@@ -27,7 +27,7 @@ public class MainRegistry {
 	public void init(FMLInitializationEvent e) {
 		//MinecraftForge.EVENT_BUS.register(new LoginHandler());
 		//MinecraftForge.EVENT_BUS.register(new PlateClickHandler());
-		MinecraftForge.EVENT_BUS.register(new AttackHandler());
+		//MinecraftForge.EVENT_BUS.register(new AttackHandler());
 	}
 
 	@EventHandler

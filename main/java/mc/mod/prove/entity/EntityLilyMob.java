@@ -27,7 +27,8 @@ public class EntityLilyMob extends EntityPig{
 			//this.tasks.addTask(0, new EntityAIHuntPlayer(this, player, 1D));
 			//this.tasks.addTask(1, new EntityAIFlee(this, player, 1));
 			
-			player.openGui(MasterInterfacer.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			// abilita se vuoi attivare l'interfaccia di apertura gui scommessa
+			//player.openGui(MasterInterfacer.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 		}
 
 		

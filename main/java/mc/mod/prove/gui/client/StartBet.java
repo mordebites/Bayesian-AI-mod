@@ -12,6 +12,10 @@ import net.minecraft.client.gui.GuiTextField;
 // Classe dell'effettiva interfaccia attivata dall'utente
 // Questa interfaccia viene attivata quando l'npc ci propone la scommessa
 
+// incolla il seguente metodo nel pezzo di codice che deve aprire la gui
+// nei parametri lo zero indica il codice dell'interfaccia che l'handler deve aprire
+// player.openGui(MasterInterfacer.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+
 public class StartBet extends GuiScreen {
 	private GuiButton a, b;
 	private GuiTextField texter;
@@ -48,10 +52,10 @@ public class StartBet extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 	    if (button == this.a) {
-	    	System.out.println("A was pressed!");
+	    	System.out.println("Yes choosen!");
 	    }
 	    if (button == this.b){
-	    	System.out.println("B was pressed!");
+	    	System.out.println("Nope choosen!");
 	    }
 	}
 }
