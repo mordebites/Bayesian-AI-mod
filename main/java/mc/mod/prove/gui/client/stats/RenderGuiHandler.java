@@ -8,8 +8,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class RenderGuiHandler {
 	@SubscribeEvent
 	public void onRenderGui(RenderGameOverlayEvent.Post event) {
+		// se la barra dell'esperienza non e' mostrata
+		// allora non mostro neanche i widgets di della mod
 		if (event.getType() != ElementType.EXPERIENCE)
 			return;
+		
 		new OnGameStats(Minecraft.getMinecraft());
 	}
 }

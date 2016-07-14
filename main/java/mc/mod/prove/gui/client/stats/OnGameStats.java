@@ -5,6 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
+// interfaccia che mostra i widgets principali del gioco
+
 public class OnGameStats extends Gui {
 	private Minecraft mc;
 	private ScaledResolution scaled;
