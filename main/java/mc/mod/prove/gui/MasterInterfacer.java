@@ -1,12 +1,10 @@
 package mc.mod.prove.gui;
 
-import mc.mod.prove.AttackHandler;
+import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 // classe mod che corrisponde alla gui
 
@@ -19,5 +17,7 @@ public class MasterInterfacer {
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		CommonProxy.init(e);
+		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
+
 	}
 }
