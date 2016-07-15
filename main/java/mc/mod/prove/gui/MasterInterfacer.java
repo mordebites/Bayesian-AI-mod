@@ -17,14 +17,16 @@ public class MasterInterfacer {
 
 	public static int ticks = 0;
 	public static int secs = 0;
+	public static int suspect_percentage = 0;
 
 	@Mod.Instance("gui")
 	public static MasterInterfacer instance;
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
-		FMLCommonHandler.instance().bus().register(new KeyInputHandler());
-		KeyBindings.init(); 
+		// registro il keybinding per i tasti speciali
+		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
+		KeyBindings.init();
 	}
 
 	@EventHandler
