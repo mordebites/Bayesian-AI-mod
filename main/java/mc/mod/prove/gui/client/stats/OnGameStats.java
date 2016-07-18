@@ -1,6 +1,8 @@
 package mc.mod.prove.gui.client.stats;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import mc.mod.prove.gui.MasterInterfacer;
 import net.minecraft.client.Minecraft;
@@ -18,24 +20,13 @@ public class OnGameStats extends Gui {
 	public OnGameStats(Minecraft mc) {
 		this.mc = mc;
 
-		// incremento il valore dei tick in questo modo posso
-		// trovarmi i secondi passati giocando
-		
-		if (MasterInterfacer.ticks % 30 == 0) {
-			MasterInterfacer.secs += 1;
-			
-			//MasterInterfacer.suspect_percentage += 1;
-		}
-		
-		MasterInterfacer.ticks += 1;
-
 		this.scaled = new ScaledResolution(this.mc);
 		this.width = scaled.getScaledWidth();
 		this.height = scaled.getScaledHeight();
 
 		drawRound(1, 2);
-		drawTime();
-		drawSuspectBar(MasterInterfacer.suspect_percentage);
+		drawTime(MasterInterfacer.generalTime);
+		drawSuspectBar(MasterInterfacer.suspectPercentage);
 	}
 
 	private void drawRound(int currentRound, int maxRound) {
@@ -47,8 +38,8 @@ public class OnGameStats extends Gui {
 				Integer.parseInt("FFAA00", 16));
 	}
 
-	private void drawTime() {
-		drawCenteredString(mc.fontRendererObj, MasterInterfacer.secs + "",
+	private void drawTime(long time) {
+		drawCenteredString(mc.fontRendererObj, time + "",
 				width - 20, 10, Integer.parseInt("FFAA00", 16));
 	}
 

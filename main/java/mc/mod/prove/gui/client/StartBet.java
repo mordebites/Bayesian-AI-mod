@@ -56,7 +56,9 @@ public class StartBet extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 	    if (button == this.a) {
-	    	System.out.println("Yes choosen!");
+	    	System.out.println("Yes chosen!");
+	    	
+	    	MasterInterfacer.matchStarted = true;
 	    	
 	    	// chiudo la gui corrente aprendo una gui che non esiste con id 1
 	    	EntityPlayer player = Minecraft.getMinecraft().thePlayer;
@@ -64,7 +66,7 @@ public class StartBet extends GuiScreen {
 	    	player.openGui(MasterInterfacer.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 	    }
 	    if (button == this.b){
-	    	System.out.println("Nope choosen!");
+	    	System.out.println("Nope chosen!");
 	    }
 	}
 }
