@@ -7,6 +7,9 @@ import mc.mod.prove.gui.KeyHandler.KeyBindings;
 import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.OnGameStats;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -34,7 +37,8 @@ public class MasterInterfacer {
 
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-
+		// timer che tiene traccia dei secondi
+		
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
@@ -50,5 +54,16 @@ public class MasterInterfacer {
 
 		// registro l'handler che si occupa dei widgets
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
+	}
+	
+	// questo metodo ci consente di chiudere una gui cercando di aprire una gui con un id
+	// nel gui handler che non esiste, quindi openGui ritornerà null ritornando alla schermata
+	// di gioco. (e' una brutta soluzione poi si fixa)
+	
+	public static void closeCustomGui() {
+		// chiudo la gui corrente aprendo una gui che non esiste con id 1
+    	EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		World world  = Minecraft.getMinecraft().theWorld;
+    	player.openGui(MasterInterfacer.instance, -1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 	}
 }

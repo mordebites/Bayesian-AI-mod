@@ -58,15 +58,17 @@ public class StartBet extends GuiScreen {
 	    if (button == this.a) {
 	    	System.out.println("Yes chosen!");
 	    	
+	    	// avvio il timer del tempo	    	
 	    	MasterInterfacer.matchStarted = true;
 	    	
-	    	// chiudo la gui corrente aprendo una gui che non esiste con id 1
-	    	EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			World world  = Minecraft.getMinecraft().theWorld;
-	    	player.openGui(MasterInterfacer.instance, 1, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+	    	// chiudo la gui selezionando una interfaccia con un id non esistente nel gui handler
+	    	MasterInterfacer.closeCustomGui();
 	    }
 	    if (button == this.b){
 	    	System.out.println("Nope chosen!");
+	    	
+	    	// metto in pausa il timer
+	    	MasterInterfacer.matchStarted = false;
 	    }
 	}
 }
