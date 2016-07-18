@@ -26,7 +26,7 @@ public class OnGameStats extends Gui {
 
 		drawRound(1, 2);
 		drawTime(MasterInterfacer.generalTime);
-		drawSuspectBar(MasterInterfacer.suspectPercentage);
+		drawSuspectBar(MasterInterfacer.suspectValue);
 	}
 
 	private void drawRound(int currentRound, int maxRound) {
@@ -43,20 +43,22 @@ public class OnGameStats extends Gui {
 				width - 20, 10, Integer.parseInt("FFAA00", 16));
 	}
 
-	private void drawSuspectBar(int percentage) {
-		// 5% di 10 -> 5:100 = x:10
+	private void drawSuspectBar(int value) {
 		
 		int max_lines = 10;
-		int perc_result = (percentage * max_lines) / 100;
+		
+		if (value < 0 || value > max_lines) {
+			return;
+		}
 		
 		String finalString = "";
 		
-		for (int i = 0; i < perc_result; i++) {
-			finalString += "|";
-		}
-			
-		for (int i = 0; i < 10 - perc_result; i++) {
-			finalString += "-";
+		for (int i = 1; i <= max_lines; i++) {
+			if (i <= value) {
+				finalString += "|";
+			} else {
+				finalString += "-";
+			}
 		}
 		
 		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 10,

@@ -1,0 +1,8 @@
+{
+  "lily_alert": {
+    "category": "player",
+    "sounds": [
+      "gui:lily_alert"
+    ]
+  }
+}
