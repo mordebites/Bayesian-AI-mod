@@ -51,8 +51,10 @@ public class MasterInterfacer {
 			public void run() {
 				if (MasterInterfacer.matchStarted) {
 					MasterInterfacer.generalTime += 1;
-					MasterInterfacer.suspectValue += 1; // TODO non funziona
-														// così
+					
+					//TODO la barra di sospetto non funziona così è solo una prova
+					// per vedere se i valori compaiono nell'interfaccia
+					MasterInterfacer.suspectValue += 1;
 				}
 			}
 		}, 0, 1000);

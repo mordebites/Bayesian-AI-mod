@@ -11,7 +11,7 @@ public class KeyInputHandler {
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
 		if (KeyBindings.pauseKey.isPressed()) {
-			System.out.println("PAUSED MENU");
+			System.out.println("Pressed P");
 			
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			World world  = Minecraft.getMinecraft().theWorld;

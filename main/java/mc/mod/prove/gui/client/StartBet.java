@@ -56,7 +56,7 @@ public class StartBet extends GuiScreen {
 	    if (button == this.a) {
 	    	System.out.println("Yes chosen!");
 	    	
-	    	// avvio il timer del tempo	    	
+	    	// avvio il timer del tempo
 	    	MasterInterfacer.matchStarted = true;
 	    	
 	    	// chiudo la gui selezionando una interfaccia con un id non esistente nel gui handler
@@ -65,7 +65,8 @@ public class StartBet extends GuiScreen {
 	    if (button == this.b){
 	    	System.out.println("Nope chosen!");
 	    	
-	    	// codice per playare il suono speciale customizzato
+	    	//TODO NON SARA' DAVVERO COSI'...
+	    	//codice per playare il suono speciale customizzato
 	    	
 	    	EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
 	    	
