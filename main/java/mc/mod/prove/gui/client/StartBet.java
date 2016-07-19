@@ -61,6 +61,12 @@ public class StartBet extends GuiScreen {
 	    	
 	    	// chiudo la gui selezionando una interfaccia con un id non esistente nel gui handler
 	    	MasterInterfacer.closeCustomGui();
+	    	
+	    	
+	    	// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO sull'asse y
+	    	EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
+	    	
+	    	playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40, playerIn.posZ);
 	    }
 	    if (button == this.b){
 	    	System.out.println("Nope chosen!");

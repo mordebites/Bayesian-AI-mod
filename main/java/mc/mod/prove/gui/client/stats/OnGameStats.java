@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 // interfaccia che mostra i widgets principali del gioco
@@ -32,7 +31,7 @@ public class OnGameStats extends Gui {
 		//TODO implementare i round
 		drawRound(1, 2);
 		
-		drawTime(MasterInterfacer.generalTime);
+		drawTime();
 		
 		// sight suspect bar, prima si setta il current sight value
 		// poi si disegna la barra
@@ -70,7 +69,7 @@ public class OnGameStats extends Gui {
 		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos + 1, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos - 1, 0);
-		this.mc.fontRendererObj.drawString(s, xPos, yPos, 8453920);
+		this.mc.fontRendererObj.drawString(s, xPos, yPos, Integer.parseInt("FFAA00", 16));
 		GlStateManager.popAttrib();
 	}
 
@@ -97,8 +96,18 @@ public class OnGameStats extends Gui {
 				Integer.parseInt("FFAA00", 16));
 	}
 
-	private void drawTime(long time) {
-		drawCenteredString(mc.fontRendererObj, time + "", width - 20, 10,
+	private void drawTime() {
+		String minuti = "0" + MasterInterfacer.maxTime;
+		
+		int secs = MasterInterfacer.secsTime;
+		String secondi = (secs < 10) ? ("0" + secs) : (secs + "");
+		
+		if (MasterInterfacer.maxTime < 0) {
+			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10,
+					Integer.parseInt("FFAA00", 16));
+		} else {
+			drawCenteredString(mc.fontRendererObj, minuti + ":" + secondi, width - 20, 10,
 				Integer.parseInt("FFAA00", 16));
+		}
 	}
 }
