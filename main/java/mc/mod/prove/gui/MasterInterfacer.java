@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import mc.mod.prove.gui.KeyHandler.KeyBindings;
 import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
+import mc.mod.prove.gui.sounds.SoundHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -17,18 +18,23 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 // La mod che corrisponde alla gui
 
-@Mod(modid = "gui", name = "MasterInterfacer", version = "1.0.0")
+@Mod(modid = MasterInterfacer.MODID, version = MasterInterfacer.VERSION)
 public class MasterInterfacer {
+	public static final String MODID = "MasterInterfacer";
+	public static final String VERSION = "1.0.0";
 
 	public static int suspectValue = 0;
 	public static long generalTime = 0;
 	public static boolean matchStarted = false;
 
-	@Mod.Instance("gui")
+	@Mod.Instance("MasterInterfacer")
 	public static MasterInterfacer instance;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		// registro l'handler che si occupa dei suoni personalizzati
+		SoundHandler.init();
+		
 		// registro il keybinding per i tasti speciali
 		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
 		KeyBindings.init();

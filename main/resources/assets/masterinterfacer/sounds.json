@@ -1,0 +1,9 @@
+{
+  "lily_alert": {
+    "category": "ambient",
+    "replace" : false,
+    "sounds": [
+      "MasterInterfacer:lily_alert"
+    ]
+  }
+}

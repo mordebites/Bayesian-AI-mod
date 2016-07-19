@@ -21,7 +21,6 @@ public class EntityLilyMob extends EntityPig {
 		World world = Minecraft.getMinecraft().theWorld;
 
 		if (player != null) {
-
 			// this.tasks.addTask(0, new EntityAIFleePlayer(this, player, 2D));
 			// this.tasks.addTask(0, new EntityAIHuntPlayer(this, player, 1D));
 			// this.tasks.addTask(1, new EntityAIFlee(this, player, 1));
