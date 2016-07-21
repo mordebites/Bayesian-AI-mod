@@ -10,6 +10,9 @@ import net.minecraft.util.ResourceLocation;
 // interfaccia che mostra i widgets principali del gioco
 
 public class OnGameStats extends Gui {
+	private static final int REDSTR = Integer.parseInt("FF0000", 16);
+	private static final int YELLOWSTR = Integer.parseInt("FFAA00", 16);
+	
 	private Minecraft mc;
 	private ScaledResolution scaled;
 	private int width;
@@ -69,7 +72,7 @@ public class OnGameStats extends Gui {
 		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos + 1, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos - 1, 0);
-		this.mc.fontRendererObj.drawString(s, xPos, yPos, Integer.parseInt("FFAA00", 16));
+		this.mc.fontRendererObj.drawString(s, xPos, yPos, YELLOWSTR);
 		GlStateManager.popAttrib();
 	}
 
@@ -90,24 +93,28 @@ public class OnGameStats extends Gui {
 	private void drawRound(int currentRound, int maxRound) {
 		String finalString = currentRound + "/" + maxRound;
 
-		drawCenteredString(mc.fontRendererObj, "Round:", width / 2, 10,
-				Integer.parseInt("FFAA00", 16));
-		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 20,
-				Integer.parseInt("FFAA00", 16));
+		drawCenteredString(mc.fontRendererObj, "Round:", width / 2, 10, YELLOWSTR);
+		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 20, YELLOWSTR);
 	}
 
 	private void drawTime() {
-		String minuti = "0" + MasterInterfacer.maxTime;
+		int stringColor = YELLOWSTR;
 		
+		// costruisco la stringa del timer con i minuti ed i secondi		
+		String minuti = "0" + MasterInterfacer.maxTime;
 		int secs = MasterInterfacer.secsTime;
 		String secondi = (secs < 10) ? ("0" + secs) : (secs + "");
 		
+		// controllo se la stringa deve essere colorata di rosso
+		// per indicare il tempo che sta per scadere
+		if ((MasterInterfacer.maxTime <= 1 && MasterInterfacer.secsTime <= 30) || MasterInterfacer.maxTime < 1) {
+			stringColor = REDSTR;
+		}
+		
 		if (MasterInterfacer.maxTime < 0) {
-			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10,
-					Integer.parseInt("FFAA00", 16));
+			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10, stringColor);
 		} else {
-			drawCenteredString(mc.fontRendererObj, minuti + ":" + secondi, width - 20, 10,
-				Integer.parseInt("FFAA00", 16));
+			drawCenteredString(mc.fontRendererObj, minuti + ":" + secondi, width - 20, 10, stringColor);
 		}
 	}
 }
