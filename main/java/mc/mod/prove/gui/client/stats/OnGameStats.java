@@ -12,30 +12,33 @@ import net.minecraft.util.ResourceLocation;
 public class OnGameStats extends Gui {
 	private static final int REDSTR = Integer.parseInt("FF0000", 16);
 	private static final int YELLOWSTR = Integer.parseInt("FFAA00", 16);
-	
+
+	private static final ResourceLocation texture = new ResourceLocation(
+			"masterinterfacer", "textures/sight_bar.png");
+
+	private static final int MAXSIGHT = 10;
+	private int currentSight = 0;
+
 	private Minecraft mc;
 	private ScaledResolution scaled;
 	private int width;
 	private int height;
 
-	private static final int MAXSIGHT = 10;
-	private int currentSight = 0;
-
-	private static final ResourceLocation texture = new ResourceLocation(
-			"masterinterfacer", "textures/sight_bar.png");
-
 	public OnGameStats(Minecraft mc) {
+		if (!MasterInterfacer.matchStarted)
+			return;
+		
 		this.mc = mc;
 
 		this.scaled = new ScaledResolution(this.mc);
 		this.width = scaled.getScaledWidth();
 		this.height = scaled.getScaledHeight();
 
-		//TODO implementare i round
-		drawRound(1, 2);
-		
+		// TODO implementare i round
+		drawRound(1, MasterInterfacer.maxRound);
+
 		drawTime();
-		
+
 		// sight suspect bar, prima si setta il current sight value
 		// poi si disegna la barra
 		setCurrentSight(MasterInterfacer.suspectValue);
@@ -93,28 +96,33 @@ public class OnGameStats extends Gui {
 	private void drawRound(int currentRound, int maxRound) {
 		String finalString = currentRound + "/" + maxRound;
 
-		drawCenteredString(mc.fontRendererObj, "Round:", width / 2, 10, YELLOWSTR);
-		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 20, YELLOWSTR);
+		drawCenteredString(mc.fontRendererObj, "Round:", width / 2, 10,
+				YELLOWSTR);
+		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 20,
+				YELLOWSTR);
 	}
 
 	private void drawTime() {
 		int stringColor = YELLOWSTR;
-		
-		// costruisco la stringa del timer con i minuti ed i secondi		
+
+		// costruisco la stringa del timer con i minuti ed i secondi
 		String minuti = "0" + MasterInterfacer.maxTime;
 		int secs = MasterInterfacer.secsTime;
 		String secondi = (secs < 10) ? ("0" + secs) : (secs + "");
-		
+
 		// controllo se la stringa deve essere colorata di rosso
 		// per indicare il tempo che sta per scadere
-		if ((MasterInterfacer.maxTime <= 1 && MasterInterfacer.secsTime <= 30) || MasterInterfacer.maxTime < 1) {
+		if ((MasterInterfacer.maxTime <= 1 && MasterInterfacer.secsTime <= 30)
+				|| MasterInterfacer.maxTime < 1) {
 			stringColor = REDSTR;
 		}
-		
+
 		if (MasterInterfacer.maxTime < 0) {
-			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10, stringColor);
+			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10,
+					stringColor);
 		} else {
-			drawCenteredString(mc.fontRendererObj, minuti + ":" + secondi, width - 20, 10, stringColor);
+			drawCenteredString(mc.fontRendererObj, minuti + ":" + secondi,
+					width - 20, 10, stringColor);
 		}
 	}
 }
