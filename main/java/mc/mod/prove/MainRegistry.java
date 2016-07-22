@@ -65,6 +65,16 @@ public class MainRegistry {
 					// per vedere se i valori compaiono nell'interfaccia
 					//match.setSightValue(match.getSightValue() + 1);
 				}
+				
+				// countdown
+				
+				if (match.isMatchStarted() && !match.isRoundStarted()) {
+					match.setCountDownTime(match.getCountDownTime() - 1);
+					
+					if (match.getCountDownTime() < 1) {
+						match.startRound();
+					}
+				}
 			}
 		}, 0, 1000);
 

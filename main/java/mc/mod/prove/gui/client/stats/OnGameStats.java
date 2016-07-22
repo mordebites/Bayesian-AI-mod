@@ -16,9 +16,6 @@ public class OnGameStats extends Gui {
 	private static final ResourceLocation texture = new ResourceLocation(
 			"mainregistry", "textures/sight_bar.png");
 
-	private static final int MAXSIGHT = 10;
-	private int currentSight = 0;
-
 	private Minecraft mc;
 	private ScaledResolution scaled;
 	private int width;
@@ -33,8 +30,9 @@ public class OnGameStats extends Gui {
 		this.scaled = new ScaledResolution(this.mc);
 		this.width = scaled.getScaledWidth();
 		this.height = scaled.getScaledHeight();
+		
+		// disegno i vari widgets
 
-		// TODO implementare i round
 		drawRound(1, MainRegistry.match.getMaxRound());
 
 		drawTime();

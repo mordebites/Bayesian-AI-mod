@@ -1,5 +1,6 @@
 package mc.mod.prove.gui.client.stats;
 
+import mc.mod.prove.MainRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -13,6 +14,10 @@ public class RenderGuiHandler {
 		if (event.getType() != ElementType.EXPERIENCE)
 			return;
 		
-		new OnGameStats(Minecraft.getMinecraft());
+		if (MainRegistry.match.isRoundStarted()) {
+			new OnGameStats(Minecraft.getMinecraft());
+		} else {
+			new CountDownTimer(Minecraft.getMinecraft());
+		}
 	}
 }

@@ -4,24 +4,41 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MatchHandler {
-	private int maxRound;
-	private int currentRound = 1;
+	// tempo del countdown iniziale
 
 	private static final int MAX_START_TIME = 3;
-	private int startTime = MAX_START_TIME;
+	private int countDownTime = MAX_START_TIME;
+
+	// minuti del round
 
 	private static final int MAX_ROUND_TIME = 5;
 	private int minutesTime = MAX_ROUND_TIME;
 	private int secsTime = 0;
 
+	// variabili di stato del match e del round
+
 	private boolean matchStarted = false;
 	private boolean roundStarted = false;
+
+	private int maxRound;
+	private int currentRound = 1;
+
+	// variabili che serviranno per capire quando uno dei due
+	// giocatori (mob o player) vice
 
 	private static final int MAX_SIGHT_VALUE = 10;
 	private int sightValue = 0;
 	private boolean opponentHit = false;
-	
+
 	private boolean gamePaused = false;
+
+	public int getCountDownTime() {
+		return countDownTime;
+	}
+
+	public void setCountDownTime(int startTime) {
+		this.countDownTime = startTime;
+	}
 
 	public boolean isGamePaused() {
 		return gamePaused;
@@ -43,8 +60,18 @@ public class MatchHandler {
 		if (maxRound == 0) {
 			throw new RuntimeException("Manca numero di round!");
 		}
+		
+		// resetto il timer del countdown
+		countDownTime = MAX_START_TIME;
+		
 		matchStarted = true;
-		startRound();
+
+		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
+		// sull'asse y
+		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
+
+		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
+				playerIn.posZ);
 	}
 
 	public void stopMatch() {
@@ -76,17 +103,10 @@ public class MatchHandler {
 		this.secsTime = secsTime;
 	}
 
-	private void startRound() {
-
+	public void startRound() {
+		// resetto il timer del round
 		minutesTime = MAX_ROUND_TIME;
 		secsTime = 0;
-
-		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
-		// sull'asse y
-		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-
-		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
-				playerIn.posZ);
 
 		roundStarted = true;
 	}
@@ -94,12 +114,13 @@ public class MatchHandler {
 	public int getMaxSightValue() {
 		return MAX_SIGHT_VALUE;
 	}
-	
+
 	public int getSightValue() {
 		return sightValue;
 	}
 
 	public void setSightValue(int sightValue) {
-		this.sightValue = (sightValue > MAX_SIGHT_VALUE) ? MAX_SIGHT_VALUE : sightValue;
+		this.sightValue = (sightValue > MAX_SIGHT_VALUE) ? MAX_SIGHT_VALUE
+				: sightValue;
 	}
 }
