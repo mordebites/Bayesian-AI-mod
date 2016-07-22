@@ -68,9 +68,10 @@ public class MasterInterfacer {
 			}
 		}, 0, 1000);
 
+		// inizializzo le interfacce full screen
 		CommonProxy.init(e);
 
-		// registro l'handler che si occupa dei widgets
+		// inizializzo le interfacce widgets che verranno mostrate mentre il player gioca
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
 	}
 	
