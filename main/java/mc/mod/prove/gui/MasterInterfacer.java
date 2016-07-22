@@ -22,10 +22,10 @@ public class MasterInterfacer {
 
 	public static int suspectValue = 0;
 
-	public static int maxTime = 5;
+	public static int minutesTime = 5;
 	public static int secsTime = 0;
 	
-	public static int maxRound = 5;
+	public static int maxRound = 5; // default number of rounds
 	public static boolean matchStarted = false;
 
 	@Mod.Instance("MasterInterfacer")
@@ -57,7 +57,7 @@ public class MasterInterfacer {
 
 					if (MasterInterfacer.secsTime < 0) {
 						MasterInterfacer.secsTime = 59;
-						MasterInterfacer.maxTime -= 1;
+						MasterInterfacer.minutesTime -= 1;
 					}
 
 					// TODO la barra di sospetto non funziona così è solo una
@@ -74,8 +74,9 @@ public class MasterInterfacer {
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
 	}
 	
+	// reset timer to default values
 	public static void reloadTimer() {
-		MasterInterfacer.maxTime = 5;
+		MasterInterfacer.minutesTime = 5;
 		MasterInterfacer.secsTime = 0;
 	}
 }

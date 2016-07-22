@@ -106,18 +106,18 @@ public class OnGameStats extends Gui {
 		int stringColor = YELLOWSTR;
 
 		// costruisco la stringa del timer con i minuti ed i secondi
-		String minuti = "0" + MasterInterfacer.maxTime;
+		String minuti = "0" + MasterInterfacer.minutesTime;
 		int secs = MasterInterfacer.secsTime;
 		String secondi = (secs < 10) ? ("0" + secs) : (secs + "");
 
 		// controllo se la stringa deve essere colorata di rosso
 		// per indicare il tempo che sta per scadere
-		if ((MasterInterfacer.maxTime <= 1 && MasterInterfacer.secsTime <= 30)
-				|| MasterInterfacer.maxTime < 1) {
+		if ((MasterInterfacer.minutesTime <= 1 && MasterInterfacer.secsTime <= 30)
+				|| MasterInterfacer.minutesTime < 1) {
 			stringColor = REDSTR;
 		}
 
-		if (MasterInterfacer.maxTime < 0) {
+		if (MasterInterfacer.minutesTime < 0) {
 			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10,
 					stringColor);
 		} else {

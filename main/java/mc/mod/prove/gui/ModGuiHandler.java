@@ -32,15 +32,20 @@ public class ModGuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
-		if (ID == GUI_START_BET) {
-			System.out.println("Selezionato GUI di inizio scommessa");
-			return new StartBet();
-		} else if (ID == GUI_ROUND_CHOICE) {
-			System.out.println("Selezionato GUI di selezione round");
-			return new RoundChoice();
-		} else if (ID == GUI_STOP_MATCH) {
-			System.out.println("selezionato gui interruzione match");
-			return new StopMatch();
+
+		switch (ID) {
+			case GUI_START_BET: {
+				System.out.println("Selezionato GUI di inizio scommessa");
+				return new StartBet();
+			}
+			case GUI_ROUND_CHOICE: {
+				System.out.println("Selezionato GUI di selezione round");
+				return new RoundChoice();
+			}
+			case GUI_STOP_MATCH: {
+				System.out.println("selezionato GUI interruzione match");
+				return new StopMatch();
+			}
 		}
 
 		return null;
