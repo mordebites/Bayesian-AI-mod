@@ -23,9 +23,6 @@ public class StartBet extends GuiScreen {
 	private GuiButton a, b;
 	private GuiTextField texter;
 
-	public void GuyTutorial() {
-	}
-
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
