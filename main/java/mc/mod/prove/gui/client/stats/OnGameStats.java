@@ -1,6 +1,6 @@
 package mc.mod.prove.gui.client.stats;
 
-import mc.mod.prove.gui.MasterInterfacer;
+import mc.mod.prove.MainRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -14,7 +14,7 @@ public class OnGameStats extends Gui {
 	private static final int YELLOWSTR = Integer.parseInt("FFAA00", 16);
 
 	private static final ResourceLocation texture = new ResourceLocation(
-			"masterinterfacer", "textures/sight_bar.png");
+			"mainregistry", "textures/sight_bar.png");
 
 	private static final int MAXSIGHT = 10;
 	private int currentSight = 0;
@@ -25,7 +25,7 @@ public class OnGameStats extends Gui {
 	private int height;
 
 	public OnGameStats(Minecraft mc) {
-		if (!MasterInterfacer.matchStarted)
+		if (!MainRegistry.match.isRoundStarted())
 			return;
 		
 		this.mc = mc;
@@ -35,21 +35,20 @@ public class OnGameStats extends Gui {
 		this.height = scaled.getScaledHeight();
 
 		// TODO implementare i round
-		drawRound(1, MasterInterfacer.maxRound);
+		drawRound(1, MainRegistry.match.getMaxRound());
 
 		drawTime();
 
 		// sight suspect bar, prima si setta il current sight value
 		// poi si disegna la barra
-		setCurrentSight(MasterInterfacer.suspectValue);
 		drawSightBar();
 
 	}
 
 	private void drawSightBar() {
-		if (getMaxSight() == 0) {
-			return;
-		}
+		// prelevo i valori della vista del mob
+		int currentSightValue = MainRegistry.match.getSightValue();
+		int maxSightValue = MainRegistry.match.getMaxSightValue();
 
 		int xPos = 10;
 		int yPos = 10;
@@ -67,9 +66,9 @@ public class OnGameStats extends Gui {
 		// note the new size
 		drawTexturedModalRect(xPos, yPos, 0, 0, 56, 9);
 		// You can keep drawing without changing anything
-		int sightbarwidth = (int) (((float) getCurrentSight() / getMaxSight()) * 49);
+		int sightbarwidth = (int) (((float) currentSightValue / maxSightValue) * 49);
 		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 9, sightbarwidth, 3);
-		String s = "Lily's sight " + getCurrentSight() + "/" + getMaxSight();
+		String s = "Lily's sight " + currentSightValue + "/" + maxSightValue;
 		yPos += 10;
 		this.mc.fontRendererObj.drawString(s, xPos + 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);
@@ -77,20 +76,6 @@ public class OnGameStats extends Gui {
 		this.mc.fontRendererObj.drawString(s, xPos, yPos - 1, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos, YELLOWSTR);
 		GlStateManager.popAttrib();
-	}
-
-	private void setCurrentSight(int sightValue) {
-		sightValue = (sightValue > MAXSIGHT) ? MAXSIGHT : sightValue;
-
-		this.currentSight = sightValue;
-	}
-
-	private int getCurrentSight() {
-		return this.currentSight;
-	}
-
-	private int getMaxSight() {
-		return MAXSIGHT;
 	}
 
 	private void drawRound(int currentRound, int maxRound) {
@@ -106,18 +91,18 @@ public class OnGameStats extends Gui {
 		int stringColor = YELLOWSTR;
 
 		// costruisco la stringa del timer con i minuti ed i secondi
-		String minuti = "0" + MasterInterfacer.minutesTime;
-		int secs = MasterInterfacer.secsTime;
+		String minuti = "0" + MainRegistry.match.getMinutesTime();
+		int secs = MainRegistry.match.getSecsTime();
 		String secondi = (secs < 10) ? ("0" + secs) : (secs + "");
 
 		// controllo se la stringa deve essere colorata di rosso
 		// per indicare il tempo che sta per scadere
-		if ((MasterInterfacer.minutesTime <= 1 && MasterInterfacer.secsTime <= 30)
-				|| MasterInterfacer.minutesTime < 1) {
+		if ((MainRegistry.match.getMinutesTime() <= 1 && MainRegistry.match.getSecsTime() <= 30)
+				|| MainRegistry.match.getMinutesTime() < 1) {
 			stringColor = REDSTR;
 		}
 
-		if (MasterInterfacer.minutesTime < 0) {
+		if (MainRegistry.match.getMinutesTime() < 0) {
 			drawCenteredString(mc.fontRendererObj, "STAHP!", width - 20, 10,
 					stringColor);
 		} else {

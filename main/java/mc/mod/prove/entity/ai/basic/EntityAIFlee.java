@@ -1,4 +1,4 @@
-package mc.mod.prove.entity.ai;
+package mc.mod.prove.entity.ai.basic;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -23,21 +23,7 @@ public class EntityAIFlee extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		System.out.println("Should flee!");
 		return true;
-		/*if (!theEntityCreature.canEntityBeSeen(thePlayer)) {
-			return false;
-		} else {
-			Vec3d vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(theEntityCreature, 5, 0, thePlayer.getPositionVector());
-			if (vec3 == null) {
-				return false;
-			} else {
-				newPosX = vec3.xCoord;
-				newPosY = vec3.yCoord;
-				newPosZ = vec3.zCoord;
-				return true;
-			}
-		}*/
 	}
 	
 	@Override

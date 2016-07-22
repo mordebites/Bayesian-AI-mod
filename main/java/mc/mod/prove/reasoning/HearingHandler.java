@@ -1,4 +1,4 @@
-package mc.mod.prove.senses;
+package mc.mod.prove.reasoning;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;

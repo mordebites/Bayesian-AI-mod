@@ -1,9 +1,9 @@
-package mc.mod.prove.utility;
+package mc.mod.prove.reasoning;
 
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 
-public class SenseUtil {
+public class SightUtil {
 
 	public static boolean isInFieldOfVision(EntityLivingBase observed, EntityLiving observer){
 	    //save observer's original rotation variables

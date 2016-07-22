@@ -1,5 +1,5 @@
 
-package mc.mod.prove.utility;
+package mc.mod.prove.reasoning;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;

@@ -2,17 +2,18 @@ package mc.mod.prove.gui.client;
 
 import java.io.IOException;
 
-import mc.mod.prove.gui.MasterInterfacer;
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 
 public class RoundChoice extends GuiScreen {
 	private GuiButton a, b;
 	private GuiTextField texter;
+	
+	private static final int MAX_ROUNDS = 5;
+	private static final int MIN_ROUNDS = 3;
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -46,29 +47,18 @@ public class RoundChoice extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.a) {
-			System.out.println("5");
-
-			MasterInterfacer.maxRound = 5;
+			MainRegistry.match.setMaxRound(MAX_ROUNDS);
 		}
 
 		if (button == this.b) {
-			System.out.println("3");
-
-			MasterInterfacer.maxRound = 3;
+			MainRegistry.match.setMaxRound(MIN_ROUNDS);
 		}
 
 		// avvio il timer del tempo
-		MasterInterfacer.matchStarted = true;
+		MainRegistry.match.startMatch();
 
 		// chiudo la gui selezionando una interfaccia con un id non esistente
 		// nel gui handler
 		ModGuiHandler.closeCustomGui();
-
-		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
-		// sull'asse y
-		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-
-		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
-				playerIn.posZ);
 	}
 }

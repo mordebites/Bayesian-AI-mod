@@ -1,6 +1,6 @@
 package mc.mod.prove;
 
-import mc.mod.prove.entity.ai.EntityAIBayesianCentral;
+import mc.mod.prove.entity.ai.EntityAILilyCentral;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;

@@ -2,7 +2,6 @@ package mc.mod.prove.gui.client;
 
 import java.io.IOException;
 
-import mc.mod.prove.gui.MasterInterfacer;
 import mc.mod.prove.gui.ModGuiHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import net.minecraft.client.Minecraft;
@@ -70,9 +69,6 @@ public class StartBet extends GuiScreen {
 			playerIn.worldObj.playSound(playerIn, playerIn.posX, playerIn.posY,
 					playerIn.posZ, SoundHandler.lily_alert,
 					SoundCategory.AMBIENT, 2.0F, 1.0F);
-
-			// metto in pausa il timer
-			MasterInterfacer.matchStarted = false;
 		}
 	}
 }

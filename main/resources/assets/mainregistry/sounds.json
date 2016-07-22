@@ -3,7 +3,7 @@
     "category": "ambient",
     "replace" : false,
     "sounds": [
-      "MasterInterfacer:lily_alert"
+      "MainRegistry:lily_alert"
     ]
   }
 }

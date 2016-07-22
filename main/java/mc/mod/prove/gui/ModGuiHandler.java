@@ -1,5 +1,6 @@
 package mc.mod.prove.gui;
 
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.client.RoundChoice;
 import mc.mod.prove.gui.client.StartBet;
 import mc.mod.prove.gui.client.StopMatch;
@@ -34,18 +35,18 @@ public class ModGuiHandler implements IGuiHandler {
 			int x, int y, int z) {
 
 		switch (ID) {
-			case GUI_START_BET: {
-				System.out.println("Selezionato GUI di inizio scommessa");
-				return new StartBet();
-			}
-			case GUI_ROUND_CHOICE: {
-				System.out.println("Selezionato GUI di selezione round");
-				return new RoundChoice();
-			}
-			case GUI_STOP_MATCH: {
-				System.out.println("selezionato GUI interruzione match");
-				return new StopMatch();
-			}
+		case GUI_START_BET: {
+			System.out.println("Selezionato GUI di inizio scommessa");
+			return new StartBet();
+		}
+		case GUI_ROUND_CHOICE: {
+			System.out.println("Selezionato GUI di selezione round");
+			return new RoundChoice();
+		}
+		case GUI_STOP_MATCH: {
+			System.out.println("selezionato GUI interruzione match");
+			return new StopMatch();
+		}
 		}
 
 		return null;
@@ -65,7 +66,7 @@ public class ModGuiHandler implements IGuiHandler {
 	public static void createGui(int id) {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		World world = Minecraft.getMinecraft().theWorld;
-		player.openGui(MasterInterfacer.instance, id, world, (int) player.posX,
+		player.openGui(MainRegistry.modInstance, id, world, (int) player.posX,
 				(int) player.posY, (int) player.posZ);
 	}
 }

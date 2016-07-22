@@ -1,4 +1,4 @@
-package mc.mod.prove.entity.ai;
+package mc.mod.prove.entity.ai.basic;
 
 import java.util.Random;
 
@@ -70,7 +70,6 @@ public class EntityAILookAround extends EntityAIBase
 	            this.zPosition = vec3d.zCoord;
 	            
 	            moveTimer = maxMoveTimer;
-	     
 	            this.mustUpdate = false;
 	        }
     	}

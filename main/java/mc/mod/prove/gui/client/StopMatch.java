@@ -2,7 +2,7 @@ package mc.mod.prove.gui.client;
 
 import java.io.IOException;
 
-import mc.mod.prove.gui.MasterInterfacer;
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,6 +11,11 @@ import net.minecraft.client.gui.GuiTextField;
 public class StopMatch extends GuiScreen {
 	private GuiButton a, b;
 	private GuiTextField texter;
+
+	public StopMatch() {
+		MainRegistry.match.setGamePaused(true);
+		System.out.println("MESSO IN PAUSA IL GIOCO");
+	}
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -44,8 +49,7 @@ public class StopMatch extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.a) {
-			MasterInterfacer.matchStarted = false;
-			MasterInterfacer.reloadTimer();
+			MainRegistry.match.stopMatch();
 		}
 
 		if (button == this.b) {
@@ -55,5 +59,13 @@ public class StopMatch extends GuiScreen {
 		// chiudo la gui selezionando una interfaccia con un id non esistente
 		// nel gui handler
 		ModGuiHandler.closeCustomGui();
+
+	}
+
+	@Override
+	public void onGuiClosed() {
+		System.out.println("Ripristino lo stato di PAUSED");
+		// tolgo il gioco dallo stato di pausa
+		MainRegistry.match.setGamePaused(false);
 	}
 }

@@ -1,18 +1,19 @@
 package mc.mod.prove.entity.ai;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
-import mc.mod.prove.discardedAI.EntityAIWander;
 import mc.mod.prove.entity.BlockEvent;
+import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.EntityTimerLeft;
 import mc.mod.prove.entity.ai.enumerations.Tricking;
 import mc.mod.prove.entity.bayesian.BayesianHandler;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import mc.mod.prove.entity.transfer.TrickDeductionTO;
-import mc.mod.prove.senses.HearingHandler;
-import mc.mod.prove.senses.SightHandler;
-import mc.mod.prove.utility.TrickHandler;
+import mc.mod.prove.reasoning.HearingHandler;
+import mc.mod.prove.reasoning.SightHandler;
+import mc.mod.prove.reasoning.TrickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNote;
 import net.minecraft.block.BlockPressurePlate;
@@ -26,15 +27,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import smile.Network;
 
-public class EntityAIBayesianCentral extends EntityAIBase{
+public class EntityAILilyCentral extends EntityAIBase{
+	
 	private EntityCreature entity;
 	private EntityPlayer player;
 	//TODO RICORDA DI DECIDERE COME GESTIRE IL TIMER PER continue E start
 	private int timer = 0;
 	private EntityAIBase currentState;
 	private Network net;
-	private final int TIMER_THRESHOLD = 1800;
-	private final int DISTANCE_THRESHOLD = 5;
+	private static final int TIMER_THRESHOLD = 1800;
+	private static final int DISTANCE_THRESHOLD = 5;
+	private static final int MAX_TIMER = 10;
 	
 	//la chiave è la positione del plate, PosAndTimer contiene la posizione del blocco e il timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
@@ -43,45 +46,40 @@ public class EntityAIBayesianCentral extends EntityAIBase{
 	//gestori per i dati e il decisore bayesiano
 	private SightHandler sightHandler;
 	private HearingHandler hearingHandler;
-	private TrickHandler trickHandler = new TrickHandler();
-	private BayesianHandler bayesianHandler = new BayesianHandler();
+	private TrickHandler trickHandler;
+	private BayesianHandler bayesianHandler;
+	private EntityAIFactory factory;
 	private EvidenceTO evidence;
 	
 	//TODO controlla
 	//non metto mai a null per simulare memoria
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
-	BlockPos lastPlate = null;
+	private BlockPos lastPlate = null;
 	
 	//coordinate bordi del labirinto
-	private final int MIN_X_LAB = 440;
-	private final int MAX_X_LAB = 454;
-	private final int MIN_Z_LAB = 360;
-	private final int MAX_Z_LAB = 374;
+	private static final int MIN_X_LAB = 209;
+	private static final int MAX_X_LAB = 222;
+	private static final int MIN_Z_LAB = 114;
+	private static final int MAX_Z_LAB = 127;
+	
 	private int globalTimer = 5000;
 	//TODO RICORDA DI CAMBIARE
 	private boolean matchStarted = true;
 	
-	public EntityAIBayesianCentral(EntityCreature entity, EntityPlayer player) {
+	
+	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.entity = entity;
 		this.player = player;
-		currentState = new EntityAIWander(entity, 0.5);
+		currentState = new EntityAILookAround(entity, 0.5);
+		
 		sightHandler = new SightHandler(entity);
 		hearingHandler = new HearingHandler(entity);
-		
-		try {
-			net = new Network();
-			//assumes the player is aggressive until gathers data regarding their behaviour
-			net.readFile("/MDKExample/eclipse/Cautious Lily Network.xdsl");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		
-		//inizializza currentState allo stato per gestire
-		//le interazioni prima che inizi la partita
-		
+		bayesianHandler = new BayesianHandler();
+		trickHandler = new TrickHandler();
+			
 		//inizializza lista controllando tutte le posizioni del labirinto
+		//TODO CAMBIA COORDINATE
 		for (int x = MIN_X_LAB; x <= MAX_X_LAB; x++) {
 			for (int z = MIN_Z_LAB; z <= MAX_Z_LAB; z++) {
 				BlockPos pos = new BlockPos(x, 4, z);
@@ -100,6 +98,34 @@ public class EntityAIBayesianCentral extends EntityAIBase{
 				}
 			}
 		}
+		System.out.println("Done exploring the labyrinth!");
+		
+		factory = new EntityAIFactory(this);
+	}
+	
+	protected Iterator getLightPlates() {
+		return lightBlocks.keySet().iterator();
+	}
+	
+	protected Iterator getSoundPlates() {
+		return soundBlocks.keySet().iterator();
+	}
+	
+	protected EntityPlayer getPlayer() {
+		return this.player;
+	}
+	
+	protected EntityCreature getEntity(){
+		return this.entity;
+	}
+	
+	protected BlockPos getLastPlayerPosition(){
+		return lastPlate;
+	}
+	
+	protected int[] getLabyrinthLimits(){
+		int[] a = {MIN_X_LAB, MAX_X_LAB, MIN_Z_LAB, MAX_Z_LAB};
+		return a;
 	}
 	
 	@Override
@@ -144,28 +170,27 @@ public class EntityAIBayesianCentral extends EntityAIBase{
 		this.handleEvidence();
 		
 		globalTimer--;
+				
+		// perform bayesian decision every 1/5 of a second
+		if(timer == 0) {
+			this.bayesian();
+			
+			currentState.startExecuting();
+			timer = MAX_TIMER;
+		} else {
+			currentState.continueExecuting();
+			timer--;
+		}
 	}
 
 	@Override
-	public void startExecuting()
-	{
+	public void startExecuting(){
 		beforeExecuting();
 	}
 	
 	@Override
 	public boolean continueExecuting(){
 		beforeExecuting();
-		
-		// perform bayesian decision every 1/5 of a second
-		if(timer == 0) {
-			this.bayesian();
-			currentState.startExecuting();
-			timer = 4;
-		} else {
-			currentState.continueExecuting();
-			timer--;
-		}
-		
 		return true;
 	}
 	
@@ -173,7 +198,8 @@ public class EntityAIBayesianCentral extends EntityAIBase{
 		//imposta i dati percepiti o raccolti nel decisore bayesiano
 		bayesianHandler.setEvidence(evidence);
 		String stateName = bayesianHandler.getDecision();
-		//TODO
+		System.out.println(stateName);
+		currentState = factory.getEntityAI(stateName);
 	}
 	
 	//si occupa di elaborare i dati dei sensi e quelli raccolti o dedotti per dare indicazioni al decisore
@@ -200,14 +226,13 @@ public class EntityAIBayesianCentral extends EntityAIBase{
 		
 		evidence = new EvidenceTO(playerInSight.name(), timerLeft.name(),
 								lightChange.name(), stepSound.name(), blockSound.name(),
-								currentState.getClass().getSimpleName().replaceFirst("EntityAI", ""),
 								playerTricking.name());
 		
 	}
 	
 	
 	
-	//trova il pressure plate corrispondente a un blocco sonoro o luminoso
+	//Trova il pressure plate corrispondente a un blocco sonoro o luminoso
 	//TODO OFFSET per blocco sonoro al livello del terreno?
 	private BlockPos findPressurePlate(BlockPos pos){
 		boolean foundPlate = false;

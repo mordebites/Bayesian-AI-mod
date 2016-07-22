@@ -19,8 +19,5 @@ public class DropHandler {
 
 		event.getEntityLiving().entityDropItem(new ItemStack(Items.diamond_axe),
 					dropped);
-		
-
 	}
-
 }

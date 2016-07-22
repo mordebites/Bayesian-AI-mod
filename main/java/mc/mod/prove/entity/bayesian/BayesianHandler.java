@@ -5,24 +5,42 @@ import java.util.Random;
 
 import mc.mod.prove.entity.ai.EntityAIFactory;
 import mc.mod.prove.entity.transfer.EvidenceTO;
-import net.minecraft.entity.ai.EntityAIBase;
 import smile.Network;
 
 public class BayesianHandler {
-	private static final String NAME = "lily prove - mejo.xdsl";
+	//TODO rendere relativo il path e inserire il file nella cartella del progetto
+	private static final String NAME = "C:/Users/Abbattista/Desktop/De Liddo/Lily Bayes/lily prove - mejo.xdsl";
 	private Network net = new Network();
-	private int stateT1 = net.getNode("State_t1");
-	private String[] esiti = net.getOutcomeIds(stateT1);
+	private int stateT1;
+	private String exStatet1 = "LookAround";
+	private String[] esiti;
 	private PriorityQueue<State> decision = new PriorityQueue<State>();
 	private boolean updated = false;
 	private Random rdm = new Random();
-
+	
+	/*	
+	public static void main(String[] args) {
+		BayesianHandler handler = new BayesianHandler();
+		EvidenceTO ev = new EvidenceTO("None", "Normal", "None",
+										"Close", "None", "Unlikely");
+		handler.setEvidence(ev);
+		System.out.println(handler.getDecision());
+	}
+	 */
 	public BayesianHandler() {
 		net.readFile(NAME);
+		stateT1 = net.getNode("State_t1");
+		esiti = net.getOutcomeIds(stateT1);
+		net.updateBeliefs();
 	}
 
+	/**
+	 * Permette di impostare i risultati delle osservazioni in modo da aggiornare la rete.
+	 * 
+	 * @param evidence il transfer object contenente i risultati delle osservazioni
+	 */
 	public void setEvidence(EvidenceTO evidence){
-		net.setEvidence("State_t", evidence.getStateT());
+		net.setEvidence("State_t", exStatet1);
 		net.setEvidence("Timer", evidence.getTimer());
 		net.setEvidence("Player_In_Sight", evidence.getPlayerInSight());
 		net.setEvidence("Step_Sound", evidence.getStepSound());
@@ -34,6 +52,12 @@ public class BayesianHandler {
 		updated = true;
 	}
 	
+	/**
+	 * Esegue il ragionamento bayesiano e restituisce il nome dello stato da eseguire.
+	 * Il metodo deve essere chiamato dopo aver settato i risultati delle osservazioni.
+	 * 
+	 * @return la stringa con il nome dello stato da eseguire
+	 */
 	public String getDecision(){
 		if (!updated) {
 			throw new RuntimeException("Network Not Updated!");
@@ -51,7 +75,12 @@ public class BayesianHandler {
 		State finalDecision = makeDecision(states);
 
 		updated = false;
-		return finalDecision.getName();
+		exStatet1 = finalDecision.getName();
+		
+		String finale = finalDecision.getName();
+
+		//TODO togli Suspect
+		return "Suspect";
 	}
 	
 	private State makeDecision(State[] states){

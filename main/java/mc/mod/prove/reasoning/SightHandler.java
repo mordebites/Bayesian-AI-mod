@@ -1,4 +1,4 @@
-package mc.mod.prove.senses;
+package mc.mod.prove.reasoning;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
@@ -6,15 +6,16 @@ import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class SightHandler {
-	private EntityCreature entity;
+	private EntityLivingBase entity;
 	
-	public SightHandler(EntityCreature entity){
+	public SightHandler(EntityLivingBase entity){
 		this.entity = entity;
 	}
 	
@@ -72,7 +73,7 @@ public class SightHandler {
 							break;
 						}
 						default: {
-							System.out.println("Lily is facing an invalid direction!");
+							System.err.println("Lily is facing an invalid direction!");
 						}
 					}
 				}
@@ -80,7 +81,6 @@ public class SightHandler {
 			
 						
 			if (lightSeen) {
-				System.err.print("Lily saw a light!");
 				lastLight.setPerceived(true);
 				if(entity.getPositionVector().distanceTo(new Vec3d(lastLight.getPos().getX(), lastLight.getPos().getY(), lastLight.getPos().getZ())) > distanceThreshold) {
 					light = EntityDistance.Far;

@@ -1,6 +1,6 @@
 package mc.mod.prove.gui.sounds;
 
-import mc.mod.prove.gui.MasterInterfacer;
+import mc.mod.prove.MainRegistry;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -23,7 +23,7 @@ public class SoundHandler {
 	 * @return The SoundEvent
 	 */
 	private static SoundEvent registerSound(String soundName) {
-		final ResourceLocation soundID = new ResourceLocation(MasterInterfacer.MODID, soundName);
+		final ResourceLocation soundID = new ResourceLocation(MainRegistry.MODID, soundName);
 		return GameRegistry.register(new SoundEvent(soundID)
 				.setRegistryName(soundID));
 	}

@@ -8,6 +8,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 public class CommonProxy {
 	public static void init(FMLInitializationEvent e) {
-		NetworkRegistry.INSTANCE.registerGuiHandler(MasterInterfacer.instance, new ModGuiHandler());
+		NetworkRegistry.INSTANCE.registerGuiHandler(MainRegistry.modInstance, new ModGuiHandler());
 	}
 }

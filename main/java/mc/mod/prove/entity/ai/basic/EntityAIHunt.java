@@ -1,4 +1,4 @@
-package mc.mod.prove.entity.ai;
+package mc.mod.prove.entity.ai.basic;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -19,13 +19,8 @@ public class EntityAIHunt extends EntityAIBase {
 	}
 
 	@Override
-	public boolean shouldExecute() {
-		
-		if (!entity.canEntityBeSeen(player)) {
-			return false;
-		} else {
-			return true;
-		}
+	public boolean shouldExecute() {		
+		return true;
 	}
 	
 	@Override
