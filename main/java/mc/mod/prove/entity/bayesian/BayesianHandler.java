@@ -3,13 +3,18 @@ package mc.mod.prove.entity.bayesian;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import mc.mod.prove.entity.ai.EntityAIFactory;
 import mc.mod.prove.entity.transfer.EvidenceTO;
+import net.minecraft.util.ResourceLocation;
 import smile.Network;
 
 public class BayesianHandler {
 	//TODO rendere relativo il path e inserire il file nella cartella del progetto
-	private static final String NAME = "C:/Users/Abbattista/Desktop/De Liddo/Lily Bayes/lily prove - mejo.xdsl";
+	
+	private static final ResourceLocation bayesianNetFile = new ResourceLocation(
+			"mainregistry", "bayesian_net/mejo.xdsl");
+	
+	private static final String NAME = bayesianNetFile.toString();
+	
 	private Network net = new Network();
 	private int stateT1;
 	private String exStatet1 = "LookAround";
