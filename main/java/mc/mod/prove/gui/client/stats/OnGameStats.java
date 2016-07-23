@@ -19,8 +19,7 @@ public class OnGameStats extends Gui {
 	private Minecraft mc;
 	private ScaledResolution scaled;
 	private int width;
-	private int height;
-
+	
 	public OnGameStats(Minecraft mc) {
 		if (!MainRegistry.match.isRoundStarted())
 			return;
@@ -29,11 +28,11 @@ public class OnGameStats extends Gui {
 
 		this.scaled = new ScaledResolution(this.mc);
 		this.width = scaled.getScaledWidth();
-		this.height = scaled.getScaledHeight();
+		scaled.getScaledHeight();
 		
 		// disegno i vari widgets
 
-		drawRound(1, MainRegistry.match.getMaxRound());
+		drawRound(MainRegistry.match.getCurrentRound(), MainRegistry.match.getRoundsNumber());
 
 		drawTime();
 

@@ -5,11 +5,12 @@ import net.minecraft.entity.player.EntityPlayer;
 
 public class MatchHandler {
 	// tempo del countdown iniziale
+	// il tempo del countdown e' stato settato a 4 poiche' a volte
+	// il il numero 3 a causa del thread di Timer non e' mostrato
+	private static final int MAX_COUNTDOWN_TIME = 4;
+	private int countDownTime = MAX_COUNTDOWN_TIME;
 
-	private static final int MAX_START_TIME = 3;
-	private int countDownTime = MAX_START_TIME;
-
-	// minuti del round
+	// minuti e secondi del round corrente
 
 	private static final int MAX_ROUND_TIME = 5;
 	private int minutesTime = MAX_ROUND_TIME;
@@ -20,11 +21,19 @@ public class MatchHandler {
 	private boolean matchStarted = false;
 	private boolean roundStarted = false;
 
-	private int maxRound;
-	private int currentRound = 1;
+	public static final int MAX_ROUNDS = 5;
+	public static final int MIN_ROUNDS = 3;
+
+	// roundsNumber verra' settato quando si comincia la scommessa
+	// settiamo quindi il numero di round da giocare in tutto il match
+	// e possibile scegliere tra 5 e 3 round se cosi' non fosse abbiamo una
+	// eccezione
+
+	private int roundsNumber;
+	private int currentRound = 0;
 
 	// variabili che serviranno per capire quando uno dei due
-	// giocatori (mob o player) vice
+	// giocatori (mob o player) vince
 
 	private static final int MAX_SIGHT_VALUE = 10;
 	private int sightValue = 0;
@@ -48,35 +57,47 @@ public class MatchHandler {
 		this.gamePaused = gamePaused;
 	}
 
-	public int getMaxRound() {
-		return maxRound;
+	public int getCurrentRound() {
+		return currentRound;
 	}
 
-	public void setMaxRound(int maxRound) {
-		this.maxRound = maxRound;
+	public void setCurrentRound(int currentRound) {
+		this.currentRound = currentRound;
+	}
+
+	public int getRoundsNumber() {
+		return roundsNumber;
+	}
+
+	public void setRoundsNumber(int chosenRound) {
+		if (chosenRound != MAX_ROUNDS && chosenRound != MIN_ROUNDS) {
+			throw new RuntimeException("Numero di round errati!");
+		}
+
+		this.roundsNumber = chosenRound;
 	}
 
 	public void startMatch() {
-		if (maxRound == 0) {
+		if (roundsNumber == 0) {
 			throw new RuntimeException("Manca numero di round!");
 		}
-		
-		// resetto il timer del countdown
-		countDownTime = MAX_START_TIME;
-		
+
+		// resetto il round corrente
+		currentRound = 0;
+
 		matchStarted = true;
-
-		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
-		// sull'asse y
-		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-
-		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
-				playerIn.posZ);
 	}
 
 	public void stopMatch() {
 		matchStarted = false;
 		roundStarted = false;
+	}
+
+	public void stopRound() {
+		roundStarted = false;
+
+		// resetto il timer del countdown
+		countDownTime = MAX_COUNTDOWN_TIME;
 	}
 
 	public boolean isMatchStarted() {
@@ -108,7 +129,17 @@ public class MatchHandler {
 		minutesTime = MAX_ROUND_TIME;
 		secsTime = 0;
 
+		// aumento il numero del round attuale
+		this.setCurrentRound(this.getCurrentRound() + 1);
+
 		roundStarted = true;
+
+		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
+		// sull'asse y
+		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
+
+		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
+				playerIn.posZ);
 	}
 
 	public int getMaxSightValue() {

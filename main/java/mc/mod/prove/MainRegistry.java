@@ -18,9 +18,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-@Mod(modid = MainRegistry.MODID, version = MainRegistry.VERSION)
+@Mod(modid = MainRegistry.MODID, name = MainRegistry.MODNAME, version = MainRegistry.VERSION)
 public class MainRegistry {
 	public static final String MODID = "MainRegistry";
+	public static final String MODNAME = "Main Registry";
 	public static final String VERSION = "1.0.0";
 	public static MatchHandler match = new MatchHandler();
 
@@ -49,10 +50,13 @@ public class MainRegistry {
 
 			@Override
 			public void run() {
-				if (match.isRoundStarted() && !match.isGamePaused()) {
-					
-					// faccio scorrere il tempo decrementando correttamente
-					// i minuti ed i secondi
+				// se il round e' cominciato, il gioco non e' in pausa
+				// e la schermata di countdown non e' mostrata allora
+				// faccio scorrere il tempo decrementando i minuti ed i secondi
+
+				if (match.isRoundStarted() && !match.isGamePaused()
+						&& match.getCountDownTime() < 1) {
+
 					match.setSecsTime(match.getSecsTime() - 1);
 
 					if (match.getSecsTime() < 0) {
@@ -60,17 +64,29 @@ public class MainRegistry {
 						match.setMinutesTime(match.getMinutesTime() - 1);
 					}
 
+					if (match.getMinutesTime() < 0) {
+						match.stopRound();
+
+						// se i round sono finiti allora finisco il gioco
+						// altrimenti comincio un nuovo round
+
+						if (match.getCurrentRound() == match.getRoundsNumber()) {
+							match.stopMatch();
+						}
+					}
+
 					// TODO la barra di sospetto non funziona così è solo una
 					// prova
 					// per vedere se i valori compaiono nell'interfaccia
-					//match.setSightValue(match.getSightValue() + 1);
+					// match.setSightValue(match.getSightValue() + 1);
 				}
-				
-				// countdown
-				
+
+				// questo controllo mi servirà per mostrare correttamente la
+				// schermata di countdown
+
 				if (match.isMatchStarted() && !match.isRoundStarted()) {
 					match.setCountDownTime(match.getCountDownTime() - 1);
-					
+
 					if (match.getCountDownTime() < 1) {
 						match.startRound();
 					}

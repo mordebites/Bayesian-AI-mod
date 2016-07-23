@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
+import mc.mod.prove.match.MatchHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -11,9 +12,6 @@ import net.minecraft.client.gui.GuiTextField;
 public class RoundChoice extends GuiScreen {
 	private GuiButton a, b;
 	private GuiTextField texter;
-	
-	private static final int MAX_ROUNDS = 5;
-	private static final int MIN_ROUNDS = 3;
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
@@ -47,11 +45,11 @@ public class RoundChoice extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.a) {
-			MainRegistry.match.setMaxRound(MAX_ROUNDS);
+			MainRegistry.match.setRoundsNumber(MatchHandler.MAX_ROUNDS);
 		}
 
 		if (button == this.b) {
-			MainRegistry.match.setMaxRound(MIN_ROUNDS);
+			MainRegistry.match.setRoundsNumber(MatchHandler.MIN_ROUNDS);
 		}
 
 		// avvio il timer del tempo
