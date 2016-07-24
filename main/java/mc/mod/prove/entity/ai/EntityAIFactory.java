@@ -21,10 +21,10 @@ public class EntityAIFactory {
 		EntityCreature entity = central.getEntity();
 
 		AIs.put("LookAround", new EntityAILookAround(entity, 1));
-		AIs.put("Hunt", new EntityAIHunt(entity, player, 1));
-		AIs.put("Flee", new EntityAIFlee(entity, player, 1));		
+		AIs.put("Hunt", new EntityAIHunt(entity, player, 1.2));
+		AIs.put("Flee", new EntityAIFlee(entity, player, 1.2));		
 		
-		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(1.5));
+		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(1.2));
 		su.setPlayerLastPosition(central.getLastPlayerPosition());
 		AIs.put("Suspect", su);
 		

@@ -17,12 +17,21 @@ public class EntityLilyMob extends EntityPig{
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		if(player != null) {
-			//this.tasks.addTask(0, new EntityAIFlee(this, player, 2D));
+			//this.tasks.addTask(0, new EntityAISuspect(this, player, 1));
 			//this.tasks.addTask(0, new EntityAIHunt(this, player, 1D));
-			
-			//TODO togli commento
-			//this.tasks.addTask(1, new EntityAILilyCentral(this, player));
+		
+			this.tasks.addTask(1, new EntityAILilyCentral(this, player));
 		}
 	}
+	
+	public void jump() {
+		this.motionY = (double)this.getJumpUpwardsMotion();
 
+	 	System.out.println("Sprinting, baby!");
+        this.motionX += 0.3*Math.signum(this.motionX);
+        this.motionZ += 0.3*Math.signum(this.motionX);
+
+        this.isAirBorne = true;
+        net.minecraftforge.common.ForgeHooks.onLivingJump(this);
+	}
 }

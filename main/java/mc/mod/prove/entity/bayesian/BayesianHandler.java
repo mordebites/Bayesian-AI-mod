@@ -10,11 +10,13 @@ import smile.Network;
 public class BayesianHandler {
 	//TODO rendere relativo il path e inserire il file nella cartella del progetto
 	
-	private static final ResourceLocation bayesianNetFile = new ResourceLocation(
+	/*private static final ResourceLocation bayesianNetFile = new ResourceLocation(
 			"mainregistry", "bayesian_net/mejo.xdsl");
 	
 	private static final String NAME = bayesianNetFile.toString();
+	*/
 	
+	private static final String NAME = "C:/Users/PC/Desktop/lily prove - mejo.xdsl";
 	private Network net = new Network();
 	private int stateT1;
 	private String exStatet1 = "LookAround";
@@ -84,8 +86,7 @@ public class BayesianHandler {
 		
 		String finale = finalDecision.getName();
 
-		//TODO togli Suspect
-		return "Suspect";
+		return finale;
 	}
 	
 	private State makeDecision(State[] states){

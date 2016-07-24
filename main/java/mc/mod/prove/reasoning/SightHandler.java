@@ -45,6 +45,7 @@ public class SightHandler {
 			
 			boolean lightSeen = false;
 			EnumFacing facing = entity.getHorizontalFacing();
+			System.out.println("Lily is facing " + facing.toString());
 			
 			//controlla se l'NPC sta guardando nella stessa direzione della luce
 			if ((facing == EnumFacing.WEST && (int) entity.posX >= lightX)

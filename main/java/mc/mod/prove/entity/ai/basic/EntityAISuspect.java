@@ -1,5 +1,6 @@
 package mc.mod.prove.entity.ai.basic;
 
+import mc.mod.prove.entity.EntityLilyMob;
 import net.minecraft.block.BlockPressurePlate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+
 public class EntityAISuspect extends EntityAIBase {
 	private EntityCreature entity;
 	private EntityPlayer player;
@@ -18,7 +20,8 @@ public class EntityAISuspect extends EntityAIBase {
 	private double newPosY;
 	private double newPosZ;
 	private BlockPos lastPosition = null;
-	
+	private int timer = 30;
+
 	
 	public EntityAISuspect(EntityCreature entity, EntityPlayer player, double speed) {
 		this.entity = entity;
@@ -37,7 +40,6 @@ public class EntityAISuspect extends EntityAIBase {
 	
 	@Override
 	public void startExecuting(){
-		//controlla
 		if(lastPosition == null) {
 			System.err.println("Last plate not set!");
 		} else {
@@ -65,12 +67,16 @@ public class EntityAISuspect extends EntityAIBase {
 		return !entity.getNavigator().noPath();
 	}
 	
-	//TODO sistemami, ricerca in croce
 	private void pathHelper() {
-		BlockPos pos = new BlockPos(entity.posX+entity.motionX, entity.posY+entity.motionY, entity.posZ+entity.motionZ);
-		IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(pos);
-		if(blockState.getBlock() instanceof BlockPressurePlate){
-			entity.motionY = 0.42D;
+		System.out.println("PathHelper!");
+		if(entity.motionX != 0 && entity.motionZ != 0){
+			BlockPos nextPos = new BlockPos(entity.posX + Math.signum(entity.motionX), 4, entity.posZ + (int)Math.signum(entity.motionZ));
+			IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(nextPos);
+			if(blockState.getBlock() instanceof BlockPressurePlate){
+				System.out.println("Found Plate!");
+				((EntityLilyMob) entity).jump();
+				System.out.println("Jumped!");
+			}
 		}
 	}
 }
