@@ -15,11 +15,6 @@ public class BayesianHandler {
 	private boolean updated = false;
 	private Random rdm = new Random();
 
-	public static void main(String[] args) {
-		BayesianHandler handler = new BayesianHandler();
-
-	}
-
 	public BayesianHandler() {
 		net.readString(FilerXDSL.MEJO);
 		stateT1 = net.getNode("State_t1");
