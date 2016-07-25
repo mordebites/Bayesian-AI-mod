@@ -3,6 +3,7 @@ package mc.mod.prove.entity.ai.basic;
 import java.util.Iterator;
 import java.util.Random;
 
+import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -81,7 +82,6 @@ public class EntityAITrick extends EntityAIBase {
 				}			
 				i++;
 			}
- 			System.out.println("Random plate to press: " + plateToPress.toString());
 		}
 	}
 	
@@ -106,7 +106,6 @@ public class EntityAITrick extends EntityAIBase {
 					Vec3d actual = new Vec3d(a.getX(), a.getY(), a.getZ());
 					if (actual.distanceTo(lastPosition) >= 7) {
 						plateToPress = actual;
-						System.out.println("Plate to press: " + plateToPress.toString());
 					}
 				}
 				i++;
@@ -117,31 +116,24 @@ public class EntityAITrick extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		if(!movingToPlate) {
-			System.out.println("Trying to move to plate!");
 			if(plateToPress == null) {
 				this.setPlayerLastPosition(null);
 			}
 			if (this.entity.getNavigator().tryMoveToXYZ(plateToPress.xCoord, plateToPress.yCoord, 
 					plateToPress.zCoord, speed)) {
 				movingToPlate = true;
-				System.out.println("Moving to plate!");
 			}
 		} else {
 			if(!platePressed){
 				if (entity.getPosition().getX() == MathHelper.floor_double(plateToPress.xCoord) &&
 					entity.getPosition().getZ() == MathHelper.floor_double(plateToPress.zCoord)) {
-					System.out.println("Plate pressed!");
 					platePressed = true;
 				} else if (entity.getNavigator().getPath() == null || (entity.motionX == 0 && entity.motionZ == 0)) {
 					this.entity.getNavigator().tryMoveToXYZ(plateToPress.xCoord, plateToPress.yCoord, 
 							plateToPress.zCoord, speed);
-					System.out.println("Recalculating the path to plate!");
-				} else {
-					System.out.println("Following the path!");
 				}
 			} else {
 				if(ambushPlace == null) {
-					System.out.println("Getting ready to ambush!");
 					Vec3d vec3 = null;
 					boolean invisible = false;
 					do {
@@ -163,7 +155,6 @@ public class EntityAITrick extends EntityAIBase {
 					
 					if (this.entity.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ, speed)) {
 						ambushPlace = vec3;
-						System.out.println("Ambush place: " + vec3);
 					}
 				} else {
 					if(entity.getPosition().getX() == MathHelper.floor_double(ambushPlace.xCoord) &&
@@ -175,15 +166,14 @@ public class EntityAITrick extends EntityAIBase {
 							entity.faceEntity(fakeRotationEntity, 360F, 360F);
 						}
 						resetVariables();
-						System.out.println("Reached ambush place!");
 					} else if (entity.getNavigator().getPath() == null || (entity.motionX == 0 && entity.motionZ == 0)) {//se Lily non si sta muovendo
 						this.entity.getNavigator().tryMoveToXYZ(ambushPlace.xCoord, ambushPlace.yCoord, 
 								ambushPlace.zCoord, speed);
-						System.out.println("Recalculating the path to ambush place!");
 					}
 				}
 			} 
 		}
+		JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 	

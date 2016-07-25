@@ -32,12 +32,14 @@ public class EntityAILilyCentral extends EntityAIBase{
 	private EntityCreature entity;
 	private EntityPlayer player;
 	//TODO RICORDA DI DECIDERE COME GESTIRE IL TIMER PER continue E start
-	private int timer = 0;
+	private int bayesianTimer = 2;
+	private int evidenceTimer = 0;
 	private EntityAIBase currentState;
 	private Network net;
 	private static final int TIMER_THRESHOLD = 1800;
 	private static final int DISTANCE_THRESHOLD = 5;
-	private static final int MAX_TIMER = 10;
+	private static final int MAX_EVIDENCE_TIMER = 5;
+	private static final int MAX_BAYESIAN_TIMER = 5;
 	
 	//la chiave è la positione del plate, PosAndTimer contiene la posizione del blocco e il timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
@@ -73,7 +75,7 @@ public class EntityAILilyCentral extends EntityAIBase{
 		this.player = player;
 		currentState = new EntityAILookAround(entity, 0.5);
 		
-		sightHandler = new SightHandler(entity);
+		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
 		bayesianHandler = new BayesianHandler();
 		trickHandler = new TrickHandler();
@@ -171,15 +173,20 @@ public class EntityAILilyCentral extends EntityAIBase{
 		
 		globalTimer--;
 				
+		if(evidenceTimer == 0) {
+			handleEvidence();
+			evidenceTimer = MAX_EVIDENCE_TIMER;
+		} else {
+			evidenceTimer--;
+		}
 		// perform bayesian decision every 1/5 of a second
-		if(timer == 0) {
+		if(bayesianTimer == 0) {
 			this.bayesian();
-			
 			currentState.startExecuting();
-			timer = MAX_TIMER;
+			bayesianTimer = MAX_BAYESIAN_TIMER;
 		} else {
 			currentState.continueExecuting();
-			timer--;
+			bayesianTimer--;
 		}
 	}
 
@@ -217,6 +224,11 @@ public class EntityAILilyCentral extends EntityAIBase{
 		lightChange = sightHandler.checkLight(lastLight, DISTANCE_THRESHOLD);
 		blockSound = hearingHandler.checkBlockSound(lastSound, DISTANCE_THRESHOLD);
 		stepSound = hearingHandler.checkStepSound(player, DISTANCE_THRESHOLD);
+		
+		if(evidence != null) {
+			sightHandler.setAlreadySeen(!evidence.getPlayerInSight().contains("None"));
+		}
+		
 		playerInSight = sightHandler.checkPlayerInSight(player, DISTANCE_THRESHOLD);
 		
 		TrickDeductionTO to = new TrickDeductionTO(playerInSight, blockSound,
@@ -227,12 +239,6 @@ public class EntityAILilyCentral extends EntityAIBase{
 		evidence = new EvidenceTO(playerInSight.name(), timerLeft.name(),
 								lightChange.name(), stepSound.name(), blockSound.name(),
 								playerTricking.name());
-		
-		System.out.println("Light Change " + lightChange.toString()
-							+ "\nSound Block " + blockSound.toString()
-							+ "\nStep Sound " + stepSound.toString()
-							+ "\nPlayer in Sight " + playerInSight.toString()
-							+ "\nPlayer Tricking " + playerTricking.toString());
 		
 	}
 	

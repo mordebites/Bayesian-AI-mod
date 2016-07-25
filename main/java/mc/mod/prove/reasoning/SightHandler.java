@@ -2,22 +2,31 @@ package mc.mod.prove.reasoning;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
+import mc.mod.prove.gui.sounds.SoundHandler;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class SightHandler {
 	private EntityLivingBase entity;
+	private EntityPlayer player;
+	private boolean alreadySeen = false;
 	
-	public SightHandler(EntityLivingBase entity){
+	public SightHandler(EntityLivingBase entity, EntityPlayer player){
 		this.entity = entity;
+		this.player = player;
 	}
 	
+	public void setAlreadySeen(boolean playerAlreadySeen) {
+		this.alreadySeen = playerAlreadySeen;
+	}
 	//stabilisce se il giocatore è visibile e a quale distanza
 	public EntityDistance checkPlayerInSight(Entity player, int distanceThreshold){
 		EntityDistance playerInSight = EntityDistance.None;
@@ -28,6 +37,9 @@ public class SightHandler {
 			} else {
 				playerInSight = EntityDistance.Close;
 			}
+		}
+		if(playerInSight != EntityDistance.None & !alreadySeen) {
+			this.handlePlayerInSightSound();
 		}
 		
 		return playerInSight;
@@ -44,7 +56,6 @@ public class SightHandler {
 			
 			boolean lightSeen = false;
 			EnumFacing facing = entity.getHorizontalFacing();
-			System.out.println("Lily is facing " + facing.toString());
 			
 			//controlla se l'NPC sta guardando nella stessa direzione della luce
 			if ((facing == EnumFacing.WEST && (int) entity.posX >= lightX)
@@ -81,6 +92,7 @@ public class SightHandler {
 			
 						
 			if (lightSeen) {
+				System.out.println("Lily saw a light!");
 				lastLight.setPerceived(true);
 				if(entity.getPositionVector().distanceTo(new Vec3d(lastLight.getPos().getX(), lastLight.getPos().getY(), lastLight.getPos().getZ())) > distanceThreshold) {
 					light = EntityDistance.Far;
@@ -263,4 +275,8 @@ public class SightHandler {
 		return visible;
 	}
 	
+	private void handlePlayerInSightSound() {
+		player.worldObj.playSound(player, player.posX, player.posY,
+				player.posZ, SoundHandler.lily_alert,	SoundCategory.AMBIENT, 2.0F, 1.0F);
+	}
 }

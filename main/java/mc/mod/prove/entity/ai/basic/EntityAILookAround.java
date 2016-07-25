@@ -2,6 +2,7 @@ package mc.mod.prove.entity.ai.basic;
 
 import java.util.Random;
 
+import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -81,7 +82,7 @@ public class EntityAILookAround extends EntityAIBase
     	} else if (moveTimer == maxMoveTimer){
     		this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
     	}
-    	
+    	JumpHelper.pathHelper(entity);
     }
     
     /**
@@ -90,7 +91,7 @@ public class EntityAILookAround extends EntityAIBase
     public boolean continueExecuting()
     {
     	this.executing();
-  
+    	
     	return true;
     }
 

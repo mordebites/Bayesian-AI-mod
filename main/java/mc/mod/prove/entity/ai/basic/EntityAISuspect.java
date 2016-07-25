@@ -68,17 +68,4 @@ public class EntityAISuspect extends EntityAIBase {
 		JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
-	
-	private void pathHelper() {
-		System.out.println("PathHelper!");
-		if(entity.motionX != 0 && entity.motionZ != 0){
-			BlockPos nextPos = new BlockPos(entity.posX + Math.signum(entity.motionX), 4, entity.posZ + (int)Math.signum(entity.motionZ));
-			IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(nextPos);
-			if(blockState.getBlock() instanceof BlockPressurePlate){
-				System.out.println("Found Plate!");
-				((EntityLilyMob) entity).jump();
-				System.out.println("Jumped!");
-			}
-		}
-	}
 }

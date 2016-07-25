@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 public class JumpHelper {
 
 	public static void pathHelper(EntityLiving entity) {
-		System.out.println("PathHelper!");
 		if(entity.motionX != 0 && entity.motionZ != 0){
 			BlockPos nextPos = new BlockPos(entity.posX + Math.signum(entity.motionX), 4, entity.posZ + (int)Math.signum(entity.motionZ));
 			IBlockState blockState = Minecraft.getMinecraft().theWorld.getBlockState(nextPos);

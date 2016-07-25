@@ -25,11 +25,11 @@ public class EntityLilyMob extends EntityPig{
 	}
 	
 	public void jump() {
-		this.motionY = (double)this.getJumpUpwardsMotion();
+		this.motionY = 0.35D;
 
 	 	System.out.println("Sprinting, baby!");
-        this.motionX += 0.3*Math.signum(this.motionX);
-        this.motionZ += 0.3*Math.signum(this.motionX);
+        this.motionX += 0.35*Math.signum(this.motionX);
+        this.motionZ += 0.35*Math.signum(this.motionX);
 
         this.isAirBorne = true;
         net.minecraftforge.common.ForgeHooks.onLivingJump(this);
