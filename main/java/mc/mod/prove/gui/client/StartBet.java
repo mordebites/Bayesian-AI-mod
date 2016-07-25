@@ -9,8 +9,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 // Classe dell'effettiva interfaccia attivata dall'utente
 // Questa interfaccia viene attivata quando l'npc ci propone la scommessa

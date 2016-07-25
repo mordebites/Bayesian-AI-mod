@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class AwardHandler {
-	private static final String ITEM_NAME = "minecraft:emerald_ore";
+	private static final String ITEM_NAME = "minecraft:emerald";
 	private static final ItemStack EMERALD_STACK = new ItemStack(
 			Item.getByNameOrId(ITEM_NAME));
 
