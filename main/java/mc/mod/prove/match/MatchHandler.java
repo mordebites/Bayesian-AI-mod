@@ -91,6 +91,9 @@ public class MatchHandler {
 	public void stopMatch() {
 		matchStarted = false;
 		roundStarted = false;
+
+		// resetto il timer del countdown
+		countDownTime = MAX_COUNTDOWN_TIME;
 	}
 
 	public void stopRound() {
