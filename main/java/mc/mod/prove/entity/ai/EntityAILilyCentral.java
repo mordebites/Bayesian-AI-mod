@@ -58,10 +58,10 @@ public class EntityAILilyCentral extends EntityAIBase{
 	private BlockPos lastPlate = null;
 	
 	//coordinate bordi del labirinto
-	private static final int MIN_X_LAB = 178;
-	private static final int MAX_X_LAB = 191;
-	private static final int MIN_Z_LAB = 703;
-	private static final int MAX_Z_LAB = 716;
+	private static final int MIN_X_LAB = 209;
+	private static final int MAX_X_LAB = 222;
+	private static final int MIN_Z_LAB = 114;
+	private static final int MAX_Z_LAB = 127;
 	
 	private int globalTimer = 5000;
 	//TODO RICORDA DI CAMBIARE

@@ -90,6 +90,7 @@ public class EntityAILookAround extends EntityAIBase
     public boolean continueExecuting()
     {
     	this.executing();
+  
     	return true;
     }
 

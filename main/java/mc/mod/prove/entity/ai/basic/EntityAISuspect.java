@@ -1,6 +1,7 @@
 package mc.mod.prove.entity.ai.basic;
 
 import mc.mod.prove.entity.EntityLilyMob;
+import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.block.BlockPressurePlate;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -58,12 +59,13 @@ public class EntityAISuspect extends EntityAIBase {
 			newPosZ = vec3.zCoord;
 			
 			this.entity.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ, speed);
+			JumpHelper.pathHelper(entity);
 		}
 	}
 	
 	@Override
 	public boolean continueExecuting() {
-		pathHelper();
+		JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 	
