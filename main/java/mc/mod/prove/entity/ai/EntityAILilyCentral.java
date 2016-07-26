@@ -3,6 +3,7 @@ package mc.mod.prove.entity.ai;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
@@ -31,15 +32,19 @@ public class EntityAILilyCentral extends EntityAIBase{
 	
 	private EntityCreature entity;
 	private EntityPlayer player;
-	//TODO RICORDA DI DECIDERE COME GESTIRE IL TIMER PER continue E start
+	
+	//partono sfalsati
 	private int bayesianTimer = 2;
 	private int evidenceTimer = 0;
+	
+	//l'ai di base da eseguire in un certo momento
 	private EntityAIBase currentState;
 	private Network net;
-	private static final int TIMER_THRESHOLD = 1800;
+	private static final int TIMER_SEC_THRESHOLD = 90;
 	private static final int DISTANCE_THRESHOLD = 5;
 	private static final int MAX_EVIDENCE_TIMER = 5;
 	private static final int MAX_BAYESIAN_TIMER = 5;
+	private static final int MINS_IN_SEC = 60;
 	
 	//la chiave è la positione del plate, PosAndTimer contiene la posizione del blocco e il timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
@@ -52,8 +57,7 @@ public class EntityAILilyCentral extends EntityAIBase{
 	private BayesianHandler bayesianHandler;
 	private EntityAIFactory factory;
 	private EvidenceTO evidence;
-	
-	//TODO controlla
+
 	//non metto mai a null per simulare memoria
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
@@ -64,12 +68,7 @@ public class EntityAILilyCentral extends EntityAIBase{
 	private static final int MAX_X_LAB = 222;
 	private static final int MIN_Z_LAB = 114;
 	private static final int MAX_Z_LAB = 127;
-	
-	private int globalTimer = 5000;
-	//TODO RICORDA DI CAMBIARE
-	private boolean matchStarted = true;
-	
-	
+
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.entity = entity;
 		this.player = player;
@@ -81,7 +80,6 @@ public class EntityAILilyCentral extends EntityAIBase{
 		trickHandler = new TrickHandler();
 			
 		//inizializza lista controllando tutte le posizioni del labirinto
-		//TODO CAMBIA COORDINATE
 		for (int x = MIN_X_LAB; x <= MAX_X_LAB; x++) {
 			for (int z = MIN_Z_LAB; z <= MAX_Z_LAB; z++) {
 				BlockPos pos = new BlockPos(x, 4, z);
@@ -105,34 +103,10 @@ public class EntityAILilyCentral extends EntityAIBase{
 		factory = new EntityAIFactory(this);
 	}
 	
-	protected Iterator getLightPlates() {
-		return lightBlocks.keySet().iterator();
-	}
-	
-	protected Iterator getSoundPlates() {
-		return soundBlocks.keySet().iterator();
-	}
-	
-	protected EntityPlayer getPlayer() {
-		return this.player;
-	}
-	
-	protected EntityCreature getEntity(){
-		return this.entity;
-	}
-	
-	protected BlockPos getLastPlayerPosition(){
-		return lastPlate;
-	}
-	
-	protected int[] getLabyrinthLimits(){
-		int[] a = {MIN_X_LAB, MAX_X_LAB, MIN_Z_LAB, MAX_Z_LAB};
-		return a;
-	}
-	
+	//TODO controlla che vada bene roundStarted
 	@Override
 	public boolean shouldExecute() {
-		return true;
+		return MainRegistry.match.isRoundStarted();
 	}
 	
 	//eseguito ad ogni tick
@@ -170,8 +144,6 @@ public class EntityAILilyCentral extends EntityAIBase{
 		
 		//gestice i dati percepiti, raccolti o dedotti
 		this.handleEvidence();
-		
-		globalTimer--;
 				
 		if(evidenceTimer == 0) {
 			handleEvidence();
@@ -216,7 +188,7 @@ public class EntityAILilyCentral extends EntityAIBase{
 		Tricking playerTricking;
 		
 		//stabilisce se sta per scadere il tempo
-		if(globalTimer > TIMER_THRESHOLD) {
+		if((MainRegistry.match.getMinutesTime()*MINS_IN_SEC + MainRegistry.match.getSecsTime()) > TIMER_SEC_THRESHOLD) {
 			timerLeft = EntityTimerLeft.Normal;
 		} else {
 			timerLeft = EntityTimerLeft.RunningOut;
@@ -225,8 +197,10 @@ public class EntityAILilyCentral extends EntityAIBase{
 		blockSound = hearingHandler.checkBlockSound(lastSound, DISTANCE_THRESHOLD);
 		stepSound = hearingHandler.checkStepSound(player, DISTANCE_THRESHOLD);
 		
-		if(evidence != null) {
+		if(evidence != null && MainRegistry.match.isRoundStarted()) {
 			sightHandler.setAlreadySeen(!evidence.getPlayerInSight().contains("None"));
+		} else {
+			sightHandler.setAlreadySeen(false);
 		}
 		
 		playerInSight = sightHandler.checkPlayerInSight(player, DISTANCE_THRESHOLD);
@@ -284,6 +258,31 @@ public class EntityAILilyCentral extends EntityAIBase{
 		} else {
 			return null;
 		}
+	}
+	
+	protected Iterator getLightPlates() {
+		return lightBlocks.keySet().iterator();
+	}
+	
+	protected Iterator getSoundPlates() {
+		return soundBlocks.keySet().iterator();
+	}
+	
+	protected EntityPlayer getPlayer() {
+		return this.player;
+	}
+	
+	protected EntityCreature getEntity(){
+		return this.entity;
+	}
+	
+	protected BlockPos getLastPlayerPosition(){
+		return lastPlate;
+	}
+	
+	protected int[] getLabyrinthLimits(){
+		int[] a = {MIN_X_LAB, MAX_X_LAB, MIN_Z_LAB, MAX_Z_LAB};
+		return a;
 	}
 
 
