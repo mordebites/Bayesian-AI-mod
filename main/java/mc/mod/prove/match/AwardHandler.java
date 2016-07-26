@@ -9,6 +9,10 @@ public class AwardHandler {
 	private static final String ITEM_NAME = "minecraft:emerald";
 	private static final ItemStack EMERALD_STACK = new ItemStack(
 			Item.getByNameOrId(ITEM_NAME));
+	
+	public static final int EMERALDS_TO_PLAY = 5;
+	public static final int EMERALDS_TO_WIN = 2;
+	public static final int EMERALDS_TO_LOSE = 1;
 
 	public static void addItem(EntityPlayer ep, int number) {
 		int newAmount = number;

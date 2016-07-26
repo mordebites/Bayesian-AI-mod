@@ -41,7 +41,7 @@ public class NotEnoughMoney extends GuiScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.okay_button) {
-			ModGuiHandler.closeCustomGui();
+			ModGuiHandler.closeCurrentGui();
 		}
 	}
 }

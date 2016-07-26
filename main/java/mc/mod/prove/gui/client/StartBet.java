@@ -3,12 +3,9 @@ package mc.mod.prove.gui.client;
 import java.io.IOException;
 
 import mc.mod.prove.gui.ModGuiHandler;
-import mc.mod.prove.match.AwardHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.entity.player.EntityPlayer;
 
 // Classe dell'effettiva interfaccia attivata dall'utente
 // Questa interfaccia viene attivata quando l'npc ci propone la scommessa
@@ -59,18 +56,8 @@ public class StartBet extends GuiScreen {
 		}
 		if (button == this.b) {
 			System.out.println("Nope chosen!");
-
-			// TODO codice per gestire gli emerald
-			EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-
-			if (AwardHandler.hasItem(playerIn, 3)) {
-				System.out.println("GG you have at least 3 emeralds");
-
-				AwardHandler.removeItem(playerIn, 3);
-			} else {
-				ModGuiHandler.createGui(ModGuiHandler.GUI_NOT_ENOUGH_MONEY);
-				AwardHandler.addItem(playerIn, 4);
-			}
+			
+			ModGuiHandler.closeCurrentGui();
 		}
 	}
 }

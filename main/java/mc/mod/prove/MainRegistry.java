@@ -10,6 +10,7 @@ import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
+import mc.mod.prove.match.PlayerAttackHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -100,6 +101,9 @@ public class MainRegistry {
 		// inizializzo le interfacce widgets che verranno mostrate mentre il
 		// player gioca
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
+		
+		// inizializzo il codice per controllare se l'entity sta per essere attaccata
+		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
 	}
 
 	@EventHandler

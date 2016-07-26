@@ -57,6 +57,6 @@ public class RoundChoice extends GuiScreen {
 
 		// chiudo la gui selezionando una interfaccia con un id non esistente
 		// nel gui handler
-		ModGuiHandler.closeCustomGui();
+		ModGuiHandler.closeCurrentGui();
 	}
 }

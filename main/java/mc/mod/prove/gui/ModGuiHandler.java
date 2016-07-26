@@ -64,8 +64,7 @@ public class ModGuiHandler implements IGuiHandler {
 	// alla schermata
 	// di gioco. (e' una brutta soluzione poi si fixa)
 
-	// TODO una maniera piu' bella per chiudere le gui
-	public static void closeCustomGui() {
+	public static void closeCurrentGui() {
 		createGui(-1);
 	}
 
