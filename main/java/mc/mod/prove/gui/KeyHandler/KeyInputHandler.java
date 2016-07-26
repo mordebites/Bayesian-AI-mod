@@ -1,4 +1,4 @@
-package mc.mod.prove.gui.KeyHandler;
+package mc.mod.prove.gui.keyhandler;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;

@@ -22,8 +22,7 @@ public class StartBet extends GuiScreen {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
 
-		if (texter != null)
-			this.texter.drawTextBox();
+		this.texter.drawTextBox();
 
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

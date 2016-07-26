@@ -1,4 +1,4 @@
-package mc.mod.prove.gui.KeyHandler;
+package mc.mod.prove.gui.keyhandler;
 
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;

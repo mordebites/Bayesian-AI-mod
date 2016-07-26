@@ -5,6 +5,7 @@ import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
+import mc.mod.prove.match.PlayerDefeatHandler;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -49,12 +50,13 @@ public class SightHandler {
 		//per aggiornare ogni secondo la barra Lily's Sight
 		if(tickTimer % 20 == 0) {
 			//TODO costante
-			if(playerInSight != EntityDistance.None && seenSeconds < 10) {
+			if(playerInSight != EntityDistance.None && seenSeconds <= 10) {
 				seenSeconds++;
 			} else if (playerInSight == EntityDistance.None && seenSeconds > 0) {
 				seenSeconds--;
 			}
 		}
+		
 		
 		if(playerInSight != EntityDistance.None && !alreadySeen && 
 				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY &&
@@ -69,6 +71,10 @@ public class SightHandler {
 		
 		MainRegistry.match.setSightValue(seenSeconds);
 		tickTimer++;
+		
+		if(seenSeconds == 11) {
+			PlayerDefeatHandler.onPlayerDefeat();
+		}
 		
 		return playerInSight;
 	}
