@@ -57,7 +57,8 @@ public class SightHandler {
 		}
 		
 		if(playerInSight != EntityDistance.None && !alreadySeen && 
-				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
+				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY &&
+				MainRegistry.match.isMatchStarted()) {
 			this.handlePlayerInSightSound();
 		}
 		
