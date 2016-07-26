@@ -75,11 +75,6 @@ public class MainRegistry {
 							match.stopMatch();
 						}
 					}
-
-					// TODO la barra di sospetto non funziona così è solo una
-					// prova
-					// per vedere se i valori compaiono nell'interfaccia
-					// match.setSightValue(match.getSightValue() + 1);
 				}
 
 				// questo controllo mi servirà per mostrare correttamente la

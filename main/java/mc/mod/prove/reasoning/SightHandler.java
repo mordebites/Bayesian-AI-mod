@@ -4,6 +4,7 @@ import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.gui.sounds.SoundHandler;
+import mc.mod.prove.match.MatchHandler;
 import net.minecraft.block.BlockStone;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -33,7 +34,7 @@ public class SightHandler {
 	public void setAlreadySeen(boolean playerAlreadySeen) {
 		this.alreadySeen = playerAlreadySeen;
 	}
-	//stabilisce se il giocatore è visibile e a quale distanza
+	//stabilisce se il giocatore ï¿½ visibile e a quale distanza
 	public EntityDistance checkPlayerInSight(Entity player, int distanceThreshold){
 		EntityDistance playerInSight = EntityDistance.None;
 		
@@ -55,8 +56,14 @@ public class SightHandler {
 			}
 		}
 		
-		if(playerInSight != EntityDistance.None & !alreadySeen) {
+		if(playerInSight != EntityDistance.None && !alreadySeen && 
+				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
 			this.handlePlayerInSightSound();
+		}
+		
+		//resetta il valore da assegnare alla barra quando ricomincia il round
+		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
+			seenSeconds = 0;
 		}
 		
 		MainRegistry.match.setSightValue(seenSeconds);
@@ -65,11 +72,11 @@ public class SightHandler {
 		return playerInSight;
 	}
 	
-	//controlla se Lily può vedere l'ultima luce che si è accesa
+	//controlla se Lily puï¿½ vedere l'ultima luce che si ï¿½ accesa
 	public EntityDistance checkLight(BlockEvent lastLight, int distanceThreshold){
 		EntityDistance light = EntityDistance.None;
 		
-		//se è stata accesa qualche luce
+		//se ï¿½ stata accesa qualche luce
 		if(lastLight != null && lastLight.getTimer() > 0) {
 			int lightX = lastLight.getPos().getX();
 			int lightZ = lastLight.getPos().getZ();
@@ -127,7 +134,7 @@ public class SightHandler {
 	private boolean handleNorth(int lightX, int lightZ) {
 		boolean lightSeen = false;
 		
-		//se la luce è a sinistra dell'npc
+		//se la luce ï¿½ a sinistra dell'npc
 		if(lightX < (int) entity.posX) {
 			lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", false);
 			if(!lightSeen) {
@@ -136,7 +143,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightZ+1, lightZ+4, lightX, "WE", true);
 				}
 			}
-		//se la luce è a destra dell'npc
+		//se la luce ï¿½ a destra dell'npc
 		} else if (lightX > (int) entity.posX) {
 			lightSeen = this.cross(lightX-1, lightX-4, lightZ, "NS", true);
 			if(!lightSeen) {
@@ -145,7 +152,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightZ+1, lightZ+4, lightX, "WE", true);
 				}
 			}
-		//se la luce è di fronte all'npc
+		//se la luce ï¿½ di fronte all'npc
 		} else {
 			lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 			if(!lightSeen) {
@@ -161,7 +168,7 @@ public class SightHandler {
 	private boolean handleSouth(int lightX, int lightZ) {
 		boolean lightSeen = false;
 		
-		//se la luce è a sinistra dell'npc
+		//se la luce ï¿½ a sinistra dell'npc
 		if(lightX > (int) entity.posX) {
 			lightSeen = this.cross(lightX-1, lightX-4, lightZ, "NS", false);
 			if(!lightSeen) {
@@ -170,7 +177,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightZ+1, lightZ+4, lightX, "WE", true);
 				}
 			}
-		//se la luce è a destra dell'npc
+		//se la luce ï¿½ a destra dell'npc
 		} else if (lightX < (int) entity.posX) {
 			lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 			if(!lightSeen) {
@@ -179,7 +186,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightZ+1, lightZ+4, lightX, "WE", true);
 				}
 			}
-		//se la luce è di fronte all'npc
+		//se la luce ï¿½ di fronte all'npc
 		} else {
 			lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 			if(!lightSeen) {
@@ -195,7 +202,7 @@ public class SightHandler {
 	private boolean handleWest(int lightX, int lightZ) {
 		boolean lightSeen = false;
 		
-		//se la luce è a sinistra dell'npc
+		//se la luce ï¿½ a sinistra dell'npc
 		if(lightZ > (int) entity.posZ) {
 			lightSeen = this.cross(lightZ-1, lightZ-4, lightX, "WE", false);
 			if(!lightSeen) {
@@ -204,7 +211,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 				}
 			}
-		//se la luce è a destra dell'npc
+		//se la luce ï¿½ a destra dell'npc
 		} else if (lightZ < (int) entity.posZ) {
 			lightSeen = this.cross(lightZ+1, lightZ-4, lightX, "WE", true);
 			if(!lightSeen) {
@@ -213,7 +220,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 				}
 			}
-		//se la luce è di fronte all'npc
+		//se la luce ï¿½ di fronte all'npc
 		} else {
 			lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 			if(!lightSeen) {
@@ -229,7 +236,7 @@ public class SightHandler {
 	private boolean handleEast(int lightX, int lightZ){
 		boolean lightSeen = false;
 		
-		//se la luce è a sinistra dell'npc
+		//se la luce ï¿½ a sinistra dell'npc
 		if(lightZ < (int) entity.posZ) {
 			lightSeen = this.cross(lightZ+1, lightZ+4, lightX, "WE", true);
 			if(!lightSeen) {
@@ -238,7 +245,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 				}
 			}
-		//se la luce è a destra dell'npc
+		//se la luce ï¿½ a destra dell'npc
 		} else if (lightZ > (int) entity.posZ) {
 			lightSeen = this.cross(lightZ-1, lightZ-4, lightX, "WE", false);
 			if(!lightSeen) {
@@ -247,7 +254,7 @@ public class SightHandler {
 					lightSeen = this.cross(lightX+1, lightX+4, lightZ, "NS", true);
 				}
 			}
-		//se la luce è di fronte all'npc
+		//se la luce ï¿½ di fronte all'npc
 		} else {
 			lightSeen = this.cross(lightX-1, lightX-4, lightZ, "NS", false);
 			if(!lightSeen) {

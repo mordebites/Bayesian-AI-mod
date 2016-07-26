@@ -21,7 +21,10 @@ public class StartBet extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
-		this.texter.drawTextBox();
+
+		if (texter != null)
+			this.texter.drawTextBox();
+
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
@@ -56,7 +59,7 @@ public class StartBet extends GuiScreen {
 		}
 		if (button == this.b) {
 			System.out.println("Nope chosen!");
-			
+
 			ModGuiHandler.closeCurrentGui();
 		}
 	}

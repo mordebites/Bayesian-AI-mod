@@ -12,7 +12,7 @@ public class MatchHandler {
 
 	// minuti e secondi del round corrente
 
-	private static final int MAX_ROUND_TIME = 5;
+	public static final int MAX_ROUND_TIME = 5;
 	private int minutesTime = MAX_ROUND_TIME;
 	private int secsTime = 0;
 
@@ -37,9 +37,22 @@ public class MatchHandler {
 
 	private static final int MAX_SIGHT_VALUE = 10;
 	private int sightValue = 0;
-	private boolean opponentHit = false;
+
+	// variabili che gestiscono chi dei due giocatori ha vinto
+	public static final int WINNER_PLAYER = 1;
+	public static final int WINNER_LILY = 2;
+	public static final int WINNER_NOBODY = 3;
+	private int winner = WINNER_NOBODY;
 
 	private boolean gamePaused = false;
+
+	public int getWinner() {
+		return winner;
+	}
+
+	public void setWinner(int winner) {
+		this.winner = winner;
+	}
 
 	public int getCountDownTime() {
 		return countDownTime;
@@ -135,6 +148,12 @@ public class MatchHandler {
 		// aumento il numero del round attuale
 		this.setCurrentRound(this.getCurrentRound() + 1);
 
+		// resetto il boolean che indica se il player ha toccato
+		// l'entity e quindi ha vinto la partita
+
+		winner = WINNER_NOBODY;
+		sightValue = 0; // azzaro la visione del maialino
+
 		roundStarted = true;
 
 		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
@@ -154,7 +173,9 @@ public class MatchHandler {
 	}
 
 	public void setSightValue(int sightValue) {
-		this.sightValue = (sightValue > MAX_SIGHT_VALUE) ? MAX_SIGHT_VALUE
-				: sightValue;
+		if (this.isRoundStarted()) {
+			this.sightValue = (sightValue > MAX_SIGHT_VALUE) ? MAX_SIGHT_VALUE
+					: sightValue;
+		}
 	}
 }
