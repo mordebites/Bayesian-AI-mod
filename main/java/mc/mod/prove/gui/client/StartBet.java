@@ -68,7 +68,7 @@ public class StartBet extends GuiScreen {
 
 				AwardHandler.removeItem(playerIn, 3);
 			} else {
-				System.out.println("sorry you no have 3 emeruldz");
+				ModGuiHandler.createGui(ModGuiHandler.GUI_NOT_ENOUGH_MONEY);
 				AwardHandler.addItem(playerIn, 4);
 			}
 		}

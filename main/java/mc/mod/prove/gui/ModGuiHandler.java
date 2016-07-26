@@ -1,6 +1,7 @@
 package mc.mod.prove.gui;
 
 import mc.mod.prove.MainRegistry;
+import mc.mod.prove.gui.client.NotEnoughMoney;
 import mc.mod.prove.gui.client.RoundChoice;
 import mc.mod.prove.gui.client.StartBet;
 import mc.mod.prove.gui.client.StopMatch;
@@ -19,6 +20,7 @@ public class ModGuiHandler implements IGuiHandler {
 	public static final int GUI_START_BET = 0;
 	public static final int GUI_ROUND_CHOICE = 1;
 	public static final int GUI_STOP_MATCH = 2;
+	public static final int GUI_NOT_ENOUGH_MONEY = 3;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
@@ -46,6 +48,10 @@ public class ModGuiHandler implements IGuiHandler {
 		case GUI_STOP_MATCH: {
 			System.out.println("selezionato GUI interruzione match");
 			return new StopMatch();
+		}
+		case GUI_NOT_ENOUGH_MONEY: {
+			System.out.println("selezionato GUI di errore soldi disponibili");
+			return new NotEnoughMoney();
 		}
 		}
 
