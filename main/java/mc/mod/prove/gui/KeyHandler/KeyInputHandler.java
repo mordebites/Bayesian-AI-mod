@@ -13,8 +13,6 @@ public class KeyInputHandler {
 			
 			if (MainRegistry.match.isMatchStarted()) {
 				ModGuiHandler.createGui(ModGuiHandler.GUI_STOP_MATCH);
-			} else {
-				ModGuiHandler.createGui(ModGuiHandler.GUI_START_BET);
 			}
 		}
 	}

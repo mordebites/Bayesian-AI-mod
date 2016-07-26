@@ -1,5 +1,6 @@
 package mc.mod.prove.reasoning;
 
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.gui.sounds.SoundHandler;
@@ -19,6 +20,11 @@ public class SightHandler {
 	private EntityPlayer player;
 	private boolean alreadySeen = false;
 	
+	//per settare la barra Lily's sight
+	private int seenSeconds = 0;
+	//TODO sistema costanti
+	private int tickTimer = 1;
+	
 	public SightHandler(EntityLivingBase entity, EntityPlayer player){
 		this.entity = entity;
 		this.player = player;
@@ -36,11 +42,25 @@ public class SightHandler {
 				playerInSight = EntityDistance.Far;
 			} else {
 				playerInSight = EntityDistance.Close;
+			}	
+		}
+		
+		//per aggiornare ogni secondo la barra Lily's Sight
+		if(tickTimer % 20 == 0) {
+			//TODO costante
+			if(playerInSight != EntityDistance.None && seenSeconds < 10) {
+				seenSeconds++;
+			} else if (playerInSight == EntityDistance.None && seenSeconds > 0) {
+				seenSeconds--;
 			}
 		}
+		
 		if(playerInSight != EntityDistance.None & !alreadySeen) {
 			this.handlePlayerInSightSound();
 		}
+		
+		MainRegistry.match.setSightValue(seenSeconds);
+		tickTimer++;
 		
 		return playerInSight;
 	}
