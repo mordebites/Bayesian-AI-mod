@@ -11,6 +11,7 @@ public class PlayerDefeatHandler {
 		if (MainRegistry.match.isMatchStarted()
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
 			
+			// mostro la gui di perdita partita
 			ModGuiHandler.createGui(ModGuiHandler.GUI_LOSE);
 
 			MainRegistry.match.setWinner(MatchHandler.WINNER_LILY);

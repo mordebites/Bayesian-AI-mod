@@ -15,6 +15,7 @@ public class PlayerAttackHandler {
 				&& MainRegistry.match.isMatchStarted()
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
 			
+			// mostro la schermata di vittoria
 			ModGuiHandler.createGui(ModGuiHandler.GUI_VICTORY);
 			
 			MainRegistry.match.setWinner(MatchHandler.WINNER_PLAYER);
