@@ -1,12 +1,12 @@
 package mc.mod.prove.gui;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.gui.client.GuiLose;
+import mc.mod.prove.gui.client.GuiLostRound;
 import mc.mod.prove.gui.client.GuiNotEnoughMoney;
 import mc.mod.prove.gui.client.GuiRoundChoice;
 import mc.mod.prove.gui.client.GuiStartBet;
 import mc.mod.prove.gui.client.GuiStopMatch;
-import mc.mod.prove.gui.client.GuiVictory;
+import mc.mod.prove.gui.client.GuiRoundWon;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -23,8 +23,8 @@ public class ModGuiHandler implements IGuiHandler {
 	public static final int GUI_ROUND_CHOICE = 1;
 	public static final int GUI_STOP_MATCH = 2;
 	public static final int GUI_NOT_ENOUGH_MONEY = 3;
-	public static final int GUI_VICTORY = 4;
-	public static final int GUI_LOSE = 5;
+	public static final int GUI_WON_ROUND = 4;
+	public static final int GUI_LOST_ROUND = 5;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
@@ -57,13 +57,13 @@ public class ModGuiHandler implements IGuiHandler {
 			System.out.println("selezionato GUI di errore soldi disponibili");
 			return new GuiNotEnoughMoney();
 		}
-		case GUI_VICTORY: {
+		case GUI_WON_ROUND: {
 			System.out.println("selezionato GUI di vittoria round!");
-			return new GuiVictory();
+			return new GuiRoundWon();
 		}
-		case GUI_LOSE: {
+		case GUI_LOST_ROUND: {
 			System.out.println("selezionato GUI  di perdita round");
-			return new GuiLose();
+			return new GuiLostRound();
 		}
 		}
 

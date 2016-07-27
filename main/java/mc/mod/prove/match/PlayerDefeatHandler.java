@@ -10,7 +10,7 @@ public class PlayerDefeatHandler {
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
 			
 			// mostro la gui di perdita partita
-			ModGuiHandler.createGui(ModGuiHandler.GUI_LOSE);
+			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_ROUND);
 
 			MainRegistry.match.setWinner(MatchHandler.WINNER_LILY);
 			MainRegistry.match.stopRound();

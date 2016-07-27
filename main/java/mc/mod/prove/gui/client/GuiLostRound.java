@@ -8,11 +8,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
-public class GuiLose extends GuiScreen {
+public class GuiLostRound extends GuiScreen {
 	private GuiButton okay_button;
 	private GuiTextField texter;
 
-	public GuiLose() {
+	public GuiLostRound() {
 		MainRegistry.match.setGamePaused(true);
 	}
 
