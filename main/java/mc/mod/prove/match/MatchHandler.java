@@ -1,9 +1,12 @@
 package mc.mod.prove.match;
 
+import mc.mod.prove.MainRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MatchHandler {
+	public InventoryContentHandler inventory = new InventoryContentHandler();
+	
 	// tempo del countdown iniziale
 	// il tempo del countdown e' stato settato a 4 poiche' a volte
 	// il il numero 3 a causa del thread di Timer non e' mostrato
@@ -99,6 +102,10 @@ public class MatchHandler {
 		currentRound = 0;
 
 		matchStarted = true;
+		
+		if(Minecraft.getMinecraft().thePlayer != null) {
+			inventory.emptyInventory(Minecraft.getMinecraft().thePlayer);
+		}
 	}
 
 	public void stopMatch() {
@@ -107,6 +114,8 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
+		
+		inventory.refillInventory();
 	}
 
 	public void stopRound() {
@@ -160,8 +169,7 @@ public class MatchHandler {
 		// sull'asse y
 		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
 
-		playerIn.setPositionAndUpdate(playerIn.posX, playerIn.posY + 40,
-				playerIn.posZ);
+		playerIn.setPositionAndUpdate(playerIn.posX, 5,	playerIn.posZ);
 	}
 
 	public int getMaxSightValue() {

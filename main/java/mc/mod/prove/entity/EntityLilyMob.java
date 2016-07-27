@@ -1,5 +1,6 @@
 package mc.mod.prove.entity;
 
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.ai.EntityAILilyCentral;
 import mc.mod.prove.gui.ModGuiHandler;
 import mc.mod.prove.match.AwardHandler;
@@ -14,6 +15,7 @@ public class EntityLilyMob extends EntityPig {
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
 		initTasks();
+		MainRegistry.lily = this;
 	}
 
 	private void initTasks() {
@@ -22,19 +24,13 @@ public class EntityLilyMob extends EntityPig {
 		if (player != null) {
 			// appena spawnato l'npc controllo che il player abbia abbastanza
 			// emeralds per giocare la partita
-			
-			if (AwardHandler.hasItem(player, AwardHandler.EMERALDS_TO_PLAY)) {
-				ModGuiHandler.createGui(ModGuiHandler.GUI_START_BET);
-			} else {
-				ModGuiHandler.createGui(ModGuiHandler.GUI_NOT_ENOUGH_MONEY);
-			}
 
 			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
 		}
 	}
 
 	public void jump() {
-		this.motionY = (double) this.getJumpUpwardsMotion();
+		this.motionY = 0.2;
 
 		System.out.println("Sprinting, baby!");
 		this.motionX += 0.4 * Math.signum(this.motionX);
@@ -46,5 +42,11 @@ public class EntityLilyMob extends EntityPig {
 
 	protected SoundEvent getAmbientSound() {
 		return null;
+	}
+	
+	@Override
+	public void setDead() {
+		super.setDead();
+		MainRegistry.lily = null;
 	}
 }

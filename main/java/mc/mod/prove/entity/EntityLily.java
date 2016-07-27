@@ -18,7 +18,7 @@ public class EntityLily extends EntityCreature {
 	}
 
 	public static void registerEntity() {
-		createEntity(EntityLilyMob.class, "Lily Mob", 0xffff00, 0xffb3b3);		
+		createEntity(EntityLilyMob.class, "Lily", 0xffff00, 0xffb3b3);		
 	}
 	
 	public static void createEntity(Class entityClass, String entityName,

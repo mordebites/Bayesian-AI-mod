@@ -4,12 +4,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import mc.mod.prove.entity.EntityLily;
+import mc.mod.prove.entity.EntityLilyMob;
 import mc.mod.prove.gui.CommonProxy;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import mc.mod.prove.gui.keyhandler.KeyBindings;
 import mc.mod.prove.gui.keyhandler.KeyInputHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
+import mc.mod.prove.match.MatchStartHandler;
 import mc.mod.prove.match.PlayerAttackHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -25,6 +27,7 @@ public class MainRegistry {
 	public static final String MODNAME = "Main Registry";
 	public static final String VERSION = "1.0.0";
 	public static MatchHandler match = new MatchHandler();
+	public static EntityLilyMob lily;
 
 	@Instance(MODID)
 	public static MainRegistry modInstance;
@@ -100,6 +103,8 @@ public class MainRegistry {
 		
 		// inizializzo il codice per controllare se l'entity sta per essere attaccata
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
+		
+		MinecraftForge.EVENT_BUS.register(new MatchStartHandler());
 	}
 
 	@EventHandler
