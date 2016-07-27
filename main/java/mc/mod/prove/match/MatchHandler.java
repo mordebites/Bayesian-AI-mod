@@ -1,5 +1,6 @@
 package mc.mod.prove.match;
 
+import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -46,11 +47,11 @@ public class MatchHandler {
 	private int winner = WINNER_NOBODY;
 
 	private boolean gamePaused = false;
-	
+
 	public int getRoundsWon() {
 		return this.roundsWon;
 	}
-	
+
 	public void setRoundsWon(int rounds) {
 		this.roundsWon = rounds;
 	}
@@ -106,7 +107,7 @@ public class MatchHandler {
 
 		// resetto il contatore di rounds vinti
 		roundsWon = 0;
-		
+
 		// resetto il round corrente
 		currentRound = 0;
 
@@ -119,15 +120,19 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
-		
+
 		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-		
+
 		int roundsLost = roundsNumber - roundsWon;
-		
+
 		if (roundsWon > (roundsNumber / 2)) {
 			AwardHandler.addItem(playerIn, (roundsWon * 2));
+			
+			ModGuiHandler.createGui(ModGuiHandler.GUI_WON_MATCH);
 		} else {
 			AwardHandler.removeItem(playerIn, roundsLost);
+			
+			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_MATCH);
 		}
 	}
 

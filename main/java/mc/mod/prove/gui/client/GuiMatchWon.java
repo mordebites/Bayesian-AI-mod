@@ -8,11 +8,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
-public class GuiRoundWon extends GuiScreen {
+public class GuiMatchWon extends GuiScreen {
 	private GuiButton okay_button;
 	private GuiTextField texter;
 
-	public GuiRoundWon() {
+	public GuiMatchWon() {
 		MainRegistry.match.setGamePaused(true);
 	}
 
@@ -25,7 +25,7 @@ public class GuiRoundWon extends GuiScreen {
 
 	@Override
 	public boolean doesGuiPauseGame() {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -34,13 +34,13 @@ public class GuiRoundWon extends GuiScreen {
 		int centered_height = (this.height / 2);
 
 		this.texter = new GuiTextField(0, this.fontRendererObj,
-				centered_width - 80, centered_height - 60, 170, 20);
+				centered_width - 100, centered_height - 60, 200, 20);
 		texter.setMaxStringLength(70);
-		texter.setText("Congrats you won this round!");
+		texter.setText("Congrats you won this AWESOME GAME!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,
-				centered_width - 100, centered_height - 24, "GG"));
+				centered_width - 100, centered_height - 24, "Ok."));
 	}
 
 	@Override
