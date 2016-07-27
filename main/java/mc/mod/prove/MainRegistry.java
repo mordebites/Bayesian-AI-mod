@@ -81,7 +81,7 @@ public class MainRegistry {
 				// questo controllo mi servirà per mostrare correttamente la
 				// schermata di countdown
 
-				if (match.isMatchStarted() && !match.isRoundStarted()) {
+				if (match.isMatchStarted() && !match.isRoundStarted() && !match.isGamePaused()) {
 					match.setCountDownTime(match.getCountDownTime() - 1);
 
 					if (match.getCountDownTime() < 1) {

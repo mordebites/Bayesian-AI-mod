@@ -2,6 +2,7 @@ package mc.mod.prove.match;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.EntityLilyMob;
+import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -13,6 +14,8 @@ public class PlayerAttackHandler {
 		if (event.getEntityLiving() instanceof EntityLilyMob
 				&& MainRegistry.match.isMatchStarted()
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
+			
+			ModGuiHandler.createGui(ModGuiHandler.GUI_VICTORY);
 			
 			MainRegistry.match.setWinner(MatchHandler.WINNER_PLAYER);
 			

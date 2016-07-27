@@ -1,10 +1,12 @@
 package mc.mod.prove.gui;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.gui.client.NotEnoughMoney;
-import mc.mod.prove.gui.client.RoundChoice;
-import mc.mod.prove.gui.client.StartBet;
-import mc.mod.prove.gui.client.StopMatch;
+import mc.mod.prove.gui.client.GuiLose;
+import mc.mod.prove.gui.client.GuiNotEnoughMoney;
+import mc.mod.prove.gui.client.GuiRoundChoice;
+import mc.mod.prove.gui.client.GuiStartBet;
+import mc.mod.prove.gui.client.GuiStopMatch;
+import mc.mod.prove.gui.client.GuiVictory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -21,6 +23,8 @@ public class ModGuiHandler implements IGuiHandler {
 	public static final int GUI_ROUND_CHOICE = 1;
 	public static final int GUI_STOP_MATCH = 2;
 	public static final int GUI_NOT_ENOUGH_MONEY = 3;
+	public static final int GUI_VICTORY = 4;
+	public static final int GUI_LOSE = 5;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
@@ -39,19 +43,27 @@ public class ModGuiHandler implements IGuiHandler {
 		switch (ID) {
 		case GUI_START_BET: {
 			System.out.println("Selezionato GUI di inizio scommessa");
-			return new StartBet();
+			return new GuiStartBet();
 		}
 		case GUI_ROUND_CHOICE: {
 			System.out.println("Selezionato GUI di selezione round");
-			return new RoundChoice();
+			return new GuiRoundChoice();
 		}
 		case GUI_STOP_MATCH: {
 			System.out.println("selezionato GUI interruzione match");
-			return new StopMatch();
+			return new GuiStopMatch();
 		}
 		case GUI_NOT_ENOUGH_MONEY: {
 			System.out.println("selezionato GUI di errore soldi disponibili");
-			return new NotEnoughMoney();
+			return new GuiNotEnoughMoney();
+		}
+		case GUI_VICTORY: {
+			System.out.println("selezionato GUI di vittoria round!");
+			return new GuiVictory();
+		}
+		case GUI_LOSE: {
+			System.out.println("selezionato GUI  di perdita round");
+			return new GuiLose();
 		}
 		}
 
