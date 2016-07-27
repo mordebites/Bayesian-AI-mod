@@ -25,7 +25,7 @@ public class GuiLostRound extends GuiScreen {
 
 	@Override
 	public boolean doesGuiPauseGame() {
-		return false;
+		return true;
 	}
 
 	@Override

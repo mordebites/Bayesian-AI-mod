@@ -12,21 +12,23 @@ public class PlayerAttackHandler {
 		if (event.getEntityLiving() instanceof EntityLilyMob
 				&& MainRegistry.match.isMatchStarted()
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
-			
-			// mostro la schermata di vittoria
-			ModGuiHandler.createGui(ModGuiHandler.GUI_WON_ROUND);
-			
+
 			MainRegistry.match.setWinner(MatchHandler.WINNER_PLAYER);
-			
-			//incremento il numero di round vinti
-			MainRegistry.match.setRoundsWon(MainRegistry.match.getRoundsWon() + 1);
+
+			// incremento il numero di round vinti
+			MainRegistry.match
+					.setRoundsWon(MainRegistry.match.getRoundsWon() + 1);
 			MainRegistry.match.stopRound();
-			
+
 			// se i round sono finiti allora finisco il gioco
 			// altrimenti comincio un nuovo round
 
-			if (MainRegistry.match.getCurrentRound() == MainRegistry.match.getRoundsNumber()) {
+			if (MainRegistry.match.getCurrentRound() == MainRegistry.match
+					.getRoundsNumber()) {
 				MainRegistry.match.stopMatch();
+			} else {
+				// mostro la schermata di vittoria
+				ModGuiHandler.createGui(ModGuiHandler.GUI_WON_ROUND);
 			}
 		}
 	}

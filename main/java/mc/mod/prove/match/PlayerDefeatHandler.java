@@ -8,9 +8,6 @@ public class PlayerDefeatHandler {
 	public static void onPlayerDefeat() {
 		if (MainRegistry.match.isMatchStarted()
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
-			
-			// mostro la gui di perdita partita
-			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_ROUND);
 
 			MainRegistry.match.setWinner(MatchHandler.WINNER_LILY);
 			MainRegistry.match.stopRound();
@@ -21,6 +18,9 @@ public class PlayerDefeatHandler {
 			if (MainRegistry.match.getCurrentRound() == MainRegistry.match
 					.getRoundsNumber()) {
 				MainRegistry.match.stopMatch();
+			} else {
+				// mostro la gui di perdita round
+				ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_ROUND);
 			}
 		}
 	}
