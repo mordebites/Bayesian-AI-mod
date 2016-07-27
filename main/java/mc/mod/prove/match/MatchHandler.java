@@ -29,8 +29,9 @@ public class MatchHandler {
 	// e possibile scegliere tra 5 e 3 round se cosi' non fosse abbiamo una
 	// eccezione
 
-	private int roundsNumber;
+	private int roundsNumber = 0;
 	private int currentRound = 0;
+	private int roundsWon = 0;
 
 	// variabili che serviranno per capire quando uno dei due
 	// giocatori (mob o player) vince
@@ -45,6 +46,14 @@ public class MatchHandler {
 	private int winner = WINNER_NOBODY;
 
 	private boolean gamePaused = false;
+	
+	public int getRoundsWon() {
+		return this.roundsWon;
+	}
+	
+	public void setRoundsWon(int rounds) {
+		this.roundsWon = rounds;
+	}
 
 	public int getWinner() {
 		return winner;
@@ -95,6 +104,9 @@ public class MatchHandler {
 			throw new RuntimeException("Manca numero di round!");
 		}
 
+		// resetto il contatore di rounds vinti
+		roundsWon = 0;
+		
 		// resetto il round corrente
 		currentRound = 0;
 
@@ -107,6 +119,16 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
+		
+		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
+		
+		int roundsLost = roundsNumber - roundsWon;
+		
+		if (roundsWon > (roundsNumber / 2)) {
+			AwardHandler.addItem(playerIn, (roundsWon * 2));
+		} else {
+			AwardHandler.removeItem(playerIn, roundsLost);
+		}
 	}
 
 	public void stopRound() {

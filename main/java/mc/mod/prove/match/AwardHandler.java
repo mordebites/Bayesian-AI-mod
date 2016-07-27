@@ -9,10 +9,29 @@ public class AwardHandler {
 	private static final String ITEM_NAME = "minecraft:emerald";
 	private static final ItemStack EMERALD_STACK = new ItemStack(
 			Item.getByNameOrId(ITEM_NAME));
-	
+
 	public static final int EMERALDS_TO_PLAY = 5;
 	public static final int EMERALDS_TO_WIN = 2;
 	public static final int EMERALDS_TO_LOSE = 1;
+
+	public static int getItemsNumber(EntityPlayer ep) {
+		int itemsNumber = 0;
+
+		// prende la grandezza dello stack e si segna la posizione se sono già
+		// presenti emerald nell'inventario
+		IInventory inv = ep.inventory;
+		for (int i = 0; i < inv.getSizeInventory(); i++) {
+			if (inv.getStackInSlot(i) != null) {
+				ItemStack j = inv.getStackInSlot(i);
+				if (j.getItem() != null
+						&& j.getItem() == EMERALD_STACK.getItem()) {
+					itemsNumber += j.stackSize;
+				}
+			}
+		}
+
+		return itemsNumber;
+	}
 
 	public static void addItem(EntityPlayer ep, int number) {
 		int newAmount = number;

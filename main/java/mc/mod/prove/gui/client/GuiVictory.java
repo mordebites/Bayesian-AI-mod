@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
-import mc.mod.prove.match.AwardHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -37,7 +36,7 @@ public class GuiVictory extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 80, centered_height - 60, 170, 20);
 		texter.setMaxStringLength(70);
-		texter.setText("Congrats you won " + AwardHandler.EMERALDS_TO_WIN + " Emeralds!");
+		texter.setText("Congrats you won this round!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0, centered_width - 100,
@@ -50,7 +49,7 @@ public class GuiVictory extends GuiScreen {
 			ModGuiHandler.closeCurrentGui();
 		}
 	}
-	
+
 	@Override
 	public void onGuiClosed() {
 		System.out.println("Ripristino lo stato di PAUSED");

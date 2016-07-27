@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
-import mc.mod.prove.match.AwardHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -37,8 +36,7 @@ public class GuiLose extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 120, centered_height - 60, 240, 20);
 		texter.setMaxStringLength(90);
-		texter.setText("Dude, you just lost " + AwardHandler.EMERALDS_TO_LOSE
-				+ " Emeralds fighting a pig!");
+		texter.setText("Dude, you just lost this round fighting a pig!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,
