@@ -14,11 +14,12 @@ public class InventoryContentHandler {
 	private int emeraldIndex = -1;
 	private int emeraldCount = 0;
 	private ItemStack lilyStack;
+	private static final Item emeralds = Item.getByNameOrId("minecraft:emerald");
 	
 	public void emptyInventory(EntityPlayer player){
 		prevInventory = new InventoryPlayer(player);
 		inv = player.inventory;
-		Item emeralds = Item.getByNameOrId("minecraft:emerald");
+		
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			ItemStack current = inv.getStackInSlot(i);
 			if (current != null && current.getItem() != null) {
@@ -42,7 +43,14 @@ public class InventoryContentHandler {
 	
 	public void refillInventory() {
 		for(int i = 0; i < inv.getSizeInventory(); i++) {
-			inv.setInventorySlotContents(i, prevInventory.getStackInSlot(i));
+			ItemStack current = prevInventory.getStackInSlot(i);
+			if (current != null && current.getItem() != null) {
+				Item currentItem = current.getItem();
+				prevInventory.setInventorySlotContents(i, current);
+				if(currentItem != emeralds) {
+					inv.setInventorySlotContents(i, prevInventory.getStackInSlot(i));
+				}
+			}
 		}
 	}
 }

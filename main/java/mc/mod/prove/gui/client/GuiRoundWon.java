@@ -4,19 +4,18 @@ import java.io.IOException;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
-import mc.mod.prove.match.AwardHandler;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
-public class GuiLose extends GuiScreen {
+public class GuiRoundWon extends GuiScreen {
 	private GuiButton okay_button;
 	private GuiTextField texter;
-
-	public GuiLose() {
+	
+	public GuiRoundWon() {
 		MainRegistry.match.setGamePaused(true);
 	}
-
+	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		this.drawDefaultBackground();
@@ -35,14 +34,13 @@ public class GuiLose extends GuiScreen {
 		int centered_height = (this.height / 2);
 
 		this.texter = new GuiTextField(0, this.fontRendererObj,
-				centered_width - 120, centered_height - 60, 240, 20);
-		texter.setMaxStringLength(90);
-		texter.setText("Dude, you just lost " + AwardHandler.EMERALDS_TO_LOSE
-				+ " Emeralds fighting a pig!");
+				centered_width - 80, centered_height - 60, 170, 20);
+		texter.setMaxStringLength(70);
+		texter.setText("Congrats you won this round!");
 		this.texter.setFocused(true);
 
-		this.buttonList.add(this.okay_button = new GuiButton(0,
-				centered_width - 100, centered_height - 24, "darn it!"));
+		this.buttonList.add(this.okay_button = new GuiButton(0, centered_width - 100,
+				centered_height - 24, "GG"));
 	}
 
 	@Override
