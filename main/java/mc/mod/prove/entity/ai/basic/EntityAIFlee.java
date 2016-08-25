@@ -18,7 +18,7 @@ public class EntityAIFlee extends EntityAIBase {
 		this.entity = entity;
 		this.player = player;
 		this.speed = speed;
-		this.setMutexBits(1);
+		this.entity.setSprinting(true);
 	}
 
 	@Override

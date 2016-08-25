@@ -2,9 +2,8 @@ package mc.mod.prove.entity;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.ai.EntityAILilyCentral;
-import mc.mod.prove.gui.ModGuiHandler;
-import mc.mod.prove.match.AwardHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.SoundEvent;
@@ -16,6 +15,22 @@ public class EntityLilyMob extends EntityPig {
 		super(worldIn);
 		initTasks();
 		MainRegistry.lily = this;
+
+		//IBlockState blockState = Blocks.dirt.getDefaultState();
+		/*List<ItemStack> subBlocks = new ArrayList<ItemStack>();
+		Blocks.dirt.getSubBlocks(null, null, subBlocks);
+		IBlockState blockState = Blocks.dirt.getStateFromMeta(subBlocks.get(1).getMetadata());
+		
+		for(int x = 150; x <= 200; x++) {
+			for(int z = 728; z <= 778; z++) {
+				BlockPos pos = new BlockPos(x, 3, z);
+				IBlockState currentState = Minecraft.getMinecraft().theWorld.getBlockState(pos);
+				Minecraft.getMinecraft().theWorld.setBlockState(new BlockPos(x, 2, z), blockState, 2);
+				if(!(currentState.getBlock() instanceof BlockRedstoneLight)){
+					Minecraft.getMinecraft().theWorld.setBlockState(pos, blockState, 2);
+				}
+			}
+		}*/
 	}
 
 	private void initTasks() {
@@ -26,6 +41,7 @@ public class EntityLilyMob extends EntityPig {
 			// emeralds per giocare la partita
 
 			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
+			this.tasks.addTask(0, new EntityAIWander(this, 1));
 		}
 	}
 

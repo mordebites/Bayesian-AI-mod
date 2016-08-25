@@ -1,6 +1,7 @@
 package mc.mod.prove.gui;
 
 import mc.mod.prove.MainRegistry;
+import mc.mod.prove.gui.client.GuiInstructions;
 import mc.mod.prove.gui.client.GuiLostMatch;
 import mc.mod.prove.gui.client.GuiLostRound;
 import mc.mod.prove.gui.client.GuiMatchWon;
@@ -29,6 +30,7 @@ public class ModGuiHandler implements IGuiHandler {
 	public static final int GUI_LOST_ROUND = 5;
 	public static final int GUI_WON_MATCH = 6;
 	public static final int GUI_LOST_MATCH = 7;
+	public static final int GUI_INSTRUCTIONS = 8;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
@@ -76,6 +78,10 @@ public class ModGuiHandler implements IGuiHandler {
 		case GUI_LOST_MATCH: {
 			System.out.println("selezionato GUI  di perdita match");
 			return new GuiLostMatch();
+		}
+		case GUI_INSTRUCTIONS: {
+			System.out.println("selezionato GUI  delle istruzioni");
+			return new GuiInstructions();
 		}
 		}
 

@@ -11,7 +11,7 @@ public class MatchStartHandler {
 	@SubscribeEvent
 	public void onEvent(RightClickEmpty event) {
 		if (MainRegistry.lily != null) {
-			if (AwardHandler.hasItem(Minecraft.getMinecraft().thePlayer, AwardHandler.EMERALDS_TO_PLAY)) {
+			if (AwardHandler.hasEmeralds(Minecraft.getMinecraft().thePlayer, AwardHandler.EMERALDS_TO_PLAY)) {
 				ModGuiHandler.createGui(ModGuiHandler.GUI_START_BET);
 			} else {
 				ModGuiHandler.createGui(ModGuiHandler.GUI_NOT_ENOUGH_MONEY);

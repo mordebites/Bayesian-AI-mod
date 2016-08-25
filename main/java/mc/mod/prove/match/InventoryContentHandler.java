@@ -31,7 +31,6 @@ public class InventoryContentHandler {
 				} else if(currentItem.getUnlocalizedName().compareTo("minecraft:spawn_egg") == 0) {
 					lilyStack = current;
 				} else {
-			
 					inv.setInventorySlotContents(i, null);
 				}
 			}

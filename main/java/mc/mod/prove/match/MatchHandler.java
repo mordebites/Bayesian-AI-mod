@@ -1,14 +1,17 @@
 package mc.mod.prove.match;
 
+import java.util.Random;
+
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MatchHandler {
 	public InventoryContentHandler inventory = new InventoryContentHandler();
-	
-	
+
 	// tempo del countdown iniziale
 	// il tempo del countdown e' stato settato a 4 poiche' a volte
 	// il il numero 3 a causa del thread di Timer non e' mostrato
@@ -51,6 +54,15 @@ public class MatchHandler {
 	private int winner = WINNER_NOBODY;
 
 	private boolean gamePaused = false;
+
+	private final MatchHandler.DoubleCoordinates[] coordinates = new MatchHandler.DoubleCoordinates[4];
+
+	public MatchHandler() {
+		coordinates[0] = new MatchHandler.DoubleCoordinates(167, 185, 728, 778);
+		coordinates[1] = new MatchHandler.DoubleCoordinates(183, 167, 728, 778);
+		coordinates[2] = new MatchHandler.DoubleCoordinates(150, 200, 745, 761);
+		coordinates[3] = new MatchHandler.DoubleCoordinates(150, 198, 762, 743);
+	}
 
 	public int getRoundsWon() {
 		return this.roundsWon;
@@ -116,6 +128,7 @@ public class MatchHandler {
 		currentRound = 0;
 
 		matchStarted = true;
+		inventory.emptyInventory(Minecraft.getMinecraft().thePlayer);
 	}
 
 	public void stopMatch() {
@@ -124,18 +137,19 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
+		inventory.refillInventory();
 
 		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
 
 		int roundsLost = roundsNumber - roundsWon;
 
 		if (roundsWon > (roundsNumber / 2)) {
-			AwardHandler.addItem(playerIn, (roundsWon * 2));
-			
+			AwardHandler.addEmeralds(playerIn, (roundsWon * 2));
+
 			ModGuiHandler.createGui(ModGuiHandler.GUI_WON_MATCH);
 		} else {
-			AwardHandler.removeItem(playerIn, roundsLost);
-			
+			AwardHandler.removeEmeralds(playerIn, roundsLost);
+
 			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_MATCH);
 		}
 	}
@@ -172,6 +186,10 @@ public class MatchHandler {
 	}
 
 	public void startRound() {
+		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
+		// il round
+		//handleTeleport();
+
 		// resetto il timer del round
 		minutesTime = MAX_ROUND_TIME;
 		secsTime = 0;
@@ -186,12 +204,6 @@ public class MatchHandler {
 		sightValue = 0; // azzaro la visione del maialino
 
 		roundStarted = true;
-
-		// TODO CODICE PER CAMBIARE LA POSIZIONE CORRENTE DEL PLAYER E ALZARLO
-		// sull'asse y
-		EntityPlayer playerIn = Minecraft.getMinecraft().thePlayer;
-
-		playerIn.setPositionAndUpdate(playerIn.posX, 5,	playerIn.posZ);
 	}
 
 	public int getMaxSightValue() {
@@ -206,6 +218,45 @@ public class MatchHandler {
 		if (this.isRoundStarted()) {
 			this.sightValue = (sightValue > MAX_SIGHT_VALUE) ? MAX_SIGHT_VALUE
 					: sightValue;
+		}
+	}
+
+	private void handleTeleport() {
+		Random rand = new Random();
+		int randomNum = rand.nextInt(4);
+
+		MatchHandler.DoubleCoordinates coord = coordinates[randomNum];
+
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+	}
+
+	private class DoubleCoordinates {
+		private int x1;
+		private int x2;
+		private int z1;
+		private int z2;
+
+		DoubleCoordinates(int x1, int x2, int z1, int z2) {
+			this.x1 = x1;
+			this.x2 = x2;
+			this.z1 = z1;
+			this.z2 = z2;
+		}
+
+		public int getX1() {
+			return x1;
+		}
+
+		public int getX2() {
+			return x2;
+		}
+
+		public int getZ1() {
+			return z1;
+		}
+
+		public int getZ2() {
+			return z2;
 		}
 	}
 }

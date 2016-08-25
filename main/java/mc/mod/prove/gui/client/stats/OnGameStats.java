@@ -65,7 +65,7 @@ public class OnGameStats extends Gui {
 		// You can keep drawing without changing anything
 		int sightbarwidth = (int) (((float) currentSightValue / maxSightValue) * 49);
 		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 9, sightbarwidth, 3);
-		String s = "Lily's sight " + currentSightValue + "/" + maxSightValue;
+		String s = "Stealth-o-meter " + currentSightValue + "/" + maxSightValue;
 		yPos += 10;
 		this.mc.fontRendererObj.drawString(s, xPos + 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);

@@ -64,10 +64,10 @@ public class EntityAILilyCentral extends EntityAIBase{
 	private BlockPos lastPlate = null;
 	
 	//coordinate bordi del labirinto
-	private static final int MIN_X_LAB = 209;
-	private static final int MAX_X_LAB = 222;
-	private static final int MIN_Z_LAB = 114;
-	private static final int MAX_Z_LAB = 127;
+	private static final int MIN_X_LAB = 150;
+	private static final int MAX_X_LAB = 200;
+	private static final int MIN_Z_LAB = 728;
+	private static final int MAX_Z_LAB = 778;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.entity = entity;
@@ -103,10 +103,9 @@ public class EntityAILilyCentral extends EntityAIBase{
 		factory = new EntityAIFactory(this);
 	}
 	
-	//TODO controlla che vada bene roundStarted
 	@Override
 	public boolean shouldExecute() {
-		return MainRegistry.match.isRoundStarted();
+		return true;
 	}
 	
 	//eseguito ad ogni tick
@@ -164,12 +163,16 @@ public class EntityAILilyCentral extends EntityAIBase{
 
 	@Override
 	public void startExecuting(){
-		beforeExecuting();
+		if (MainRegistry.match.isRoundStarted()) {
+			beforeExecuting();
+		}
 	}
 	
 	@Override
 	public boolean continueExecuting(){
-		beforeExecuting();
+		if(MainRegistry.match.isRoundStarted()) {
+			beforeExecuting();
+		}
 		return true;
 	}
 	
@@ -251,9 +254,9 @@ public class EntityAILilyCentral extends EntityAIBase{
 					foundWire = true;
 				}
 			}
-		} while(!foundPlate && i <= 4);
+		} while(!foundPlate && i < 4);
 		
-		if(i <= 4){
+		if(i < 4){
 			return pos;
 		} else {
 			return null;

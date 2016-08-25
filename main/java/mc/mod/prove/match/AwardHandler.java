@@ -14,7 +14,7 @@ public class AwardHandler {
 	public static final int EMERALDS_TO_WIN = 2;
 	public static final int EMERALDS_TO_LOSE = 1;
 
-	public static int getItemsNumber(EntityPlayer ep) {
+	public static int getEmeraldQuantity(EntityPlayer ep) {
 		int itemsNumber = 0;
 
 		// prende la grandezza dello stack e si segna la posizione se sono già
@@ -33,7 +33,7 @@ public class AwardHandler {
 		return itemsNumber;
 	}
 
-	public static void addItem(EntityPlayer ep, int number) {
+	public static void addEmeralds(EntityPlayer ep, int number) {
 		int newAmount = number;
 		int currentAmount = 0;
 
@@ -49,6 +49,7 @@ public class AwardHandler {
 						&& j.getItem() == EMERALD_STACK.getItem()) {
 					currentAmount = j.stackSize;
 					index = i;
+					inv.setInventorySlotContents(i, null);
 				}
 			}
 		}
@@ -77,7 +78,7 @@ public class AwardHandler {
 		inv.setInventorySlotContents(index, newEmerald);
 	}
 
-	public static boolean hasItem(EntityPlayer ep, int number) {
+	public static boolean hasEmeralds(EntityPlayer ep, int number) {
 		boolean hasIt = false;
 
 		IInventory inv = ep.inventory;
@@ -97,13 +98,14 @@ public class AwardHandler {
 		return hasIt;
 	}
 
-	public static void removeItem(EntityPlayer ep, int number) {
+	public static void removeEmeralds(EntityPlayer ep, int number) {
 		IInventory inv = ep.inventory;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			if (inv.getStackInSlot(i) != null) {
 				ItemStack j = inv.getStackInSlot(i);
 				if (j.getItem() != null
-						&& j.getItem() == EMERALD_STACK.getItem()) {
+						&& j.getItem() == EMERALD_STACK.getItem()
+						&& j.stackSize >= number) {
 					inv.decrStackSize(i, number);
 					break;
 				}

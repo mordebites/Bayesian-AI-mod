@@ -15,7 +15,7 @@ import net.minecraft.client.gui.GuiTextField;
 // player.openGui(MasterInterfacer.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
 public class GuiStartBet extends GuiScreen {
-	private GuiButton a, b;
+	private GuiButton a, b, c;
 	private GuiTextField texter;
 
 	@Override
@@ -40,13 +40,15 @@ public class GuiStartBet extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 70, centered_height - 60, 150, 20);
 		texter.setMaxStringLength(60);
-		texter.setText("Hey there! Let's battle!!11");
+		texter.setText("Ti va di sfidarmi?");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Yes"));
+				centered_height - 24, "Certo!"));
 		this.buttonList.add(this.b = new GuiButton(1, centered_width - 100,
-				centered_height + 4, "Nope"));
+				centered_height + 4, "Non adesso..."));
+		this.buttonList.add(this.c = new GuiButton(1, centered_width - 100,
+				centered_height + 32, "Regole del gioco?"));
 	}
 
 	@Override
@@ -60,6 +62,12 @@ public class GuiStartBet extends GuiScreen {
 			System.out.println("Nope chosen!");
 
 			ModGuiHandler.closeCurrentGui();
+		}
+		
+		if(button == this.c) {
+			System.out.println("Instructions chosen!");
+
+			ModGuiHandler.createGui(ModGuiHandler.GUI_INSTRUCTIONS);
 		}
 	}
 }

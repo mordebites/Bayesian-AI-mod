@@ -37,7 +37,7 @@ public class EntityAILookAround extends EntityAIBase
     {
         this.entity = creatureIn;
         this.speed = speedIn;
-        this.setMutexBits(1);
+        this.entity.setSprinting(false);
         
         fakeRotationEntity = new EntityCow(Minecraft.getMinecraft().theWorld);
     }

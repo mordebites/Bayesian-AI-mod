@@ -47,6 +47,7 @@ public class EntityAITrick extends EntityAIBase {
 		this.entity = entity;
 		this.speed = speed;
 		this.labLimits = labLimits;
+		this.entity.setSprinting(false);
 	}
 	
 

@@ -6,9 +6,9 @@ import java.util.TimerTask;
 import mc.mod.prove.entity.EntityLily;
 import mc.mod.prove.entity.EntityLilyMob;
 import mc.mod.prove.gui.CommonProxy;
+import mc.mod.prove.gui.KeyHandler.KeyBindings;
+import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
-import mc.mod.prove.gui.keyhandler.KeyBindings;
-import mc.mod.prove.gui.keyhandler.KeyInputHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
 import mc.mod.prove.match.MatchStartHandler;
@@ -109,6 +109,6 @@ public class MainRegistry {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-
+		
 	}
 }

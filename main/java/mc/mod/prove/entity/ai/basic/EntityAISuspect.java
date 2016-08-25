@@ -28,6 +28,7 @@ public class EntityAISuspect extends EntityAIBase {
 		this.entity = entity;
 		this.player = player;
 		this.speed = speed;
+		this.entity.setSprinting(true);
 	}
 
 	public void setPlayerLastPosition(BlockPos lastPosition){

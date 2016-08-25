@@ -36,13 +36,13 @@ public class GuiStopMatch extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 70, centered_height - 60, 150, 20);
 		texter.setMaxStringLength(60);
-		texter.setText("are you a chicken Steve?");
+		texter.setText("Sei un codardo, Steve?");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Yes"));
+				centered_height - 24, "Sì"));
 		this.buttonList.add(this.b = new GuiButton(1, centered_width - 100,
-				centered_height + 4, "Nobody calls me CHICKEN!"));
+				centered_height + 4, "Nessuno mi dà del codardo!"));
 	}
 
 	@Override

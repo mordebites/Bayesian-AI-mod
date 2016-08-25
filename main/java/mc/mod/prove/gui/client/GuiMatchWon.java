@@ -36,7 +36,7 @@ public class GuiMatchWon extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 100, centered_height - 60, 200, 20);
 		texter.setMaxStringLength(70);
-		texter.setText("Congrats you won this AWESOME GAME!");
+		texter.setText("Congratulazioni, hai vinto la PARTITA!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,
