@@ -2,11 +2,11 @@ package mc.mod.prove.entity;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.ai.EntityAILilyCentral;
+import mc.mod.prove.match.InventoryContentHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class EntityLilyMob extends EntityPig {
@@ -15,6 +15,7 @@ public class EntityLilyMob extends EntityPig {
 		super(worldIn);
 		initTasks();
 		MainRegistry.lily = this;
+		InventoryContentHandler.removeLilyEggs(Minecraft.getMinecraft().thePlayer);
 
 		//IBlockState blockState = Blocks.dirt.getDefaultState();
 		/*List<ItemStack> subBlocks = new ArrayList<ItemStack>();
@@ -55,14 +56,16 @@ public class EntityLilyMob extends EntityPig {
 		this.isAirBorne = true;
 		net.minecraftforge.common.ForgeHooks.onLivingJump(this);
 	}
-
+/*
 	protected SoundEvent getAmbientSound() {
 		return null;
 	}
+	*/
 	
 	@Override
 	public void setDead() {
 		super.setDead();
 		MainRegistry.lily = null;
+		InventoryContentHandler.insertLilyEggs();
 	}
 }

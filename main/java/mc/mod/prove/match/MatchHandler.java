@@ -6,8 +6,6 @@ import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class MatchHandler {
 	public InventoryContentHandler inventory = new InventoryContentHandler();
@@ -55,13 +53,30 @@ public class MatchHandler {
 
 	private boolean gamePaused = false;
 
-	private final MatchHandler.DoubleCoordinates[] coordinates = new MatchHandler.DoubleCoordinates[4];
+	private final double[][] coord = new double[4][4];
 
+	// serve per inizializzare la matrice che contiene le coordinate dove
+	// teletrasportare npc e giocatore a inizio round
 	public MatchHandler() {
-		coordinates[0] = new MatchHandler.DoubleCoordinates(167, 185, 728, 778);
-		coordinates[1] = new MatchHandler.DoubleCoordinates(183, 167, 728, 778);
-		coordinates[2] = new MatchHandler.DoubleCoordinates(150, 200, 745, 761);
-		coordinates[3] = new MatchHandler.DoubleCoordinates(150, 198, 762, 743);
+		coord[0][0] = 174.5;
+		coord[0][1] = 178.5;
+		coord[0][2] = 740.5;
+		coord[0][3] = 766.5;
+
+		coord[1][0] = 163.5;
+		coord[1][1] = 183.5;
+		coord[1][2] = 750.5;
+		coord[1][3] = 749.5;
+
+		coord[2][0] = 178.5;
+		coord[2][1] = 174.5;
+		coord[2][2] = 766.5;
+		coord[2][3] = 740.5;
+
+		coord[3][0] = 183.5;
+		coord[3][1] = 163.5;
+		coord[3][2] = 749.5;
+		coord[3][3] = 750.5;
 	}
 
 	public int getRoundsWon() {
@@ -188,7 +203,7 @@ public class MatchHandler {
 	public void startRound() {
 		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
 		// il round
-		//handleTeleport();
+		this.handleTeleport();
 
 		// resetto il timer del round
 		minutesTime = MAX_ROUND_TIME;
@@ -201,7 +216,7 @@ public class MatchHandler {
 		// l'entity e quindi ha vinto la partita
 
 		winner = WINNER_NOBODY;
-		sightValue = 0; // azzaro la visione del maialino
+		sightValue = 0; // azzero la visione del maialino
 
 		roundStarted = true;
 	}
@@ -223,40 +238,11 @@ public class MatchHandler {
 
 	private void handleTeleport() {
 		Random rand = new Random();
-		int randomNum = rand.nextInt(4);
-
-		MatchHandler.DoubleCoordinates coord = coordinates[randomNum];
+		int n = rand.nextInt(4);
 
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-	}
+		player.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
 
-	private class DoubleCoordinates {
-		private int x1;
-		private int x2;
-		private int z1;
-		private int z2;
-
-		DoubleCoordinates(int x1, int x2, int z1, int z2) {
-			this.x1 = x1;
-			this.x2 = x2;
-			this.z1 = z1;
-			this.z2 = z2;
-		}
-
-		public int getX1() {
-			return x1;
-		}
-
-		public int getX2() {
-			return x2;
-		}
-
-		public int getZ1() {
-			return z1;
-		}
-
-		public int getZ2() {
-			return z2;
-		}
+		MainRegistry.lily.setPositionAndUpdate(coord[n][1], 4, coord[n][3]);
 	}
 }

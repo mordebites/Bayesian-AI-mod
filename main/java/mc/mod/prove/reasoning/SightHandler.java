@@ -1,8 +1,5 @@
 package mc.mod.prove.reasoning;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
@@ -29,7 +26,6 @@ public class SightHandler {
 	private int sightValue = 0;
 	//TODO sistema costanti
 	private int cont = 0;
-	private Timer actualTimer = new Timer();
 	//distanza al quarto di secondo precedente
 	private int prevDistance;
 	
@@ -80,6 +76,10 @@ public class SightHandler {
 			
 			MainRegistry.match.setSightValue(sightValue);
 			prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
+			
+			if(cont % 20 == 0) {
+				System.out.println("Lily's position: " + entity.getPosition().toString());
+			}
 		}
 		
 		
