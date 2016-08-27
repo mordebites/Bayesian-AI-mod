@@ -71,6 +71,7 @@ public class InventoryContentHandler {
 	
 	public static void insertLilyEggs() {
 		if(lilyStack != null) {
+			lilyStack.stackSize = 1;
 			inv.setInventorySlotContents(lilyIndex, lilyStack);
 			lilyStack = null;
 			lilyIndex = -1;

@@ -5,11 +5,12 @@ import mc.mod.prove.entity.ai.EntityAILilyCentral;
 import mc.mod.prove.match.InventoryContentHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
-public class EntityLilyMob extends EntityPig {
+public class EntityLilyMob extends EntityVillager {
 
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
@@ -46,21 +47,11 @@ public class EntityLilyMob extends EntityPig {
 		}
 	}
 
-	public void jump() {
-		this.motionY = 0.2;
-
-		System.out.println("Sprinting, baby!");
-		this.motionX += 0.4 * Math.signum(this.motionX);
-		this.motionZ += 0.4 * Math.signum(this.motionX);
-
-		this.isAirBorne = true;
-		net.minecraftforge.common.ForgeHooks.onLivingJump(this);
-	}
-/*
+	@Override
 	protected SoundEvent getAmbientSound() {
 		return null;
 	}
-	*/
+	
 	
 	@Override
 	public void setDead() {

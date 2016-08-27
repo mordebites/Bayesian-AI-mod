@@ -82,7 +82,7 @@ public class EntityAILookAround extends EntityAIBase
     	} else if (moveTimer == maxMoveTimer){
     		this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
     	}
-    	JumpHelper.pathHelper(entity);
+    	//JumpHelper.pathHelper(entity);
     }
     
     /**

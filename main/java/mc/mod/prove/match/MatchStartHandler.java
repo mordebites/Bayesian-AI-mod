@@ -10,7 +10,7 @@ public class MatchStartHandler {
 
 	@SubscribeEvent
 	public void onEvent(RightClickEmpty event) {
-		if (MainRegistry.lily != null) {
+		if (MainRegistry.lily != null && !MainRegistry.match.isMatchStarted()) {
 			if (AwardHandler.hasEmeralds(Minecraft.getMinecraft().thePlayer, AwardHandler.EMERALDS_TO_PLAY)) {
 				ModGuiHandler.createGui(ModGuiHandler.GUI_START_BET);
 			} else {

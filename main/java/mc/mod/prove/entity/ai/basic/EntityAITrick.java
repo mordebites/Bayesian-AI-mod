@@ -174,7 +174,7 @@ public class EntityAITrick extends EntityAIBase {
 				}
 			} 
 		}
-		JumpHelper.pathHelper(entity);
+		//JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 	

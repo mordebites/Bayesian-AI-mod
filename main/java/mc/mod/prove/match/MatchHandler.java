@@ -58,25 +58,25 @@ public class MatchHandler {
 	// serve per inizializzare la matrice che contiene le coordinate dove
 	// teletrasportare npc e giocatore a inizio round
 	public MatchHandler() {
-		coord[0][0] = 174.5;
-		coord[0][1] = 178.5;
-		coord[0][2] = 740.5;
-		coord[0][3] = 766.5;
+		coord[0][0] = 181.7;
+		coord[0][1] = 190.7;
+		coord[0][2] = 708.3;
+		coord[0][3] = 704.3;
 
-		coord[1][0] = 163.5;
-		coord[1][1] = 183.5;
-		coord[1][2] = 750.5;
-		coord[1][3] = 749.5;
+		coord[1][0] = 191.5;
+		coord[1][1] = 179.3;
+		coord[1][2] = 698.5;
+		coord[1][3] = 701.7;
 
-		coord[2][0] = 178.5;
-		coord[2][1] = 174.5;
-		coord[2][2] = 766.5;
-		coord[2][3] = 740.5;
+		coord[2][0] = 197.3;
+		coord[2][1] = 180.7;
+		coord[2][2] = 712.6;
+		coord[2][3] = 703.7;
 
-		coord[3][0] = 183.5;
-		coord[3][1] = 163.5;
-		coord[3][2] = 749.5;
-		coord[3][3] = 750.5;
+		coord[3][0] = 190.7;
+		coord[3][1] = 181.7;
+		coord[3][2] = 704.3;
+		coord[3][3] = 708.3;
 	}
 
 	public int getRoundsWon() {
@@ -238,7 +238,7 @@ public class MatchHandler {
 
 	private void handleTeleport() {
 		Random rand = new Random();
-		int n = rand.nextInt(4);
+		int n = rand.nextInt(coord.length);
 
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		player.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);

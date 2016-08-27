@@ -12,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-
 public class EntityAISuspect extends EntityAIBase {
 	private EntityCreature entity;
 	private EntityPlayer player;
@@ -23,50 +22,54 @@ public class EntityAISuspect extends EntityAIBase {
 	private BlockPos lastPosition = null;
 	private int timer = 30;
 
-	
-	public EntityAISuspect(EntityCreature entity, EntityPlayer player, double speed) {
+	public EntityAISuspect(EntityCreature entity, EntityPlayer player,
+			double speed) {
 		this.entity = entity;
 		this.player = player;
 		this.speed = speed;
 		this.entity.setSprinting(true);
 	}
 
-	public void setPlayerLastPosition(BlockPos lastPosition){
+	public void setPlayerLastPosition(BlockPos lastPosition) {
 		this.lastPosition = lastPosition;
 	}
-	
+
 	@Override
 	public boolean shouldExecute() {
 		return true;
 	}
-	
+
 	@Override
-	public void startExecuting(){
-		if(lastPosition == null) {
+	public void startExecuting() {
+		if (lastPosition == null) {
 			System.err.println("Last plate not set!");
 		} else {
-			//position of the last activated plate
-			Vec3d lastPosVec = new Vec3d(lastPosition.getX(), lastPosition.getY(), lastPosition.getZ());
-			//distanza tra l'npc e il blocco attivato
-			int distance = (int) entity.getPositionVector().distanceTo(lastPosVec);
-			
+			// position of the last activated plate
+			Vec3d lastPosVec = new Vec3d(lastPosition.getX(),
+					lastPosition.getY(), lastPosition.getZ());
+			// distanza tra l'npc e il blocco attivato
+			int distance = (int) entity.getPositionVector().distanceTo(
+					lastPosVec);
+
 			Vec3d vec3 = null;
 			do {
-				vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(entity, distance > 0 ? distance : 2, 0, lastPosVec);
+				vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(
+						entity, distance > 0 ? distance : 2, 0, lastPosVec);
 			} while (vec3 == null);
-			
+
 			newPosX = vec3.xCoord;
 			newPosY = vec3.yCoord;
 			newPosZ = vec3.zCoord;
-			
-			this.entity.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ, speed);
-			JumpHelper.pathHelper(entity);
+
+			this.entity.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ,
+					speed);
+			//JumpHelper.pathHelper(entity);
 		}
 	}
-	
+
 	@Override
 	public boolean continueExecuting() {
-		JumpHelper.pathHelper(entity);
+		//JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 }
