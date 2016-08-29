@@ -2,6 +2,8 @@ package mc.mod.prove.gui.KeyHandler;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
+import mc.mod.prove.match.AwardHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 
@@ -13,6 +15,18 @@ public class KeyInputHandler {
 			
 			if (MainRegistry.match.isMatchStarted()) {
 				ModGuiHandler.createGui(ModGuiHandler.GUI_STOP_MATCH);
+			}
+		}
+		
+		if (KeyBindings.startMatchKey.isPressed()) {
+			System.out.println("Pressed M");
+			
+			if (MainRegistry.lily != null && !MainRegistry.match.isMatchStarted()) {
+				if (AwardHandler.hasEmeralds(Minecraft.getMinecraft().thePlayer, AwardHandler.EMERALDS_TO_PLAY)) {
+					ModGuiHandler.createGui(ModGuiHandler.GUI_START_BET);
+				} else {
+					ModGuiHandler.createGui(ModGuiHandler.GUI_NOT_ENOUGH_MONEY);
+				}
 			}
 		}
 	}

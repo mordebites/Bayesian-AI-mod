@@ -9,14 +9,15 @@ import net.minecraft.item.ItemStack;
 public class InventoryContentHandler {
 	private static IInventory inv;
 	private IInventory prevInventory;
-	private int emeraldIndex = -1;
-	private int emeraldCount = 0;
 	private static ItemStack lilyStack;
 	private static int lilyIndex = -1;
 	private static final Item emeralds = Item
 			.getByNameOrId("minecraft:emerald");
 
 	public void emptyInventory(EntityPlayer player) {
+		int emeraldIndex = -1;
+		int emeraldCount = 0;
+
 		prevInventory = new InventoryPlayer(player);
 		inv = player.inventory;
 
@@ -60,7 +61,8 @@ public class InventoryContentHandler {
 			ItemStack current = inv.getStackInSlot(i);
 			if (current != null && current.getItem() != null) {
 				Item currentItem = current.getItem();
-				if (currentItem.getItemStackDisplayName(current).contains("Lily")) {
+				if (currentItem.getItemStackDisplayName(current).contains(
+						"Lily")) {
 					lilyStack = current;
 					lilyIndex = i;
 					inv.setInventorySlotContents(i, null);
@@ -68,9 +70,9 @@ public class InventoryContentHandler {
 			}
 		}
 	}
-	
+
 	public static void insertLilyEggs() {
-		if(lilyStack != null) {
+		if (lilyStack != null) {
 			lilyStack.stackSize = 1;
 			inv.setInventorySlotContents(lilyIndex, lilyStack);
 			lilyStack = null;

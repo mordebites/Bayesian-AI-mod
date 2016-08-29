@@ -5,6 +5,7 @@ import java.util.Random;
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class MatchHandler {
@@ -58,25 +59,25 @@ public class MatchHandler {
 	// serve per inizializzare la matrice che contiene le coordinate dove
 	// teletrasportare npc e giocatore a inizio round
 	public MatchHandler() {
-		coord[0][0] = 181.7;
-		coord[0][1] = 190.7;
-		coord[0][2] = 708.3;
-		coord[0][3] = 704.3;
+		coord[0][0] = 180.5;
+		coord[0][1] = 193.143;
+		coord[0][2] = 710.083;
+		coord[0][3] = 707.075;
 
-		coord[1][0] = 191.5;
-		coord[1][1] = 179.3;
-		coord[1][2] = 698.5;
-		coord[1][3] = 701.7;
+		coord[1][0] = 193.894;
+		coord[1][1] = 181.889;
+		coord[1][2] = 696.974;
+		coord[1][3] = 701.326;
 
-		coord[2][0] = 197.3;
-		coord[2][1] = 180.7;
-		coord[2][2] = 712.6;
-		coord[2][3] = 703.7;
+		coord[2][0] = 197.692;
+		coord[2][1] = 187.726;
+		coord[2][2] = 712.339;
+		coord[2][3] = 699.857;
 
-		coord[3][0] = 190.7;
-		coord[3][1] = 181.7;
-		coord[3][2] = 704.3;
-		coord[3][3] = 708.3;
+		coord[3][0] = coord[0][1];
+		coord[3][1] = coord[0][0];
+		coord[3][2] = coord[0][3];
+		coord[3][3] = coord[0][2];
 	}
 
 	public int getRoundsWon() {
@@ -240,9 +241,10 @@ public class MatchHandler {
 		Random rand = new Random();
 		int n = rand.nextInt(coord.length);
 
-		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		player.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
+		Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
+		MainRegistry.lily.setPositionAndUpdate(coord[n][1], 5, coord[n][3]);
 
-		MainRegistry.lily.setPositionAndUpdate(coord[n][1], 4, coord[n][3]);
+		System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
+		System.out.println("Lily Spawn: " + coord[n][1] + ", " + coord[n][3]);
 	}
 }

@@ -104,7 +104,7 @@ public class MainRegistry {
 		// inizializzo il codice per controllare se l'entity sta per essere attaccata
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
 		
-		MinecraftForge.EVENT_BUS.register(new MatchStartHandler());
+		//MinecraftForge.EVENT_BUS.register(new MatchStartHandler());
 	}
 
 	@EventHandler

@@ -16,7 +16,7 @@ public class EntityLilyMob extends EntityVillager {
 		super(worldIn);
 		initTasks();
 		MainRegistry.lily = this;
-		InventoryContentHandler.removeLilyEggs(Minecraft.getMinecraft().thePlayer);
+		//InventoryContentHandler.removeLilyEggs(Minecraft.getMinecraft().thePlayer);
 
 		//IBlockState blockState = Blocks.dirt.getDefaultState();
 		/*List<ItemStack> subBlocks = new ArrayList<ItemStack>();
@@ -57,6 +57,9 @@ public class EntityLilyMob extends EntityVillager {
 	public void setDead() {
 		super.setDead();
 		MainRegistry.lily = null;
-		InventoryContentHandler.insertLilyEggs();
+		
+		if(MainRegistry.match.isMatchStarted()) {
+			MainRegistry.match.stopMatch();
+		}
 	}
 }

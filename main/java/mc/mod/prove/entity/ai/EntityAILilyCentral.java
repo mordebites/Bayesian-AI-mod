@@ -291,7 +291,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 		return lastPlate;
 	}
 
-	protected int[] getLabyrinthLimits() {
+	protected static int[] getLabyrinthLimits() {
 		int[] a = { MIN_X_LAB, MAX_X_LAB, MIN_Z_LAB, MAX_Z_LAB };
 		return a;
 	}

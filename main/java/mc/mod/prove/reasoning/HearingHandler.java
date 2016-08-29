@@ -8,6 +8,7 @@ import net.minecraft.util.math.Vec3d;
 
 public class HearingHandler {
 	private EntityCreature entity;
+	private final int HEARING_THRESHOLD = 10;
 
 	public HearingHandler(EntityCreature entity) {
 		this.entity = entity;
@@ -41,14 +42,18 @@ public class HearingHandler {
 	//se il suono non è vicino, sarà colto solo in caso di assenza di ostacoli tra l'NPC e la fonte
 	private EntityDistance checkSound(Vec3d targetPosition, int distanceThreshold) {
 		EntityDistance blockSound = EntityDistance.None;
+		double distance = entity.getPositionVector().distanceTo(targetPosition);
 		
-		//se il target è vicino (vedi DISTANCE_THRESHOLD), viene sentito a prescindere
-		if(entity.getPositionVector().distanceTo(targetPosition) <= distanceThreshold){
-			blockSound = EntityDistance.Close;
-		} else {
-			//se il target è lontano, viene sentito a patto che non ci siano muri tra lui è il giocatore
-			if (entity.worldObj.rayTraceBlocks(new Vec3d(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ), targetPosition, false, true, false) == null) {
-				blockSound = EntityDistance.Far;
+		//se l'npc si sta muovendo il rumore dei propri passi copre la capacità di sentire l'altro
+		if(entity.motionX == 0 && entity.motionZ == 0) {
+			//se il target è vicino (vedi DISTANCE_THRESHOLD), viene sentito a prescindere
+			if(distance <= distanceThreshold){
+				blockSound = EntityDistance.Close;
+			} else {
+				//se il target è lontano
+				if (distance <= HEARING_THRESHOLD) {
+					blockSound = EntityDistance.Far;
+				}
 			}
 		}
 		return blockSound;

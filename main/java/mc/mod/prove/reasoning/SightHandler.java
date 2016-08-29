@@ -96,7 +96,7 @@ public class SightHandler {
 		
 		cont++;
 		
-		if(sightValue == 10) {
+		if(sightValue == 11) {
 			PlayerDefeatHandler.onPlayerDefeat();
 		}
 		
