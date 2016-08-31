@@ -1,5 +1,6 @@
 package mc.mod.prove.match;
 
+import mc.mod.prove.MainRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -63,6 +64,7 @@ public class InventoryContentHandler {
 				Item currentItem = current.getItem();
 				if (currentItem.getItemStackDisplayName(current).contains(
 						"Lily")) {
+					
 					lilyStack = current;
 					lilyIndex = i;
 					inv.setInventorySlotContents(i, null);
@@ -71,12 +73,28 @@ public class InventoryContentHandler {
 		}
 	}
 
-	public static void insertLilyEggs() {
-		if (lilyStack != null) {
-			lilyStack.stackSize = 1;
-			inv.setInventorySlotContents(lilyIndex, lilyStack);
-			lilyStack = null;
-			lilyIndex = -1;
+	public static void insertLilyEggs(EntityPlayer player) {
+		IInventory inventory = player.inventory;
+		boolean lilyEggFound = false;
+		int emptyIndex = -1;
+		
+		for (int i = 0; i < inventory.getSizeInventory() && !lilyEggFound; i++) {
+			ItemStack current = inventory.getStackInSlot(i);
+			if (current != null && current.getItem() != null) {
+				Item currentItem = current.getItem();
+				if (currentItem.getItemStackDisplayName(current).contains("Lily")) {
+					lilyEggFound = true;
+				}
+			} else {
+				emptyIndex = i;
+			}
+		}
+		
+		if(!lilyEggFound) {
+			if (emptyIndex == -1) {
+				emptyIndex = 0;
+			}
+			inventory.setInventorySlotContents(emptyIndex, new ItemStack(MainRegistry.lilyEgg));
 		}
 	}
 }

@@ -2,51 +2,36 @@ package mc.mod.prove.entity;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.ai.EntityAILilyCentral;
-import mc.mod.prove.match.InventoryContentHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityLilyMob extends EntityVillager {
-
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
-		initTasks();
 		MainRegistry.lily = this;
+		initTasks();
 		//InventoryContentHandler.removeLilyEggs(Minecraft.getMinecraft().thePlayer);
 
-		//IBlockState blockState = Blocks.dirt.getDefaultState();
-		/*List<ItemStack> subBlocks = new ArrayList<ItemStack>();
-		Blocks.dirt.getSubBlocks(null, null, subBlocks);
-		IBlockState blockState = Blocks.dirt.getStateFromMeta(subBlocks.get(1).getMetadata());
-		
-		for(int x = 150; x <= 200; x++) {
-			for(int z = 728; z <= 778; z++) {
-				BlockPos pos = new BlockPos(x, 3, z);
-				IBlockState currentState = Minecraft.getMinecraft().theWorld.getBlockState(pos);
-				Minecraft.getMinecraft().theWorld.setBlockState(new BlockPos(x, 2, z), blockState, 2);
-				if(!(currentState.getBlock() instanceof BlockRedstoneLight)){
-					Minecraft.getMinecraft().theWorld.setBlockState(pos, blockState, 2);
-				}
-			}
-		}*/
 	}
 
-	private void initTasks() {
+	public void initTasks() {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		if (player != null) {
-			// appena spawnato l'npc controllo che il player abbia abbastanza
-			// emeralds per giocare la partita
-
 			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
 			this.tasks.addTask(0, new EntityAIWander(this, 1));
+
+			System.out.println("Lily's AI set!");
 		}
 	}
 
+	
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return null;
@@ -61,5 +46,7 @@ public class EntityLilyMob extends EntityVillager {
 		if(MainRegistry.match.isMatchStarted()) {
 			MainRegistry.match.stopMatch();
 		}
+		
+		System.out.println("Oh noes Lily died!");
 	}
 }

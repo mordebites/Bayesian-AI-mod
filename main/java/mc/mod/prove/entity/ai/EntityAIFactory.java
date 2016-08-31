@@ -20,15 +20,15 @@ public class EntityAIFactory {
 		EntityPlayer player = central.getPlayer();
 		EntityCreature entity = central.getEntity();
 
-		AIs.put("LookAround", new EntityAILookAround(entity, 0.8));
-		AIs.put("Hunt", new EntityAIHunt(entity, player, 1));
-		AIs.put("Flee", new EntityAIFlee(entity, player, 1));		
+		AIs.put("LookAround", new EntityAILookAround(entity, 0.5));
+		AIs.put("Hunt", new EntityAIHunt(entity, player, 0.7));
+		AIs.put("Flee", new EntityAIFlee(entity, player, 0.7));		
 		
-		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(1.1));
+		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(0.7));
 		su.setPlayerLastPosition(central.getLastPlayerPosition());
 		AIs.put("Suspect", su);
 		
-		EntityAITrick tr = new EntityAITrick(entity, new Double(0.8), central.getLabyrinthLimits());
+		EntityAITrick tr = new EntityAITrick(entity, new Double(0.6));
 		tr.setIterators(central.getLightPlates(), central.getSoundPlates());
 		tr.setPlayerLastPosition(central.getLastPlayerPosition());
 		tr.setTricking();

@@ -5,14 +5,18 @@ import java.util.TimerTask;
 
 import mc.mod.prove.entity.EntityLily;
 import mc.mod.prove.entity.EntityLilyMob;
+import mc.mod.prove.eventhandler.MonsterPlacerHandler;
+import mc.mod.prove.eventhandler.PlayerAttackHandler;
+import mc.mod.prove.eventhandler.PlayerLogHandler;
 import mc.mod.prove.gui.CommonProxy;
 import mc.mod.prove.gui.KeyHandler.KeyBindings;
 import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
-import mc.mod.prove.match.MatchStartHandler;
-import mc.mod.prove.match.PlayerAttackHandler;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemMonsterPlacer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -28,6 +32,15 @@ public class MainRegistry {
 	public static final String VERSION = "1.0.0";
 	public static MatchHandler match = new MatchHandler();
 	public static EntityLilyMob lily;
+	
+	// coordinate bordi del labirinto
+	public static final int MIN_X_LAB = 178;
+	public static final int MAX_X_LAB = 199;
+	public static final int MIN_Z_LAB = 694;
+	public static final int MAX_Z_LAB = 716;
+	// BlockPos con coordinate plate della porta del labirinto
+	public static final BlockPos LAB_PLATE = new BlockPos(187, 4, 692);
+	public static ItemMonsterPlacer lilyEgg = (ItemMonsterPlacer) Item.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
 
 	@Instance(MODID)
 	public static MainRegistry modInstance;
@@ -35,6 +48,7 @@ public class MainRegistry {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
+		System.out.println("Preinit!");
 		// Inizializza l'entity lily
 		EntityLily.mainRegistry();
 
@@ -48,6 +62,7 @@ public class MainRegistry {
 
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
+		System.out.println("Init!");
 		// timer che tiene traccia dei secondi
 
 		Timer timer = new Timer();
@@ -104,11 +119,13 @@ public class MainRegistry {
 		// inizializzo il codice per controllare se l'entity sta per essere attaccata
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
 		
-		//MinecraftForge.EVENT_BUS.register(new MatchStartHandler());
+		MinecraftForge.EVENT_BUS.register(new MonsterPlacerHandler());
+		
+		MinecraftForge.EVENT_BUS.register(new PlayerLogHandler());
 	}
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent e) {
-		
+		System.out.println("Postinit!");
 	}
 }

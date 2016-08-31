@@ -32,7 +32,7 @@ public class HearingHandler {
 	public EntityDistance checkStepSound(EntityPlayer player, int distanceThreshold){
 		EntityDistance stepSound = EntityDistance.None;
 		
-		if(!player.isSneaking() ){
+		if(!player.isSneaking() && (player.motionX != 0 || player.motionZ != 0)){
 			Vec3d playerPos = new Vec3d(player.posX, player.posY, player.posZ);
 			stepSound = checkSound(playerPos, distanceThreshold);
 		}
@@ -45,8 +45,7 @@ public class HearingHandler {
 		double distance = entity.getPositionVector().distanceTo(targetPosition);
 		
 		//se l'npc si sta muovendo il rumore dei propri passi copre la capacità di sentire l'altro
-		if(entity.motionX == 0 && entity.motionZ == 0) {
-			//se il target è vicino (vedi DISTANCE_THRESHOLD), viene sentito a prescindere
+		//if(entity.motionX == 0 && entity.motionZ == 0) {
 			if(distance <= distanceThreshold){
 				blockSound = EntityDistance.Close;
 			} else {
@@ -55,7 +54,7 @@ public class HearingHandler {
 					blockSound = EntityDistance.Far;
 				}
 			}
-		}
+		//}
 		return blockSound;
 	}
 }

@@ -3,6 +3,7 @@ package mc.mod.prove.entity.ai.basic;
 import java.util.Iterator;
 import java.util.Random;
 
+import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
@@ -20,7 +21,6 @@ public class EntityAITrick extends EntityAIBase {
 	private double speed;
 	private Iterator[] iters = new Iterator[2];
 	private Random rdm = new Random();
-	private int[] labLimits;
 	private boolean tricking = false;
 	private EntityLiving fakeRotationEntity = new EntityCow(Minecraft.getMinecraft().theWorld);
 	
@@ -43,10 +43,9 @@ public class EntityAITrick extends EntityAIBase {
 		this.tricking = true;
 	}
 
-	public EntityAITrick(EntityCreature entity,	double speed, int[] labLimits) {
+	public EntityAITrick(EntityCreature entity,	double speed) {
 		this.entity = entity;
 		this.speed = speed;
-		this.labLimits = labLimits;
 		this.entity.setSprinting(false);
 	}
 	
@@ -140,8 +139,8 @@ public class EntityAITrick extends EntityAIBase {
 					do {
 						vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 4, 0, plateToPress);
 						if(vec3 != null) {
-							if (vec3.xCoord >= labLimits[0] && vec3.xCoord <= labLimits[1] &&
-								vec3.zCoord >= labLimits[2] && vec3.zCoord <= labLimits[3]) {
+							if (vec3.xCoord >= MainRegistry.MIN_X_LAB && vec3.xCoord <= MainRegistry.MAX_X_LAB &&
+								vec3.zCoord >= MainRegistry.MIN_Z_LAB && vec3.zCoord <= MainRegistry.MAX_Z_LAB) {
 								//controlla se va bene che sia visibile il plate o meglio il blocco
 								if(entity.worldObj.rayTraceBlocks(plateToPress, vec3, false, true, false) != null) {
 									invisible = true;

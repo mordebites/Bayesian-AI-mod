@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
+import mc.mod.prove.entity.EntityLilyMob;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.EntityTimerLeft;
@@ -35,7 +36,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 	// partono sfalsati
 	private int bayesianTimer = 2;
-	private int evidenceTimer = 0;
 
 	// l'ai di base da eseguire in un certo momento
 	private EntityAIBase currentState;
@@ -64,12 +64,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private BlockEvent lastSound = null;
 	private BlockPos lastPlate = null;
 
-	// coordinate bordi del labirinto
-	private static final int MIN_X_LAB = 178;
-	private static final int MAX_X_LAB = 199;
-	private static final int MIN_Z_LAB = 694;
-	private static final int MAX_Z_LAB = 716;
-
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.entity = entity;
 		this.player = player;
@@ -81,8 +75,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 		trickHandler = new TrickHandler();
 
 		// inizializza lista controllando tutte le posizioni del labirinto
-		for (int x = MIN_X_LAB; x <= MAX_X_LAB; x++) {
-			for (int z = MIN_Z_LAB; z <= MAX_Z_LAB; z++) {
+		for (int x = MainRegistry.MIN_X_LAB; x <= MainRegistry.MAX_X_LAB; x++) {
+			for (int z = MainRegistry.MIN_Z_LAB; z <= MainRegistry.MAX_Z_LAB; z++) {
 				BlockPos pos = new BlockPos(x, 4, z);
 				IBlockState blockState = Minecraft.getMinecraft().theWorld
 						.getBlockState(pos);
@@ -148,12 +142,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 		// gestice i dati percepiti, raccolti o dedotti
 		this.handleEvidence();
 
-		if (evidenceTimer == 0) {
-			handleEvidence();
-			evidenceTimer = MAX_EVIDENCE_TIMER;
-		} else {
-			evidenceTimer--;
-		}
 		// perform bayesian decision every 1/5 of a second
 		if (bayesianTimer == 0) {
 			this.bayesian();
@@ -290,10 +278,4 @@ public class EntityAILilyCentral extends EntityAIBase {
 	protected BlockPos getLastPlayerPosition() {
 		return lastPlate;
 	}
-
-	protected static int[] getLabyrinthLimits() {
-		int[] a = { MIN_X_LAB, MAX_X_LAB, MIN_Z_LAB, MAX_Z_LAB };
-		return a;
-	}
-
 }

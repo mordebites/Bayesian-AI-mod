@@ -29,5 +29,11 @@ public class KeyInputHandler {
 				}
 			}
 		}
+		
+		if (KeyBindings.locationKey.isPressed()) {
+			if(MainRegistry.lily != null) {
+				System.out.println("Requested Lily's Position: " + MainRegistry.lily.posX + ", " + MainRegistry.lily.posZ);
+			}
+		}
 	}
 }

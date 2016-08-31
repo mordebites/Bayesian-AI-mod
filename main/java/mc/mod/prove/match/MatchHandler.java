@@ -51,6 +51,12 @@ public class MatchHandler {
 	public static final int WINNER_LILY = 2;
 	public static final int WINNER_NOBODY = 3;
 	private int winner = WINNER_NOBODY;
+	
+	private static final int START_MATCH_TELEPORT = 0;
+	private static final int STOP_ROUND_TELEPORT = 1;
+	private static final int START_ROUND_TELEPORT = 2;
+	private static final int STOP_MATCH_TELEPORT = 3;
+	
 
 	private boolean gamePaused = false;
 
@@ -145,6 +151,8 @@ public class MatchHandler {
 
 		matchStarted = true;
 		inventory.emptyInventory(Minecraft.getMinecraft().thePlayer);
+		
+		handleTeleport(START_MATCH_TELEPORT);
 	}
 
 	public void stopMatch() {
@@ -168,6 +176,8 @@ public class MatchHandler {
 
 			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_MATCH);
 		}
+		handleTeleport(STOP_MATCH_TELEPORT);
+		//MainRegistry.lily.setDead();
 	}
 
 	public void stopRound() {
@@ -175,6 +185,8 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
+		
+		this.handleTeleport(STOP_ROUND_TELEPORT);
 	}
 
 	public boolean isMatchStarted() {
@@ -202,10 +214,6 @@ public class MatchHandler {
 	}
 
 	public void startRound() {
-		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
-		// il round
-		this.handleTeleport();
-
 		// resetto il timer del round
 		minutesTime = MAX_ROUND_TIME;
 		secsTime = 0;
@@ -220,6 +228,10 @@ public class MatchHandler {
 		sightValue = 0; // azzero la visione del maialino
 
 		roundStarted = true;
+		
+		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
+		// il round
+		this.handleTeleport(START_ROUND_TELEPORT);
 	}
 
 	public int getMaxSightValue() {
@@ -237,14 +249,21 @@ public class MatchHandler {
 		}
 	}
 
-	private void handleTeleport() {
-		Random rand = new Random();
-		int n = rand.nextInt(coord.length);
-
-		Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
-		MainRegistry.lily.setPositionAndUpdate(coord[n][1], 5, coord[n][3]);
-
-		System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
-		System.out.println("Lily Spawn: " + coord[n][1] + ", " + coord[n][3]);
+	private void handleTeleport(int teleportType) {
+		
+		if (teleportType == START_MATCH_TELEPORT || teleportType == STOP_ROUND_TELEPORT) {
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(188, 8, 705);
+		} else if (teleportType == START_ROUND_TELEPORT) {
+			Random rand = new Random();
+			int n = rand.nextInt(coord.length);
+			
+			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 5, coord[n][3], 2);
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
+			
+			System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
+			System.out.println("Lily Spawn: " + coord[n][1] + ", " + coord[n][3]);
+		} else if (teleportType == STOP_MATCH_TELEPORT) {
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(176, 4, 694);
+		}
 	}
 }
