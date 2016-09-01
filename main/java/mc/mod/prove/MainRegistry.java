@@ -5,7 +5,7 @@ import java.util.TimerTask;
 
 import mc.mod.prove.entity.EntityLily;
 import mc.mod.prove.entity.EntityLilyMob;
-import mc.mod.prove.eventhandler.MonsterPlacerHandler;
+import mc.mod.prove.eventhandler.PlayerMouseHandler;
 import mc.mod.prove.eventhandler.PlayerAttackHandler;
 import mc.mod.prove.eventhandler.PlayerLogHandler;
 import mc.mod.prove.gui.CommonProxy;
@@ -14,6 +14,7 @@ import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.util.math.BlockPos;
@@ -40,7 +41,7 @@ public class MainRegistry {
 	public static final int MAX_Z_LAB = 716;
 	// BlockPos con coordinate plate della porta del labirinto
 	public static final BlockPos LAB_PLATE = new BlockPos(187, 4, 692);
-	public static ItemMonsterPlacer lilyEgg = (ItemMonsterPlacer) Item.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
+	public static ItemMonsterPlacer lilyEgg;
 
 	@Instance(MODID)
 	public static MainRegistry modInstance;
@@ -51,7 +52,8 @@ public class MainRegistry {
 		System.out.println("Preinit!");
 		// Inizializza l'entity lily
 		EntityLily.mainRegistry();
-
+		lilyEgg = (ItemMonsterPlacer) Item.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
+		
 		// registro l'handler che si occupa dei suoni personalizzati
 		SoundHandler.init();
 
@@ -119,7 +121,7 @@ public class MainRegistry {
 		// inizializzo il codice per controllare se l'entity sta per essere attaccata
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
 		
-		MinecraftForge.EVENT_BUS.register(new MonsterPlacerHandler());
+		MinecraftForge.EVENT_BUS.register(new PlayerMouseHandler());
 		
 		MinecraftForge.EVENT_BUS.register(new PlayerLogHandler());
 	}

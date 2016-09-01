@@ -17,7 +17,7 @@ public class PlayerAttackHandler {
 		if (player != null) {
 			EntityLivingBase entity = event.getEntityLiving();
 
-			int distance = (int) entity.getPositionVector().distanceTo(
+			double distance = entity.getPositionVector().distanceTo(
 					player.getPositionVector());
 
 			if (entity instanceof EntityLilyMob) {

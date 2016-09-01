@@ -5,8 +5,8 @@ import java.util.Random;
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 
 public class MatchHandler {
 	public InventoryContentHandler inventory = new InventoryContentHandler();
@@ -61,7 +61,8 @@ public class MatchHandler {
 	private boolean gamePaused = false;
 
 	private final double[][] coord = new double[4][4];
-
+	private int lastPlayerSpawnIndex = -1;
+	
 	// serve per inizializzare la matrice che contiene le coordinate dove
 	// teletrasportare npc e giocatore a inizio round
 	public MatchHandler() {
@@ -257,13 +258,20 @@ public class MatchHandler {
 			Random rand = new Random();
 			int n = rand.nextInt(coord.length);
 			
+			//TODO aggiungi distanza da lily
+			if(lastPlayerSpawnIndex != -1 && (n == lastPlayerSpawnIndex 
+				|| (new Vec3d(coord[n][0], 4, coord[n][2])).distanceTo(MainRegistry.lily.getPositionVector()) < 15)) {
+				n = (n + 1) % 4;
+				lastPlayerSpawnIndex = n;
+			}
+			
 			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 5, coord[n][3], 2);
 			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
 			
 			System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
 			System.out.println("Lily Spawn: " + coord[n][1] + ", " + coord[n][3]);
 		} else if (teleportType == STOP_MATCH_TELEPORT) {
-			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(176, 4, 694);
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(MainRegistry.LAB_PLATE.getX()-2, 4, MainRegistry.LAB_PLATE.getZ());
 		}
 	}
 }
