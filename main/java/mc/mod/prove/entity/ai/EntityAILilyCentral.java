@@ -13,6 +13,9 @@ import mc.mod.prove.entity.ai.enumerations.Tricking;
 import mc.mod.prove.entity.bayesian.BayesianHandler;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import mc.mod.prove.entity.transfer.TrickDeductionTO;
+import mc.mod.prove.gui.sounds.SoundHandler;
+import mc.mod.prove.match.MatchHandler;
+import mc.mod.prove.match.PlayerDefeatHandler;
 import mc.mod.prove.reasoning.HearingHandler;
 import mc.mod.prove.reasoning.SightHandler;
 import mc.mod.prove.reasoning.TrickHandler;
@@ -26,6 +29,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import smile.Network;
 
@@ -33,16 +37,13 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 	private EntityCreature entity;
 	private EntityPlayer player;
-
-	// partono sfalsati
-	private int bayesianTimer = 2;
-
+	
+	private int tickTimer = 0;
 	// l'ai di base da eseguire in un certo momento
 	private EntityAIBase currentState;
 	private Network net;
 	private static final int TIMER_SEC_THRESHOLD = 90;
 	private static final int DISTANCE_THRESHOLD = 5;
-	private static final int MAX_EVIDENCE_TIMER = 5;
 	private static final int MAX_BAYESIAN_TIMER = 5;
 	private static final int MINS_IN_SEC = 60;
 
@@ -63,6 +64,12 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
 	private BlockPos lastPlate = null;
+	
+	//per settare la barra Lily's sight
+	private int sightValue = 0;
+	//distanza al quarto di secondo precedente
+	private int prevDistance;
+	private boolean playerAlreadySeen = false;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.entity = entity;
@@ -73,6 +80,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 		hearingHandler = new HearingHandler(entity);
 		bayesianHandler = new BayesianHandler();
 		trickHandler = new TrickHandler();
+		
+		prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
 
 		// inizializza lista controllando tutte le posizioni del labirinto
 		for (int x = MainRegistry.MIN_X_LAB; x <= MainRegistry.MAX_X_LAB; x++) {
@@ -143,14 +152,14 @@ public class EntityAILilyCentral extends EntityAIBase {
 		this.handleEvidence();
 
 		// perform bayesian decision every 1/5 of a second
-		if (bayesianTimer == 0) {
+		if (tickTimer % MAX_BAYESIAN_TIMER == 0) {
 			this.bayesian();
 			currentState.startExecuting();
-			bayesianTimer = MAX_BAYESIAN_TIMER;
 		} else {
 			currentState.continueExecuting();
-			bayesianTimer--;
 		}
+		
+		tickTimer++;
 	}
 
 	@Override
@@ -196,10 +205,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 		stepSound = hearingHandler.checkStepSound(player, DISTANCE_THRESHOLD);
 
 		if (evidence != null && MainRegistry.match.isRoundStarted()) {
-			sightHandler.setAlreadySeen(!evidence.getPlayerInSight().contains(
-					"None"));
+			playerAlreadySeen = !evidence.getPlayerInSight().contains("None");
 		} else {
-			sightHandler.setAlreadySeen(false);
+			playerAlreadySeen = false;
 		}
 
 		playerInSight = sightHandler.checkPlayerInSight(player,
@@ -212,7 +220,55 @@ public class EntityAILilyCentral extends EntityAIBase {
 		evidence = new EvidenceTO(playerInSight.name(), timerLeft.name(),
 				lightChange.name(), stepSound.name(), blockSound.name(),
 				playerTricking.name());
+		
+		handleSightBar(playerInSight);
 
+	}
+
+	
+	private void handleSightBar(EntityDistance playerInSight) {
+		//per aggiornare ogni quarto di secondo la barra Lily's Sight
+		if(tickTimer % 2 == 0) {
+			//TODO costante
+			if(playerInSight != EntityDistance.None && sightValue <= 10) {
+				int currentDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
+				if(prevDistance >= currentDistance) {
+					//TODO costanti
+					if((currentDistance <= 3) 
+						|| (currentDistance > 3 && currentDistance <= 7 && tickTimer % 6 == 0)
+						|| (currentDistance > 7 && tickTimer % 10 == 0)) {
+						sightValue++;
+					}
+				}
+			} else if (playerInSight == EntityDistance.None && sightValue > 0) {
+				sightValue--;
+			}
+			
+			MainRegistry.match.setSightValue(sightValue);
+			prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
+			
+			if(tickTimer % 20 == 0) {
+				System.out.println("Lily's position: " + entity.getPosition().toString());
+			}
+		}
+		
+		
+		if(playerInSight != EntityDistance.None && !playerAlreadySeen && 
+				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY &&
+				MainRegistry.match.isMatchStarted()) {
+			SoundHandler.handlePlayerInSightSound(player);
+		}
+		
+		//resetta il valore da assegnare alla barra quando ricomincia il round
+		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
+			sightValue = 0;
+		}
+		
+		tickTimer++;
+		
+		if(sightValue == 11) {
+			PlayerDefeatHandler.onPlayerDefeat();
+		}
 	}
 
 	// Trova il pressure plate corrispondente a un blocco sonoro o luminoso

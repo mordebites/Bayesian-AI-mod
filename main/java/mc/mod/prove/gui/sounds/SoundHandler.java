@@ -1,7 +1,9 @@
 package mc.mod.prove.gui.sounds;
 
 import mc.mod.prove.MainRegistry;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -26,5 +28,10 @@ public class SoundHandler {
 		final ResourceLocation soundID = new ResourceLocation(MainRegistry.MODID, soundName);
 		return GameRegistry.register(new SoundEvent(soundID)
 				.setRegistryName(soundID));
+	}
+	
+	public static void handlePlayerInSightSound(EntityPlayer player) {
+		player.worldObj.playSound(player, player.posX, player.posY,
+				player.posZ, SoundHandler.lily_alert,	SoundCategory.AMBIENT, 2.0F, 1.0F);
 	}
 }

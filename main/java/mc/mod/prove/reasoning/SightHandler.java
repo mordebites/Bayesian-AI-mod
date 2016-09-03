@@ -20,24 +20,12 @@ import net.minecraft.util.math.Vec3d;
 public class SightHandler {
 	private EntityLivingBase entity;
 	private EntityPlayer player;
-	private boolean alreadySeen = false;
-	
-	//per settare la barra Lily's sight
-	private int sightValue = 0;
-	//TODO sistema costanti
-	private int cont = 0;
-	//distanza al quarto di secondo precedente
-	private int prevDistance;
-	
+
 	public SightHandler(EntityLivingBase entity, EntityPlayer player){
 		this.entity = entity;
 		this.player = player;
-		prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
 	}
-	
-	public void setAlreadySeen(boolean playerAlreadySeen) {
-		this.alreadySeen = playerAlreadySeen;
-	}
+
 	//stabilisce se il giocatore  e'  visibile e a quale distanza
 	public EntityDistance checkPlayerInSight(Entity player, int distanceThreshold){
 		EntityDistance playerInSight = EntityDistance.None;
@@ -55,51 +43,7 @@ public class SightHandler {
 					playerInSight = EntityDistance.Close;
 				}	
 			}
-		}
-		
-		//per aggiornare ogni quarto di secondo la barra Lily's Sight
-		if(cont % 2 == 0) {
-			//TODO costante
-			if(playerInSight != EntityDistance.None && sightValue <= 10) {
-				int currentDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
-				if(prevDistance >= currentDistance) {
-					//TODO costanti
-					if((currentDistance <= 3) 
-						|| (currentDistance > 3 && currentDistance <= 7 && cont % 6 == 0)
-						|| (currentDistance > 7 && cont % 10 == 0)) {
-						sightValue++;
-					}
-				}
-			} else if (playerInSight == EntityDistance.None && sightValue > 0) {
-				sightValue--;
-			}
-			
-			MainRegistry.match.setSightValue(sightValue);
-			prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
-			
-			if(cont % 20 == 0) {
-				System.out.println("Lily's position: " + entity.getPosition().toString());
-			}
-		}
-		
-		
-		if(playerInSight != EntityDistance.None && !alreadySeen && 
-				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY &&
-				MainRegistry.match.isMatchStarted()) {
-			this.handlePlayerInSightSound();
-		}
-		
-		//resetta il valore da assegnare alla barra quando ricomincia il round
-		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
-			sightValue = 0;
-		}
-		
-		cont++;
-		
-		if(sightValue == 11) {
-			PlayerDefeatHandler.onPlayerDefeat();
-		}
-		
+		}		
 		return playerInSight;
 	}
 	
@@ -331,10 +275,5 @@ public class SightHandler {
 			blockState = Minecraft.getMinecraft().theWorld.getBlockState(pos);
 		}
 		return visible;
-	}
-	
-	private void handlePlayerInSightSound() {
-		player.worldObj.playSound(player, player.posX, player.posY,
-				player.posZ, SoundHandler.lily_alert,	SoundCategory.AMBIENT, 2.0F, 1.0F);
 	}
 }

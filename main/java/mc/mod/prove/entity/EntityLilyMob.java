@@ -12,6 +12,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityLilyMob extends EntityVillager {
+	private final static int HIT_DISTANCE = 1;
+	
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
 		MainRegistry.lily = this;
@@ -25,12 +27,11 @@ public class EntityLilyMob extends EntityVillager {
 
 		if (player != null) {
 			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
-			this.tasks.addTask(0, new EntityAIWander(this, 1));
+			this.tasks.addTask(0, new EntityAIWander(this, 0.2));
 
 			System.out.println("Lily's AI set!");
 		}
 	}
-
 	
 	@Override
 	protected SoundEvent getAmbientSound() {
@@ -48,5 +49,30 @@ public class EntityLilyMob extends EntityVillager {
 		}
 		
 		System.out.println("Oh noes Lily died!");
+	}
+	
+	@Override
+	public void performHurtAnimation(){
+		double distance = getDistance();
+		if (distance <= HIT_DISTANCE) {
+			super.performHurtAnimation();
+		}
+	}
+	
+	@Override
+	public boolean isEntityInvulnerable(DamageSource source) {
+		boolean result = super.isEntityInvulnerable(source);
+		if (source.isCreativePlayer()){
+			double distance = getDistance();
+			
+			if(distance > HIT_DISTANCE) {
+				result = true;
+			}
+		}
+		return result;
+	}
+	
+	private double getDistance() {
+		return Minecraft.getMinecraft().thePlayer.getPositionVector().distanceTo(this.getPositionVector());
 	}
 }

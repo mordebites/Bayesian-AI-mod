@@ -52,7 +52,8 @@ public class PlayerMouseHandler {
 						event.setCanceled(true);
 						// se è nel labirinto
 					} else {
-						message = "Premi M per giocare! \nUsa P per mettere in pausa durante la partita!";
+						message = "Premi M per giocare! \nUsa P per mettere in pausa durante la partita!"
+								+ "\nRicorda: devi essere molto vicino a Lily per colpirla!";
 					}
 
 					if (!this.messageSent) {

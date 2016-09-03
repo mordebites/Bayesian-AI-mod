@@ -17,13 +17,10 @@ public class PlayerAttackHandler {
 		if (player != null) {
 			EntityLivingBase entity = event.getEntityLiving();
 
-			double distance = entity.getPositionVector().distanceTo(
-					player.getPositionVector());
-
 			if (entity instanceof EntityLilyMob) {
 				if (MainRegistry.match.isMatchStarted()) {
-					if (MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY
-							&& distance <= 1) {
+					
+					if (MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY) {
 
 						MainRegistry.match
 								.setWinner(MatchHandler.WINNER_PLAYER);
@@ -36,20 +33,19 @@ public class PlayerAttackHandler {
 						// se i round sono finiti allora finisco il gioco
 						// altrimenti comincio un nuovo round
 
-						if (MainRegistry.match.getCurrentRound() == MainRegistry.match
+						ModGuiHandler
+						.createGui(ModGuiHandler.GUI_WON_ROUND);
+						
+						/*if (MainRegistry.match.getCurrentRound() == MainRegistry.match
 								.getRoundsNumber()) {
 							MainRegistry.match.stopMatch();
 						} else {
 							// mostro la schermata di vittoria
 							ModGuiHandler
 									.createGui(ModGuiHandler.GUI_WON_ROUND);
-						}
+						}*/
 					}
-				} /*else {
-					if (event.isCancelable()) {
-						event.setCanceled(true);
-					}
-				}*/
+				}
 			}
 		}
 

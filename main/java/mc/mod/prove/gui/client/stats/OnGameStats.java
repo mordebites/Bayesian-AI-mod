@@ -19,6 +19,7 @@ public class OnGameStats extends Gui {
 	private Minecraft mc;
 	private ScaledResolution scaled;
 	private int width;
+	private int height;
 	
 	public OnGameStats(Minecraft mc) {
 		if (!MainRegistry.match.isRoundStarted())
@@ -28,7 +29,7 @@ public class OnGameStats extends Gui {
 
 		this.scaled = new ScaledResolution(this.mc);
 		this.width = scaled.getScaledWidth();
-		scaled.getScaledHeight();
+		this.height = scaled.getScaledHeight();
 		
 		// disegno i vari widgets
 
@@ -47,8 +48,8 @@ public class OnGameStats extends Gui {
 		int currentSightValue = MainRegistry.match.getSightValue();
 		int maxSightValue = MainRegistry.match.getMaxSightValue();
 
-		int xPos = 10;
-		int yPos = 10;
+		int xPos = (width/2) - 45;
+		int yPos = 5;
 		this.mc.getTextureManager().bindTexture(texture);
 
 		// Add this block of code before you draw the section of your texture
@@ -61,12 +62,13 @@ public class OnGameStats extends Gui {
 		GlStateManager.enableBlend();
 		// Here we draw the background bar which contains a transparent section;
 		// note the new size
-		drawTexturedModalRect(xPos, yPos, 0, 0, 56, 9);
+		drawTexturedModalRect(xPos, yPos, 0, 0, 83, 14);
+		
 		// You can keep drawing without changing anything
-		int sightbarwidth = (int) (((float) currentSightValue / maxSightValue) * 49);
-		drawTexturedModalRect(xPos + 3, yPos + 3, 0, 9, sightbarwidth, 3);
+		int sightbarwidth = (int) (((float) currentSightValue / maxSightValue) * 73);
+		drawTexturedModalRect(xPos + 5, yPos + 4, 0, 14, sightbarwidth, 5);
 		String s = "Stealth-o-meter " + currentSightValue + "/" + maxSightValue;
-		yPos += 10;
+		yPos += 20;
 		this.mc.fontRendererObj.drawString(s, xPos + 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos - 1, yPos, 0);
 		this.mc.fontRendererObj.drawString(s, xPos, yPos + 1, 0);
@@ -78,9 +80,9 @@ public class OnGameStats extends Gui {
 	private void drawRound(int currentRound, int maxRound) {
 		String finalString = currentRound + "/" + maxRound;
 
-		drawCenteredString(mc.fontRendererObj, "Round:", width / 2, 10,
+		drawCenteredString(mc.fontRendererObj, "Round:", 30, 10,
 				YELLOWSTR);
-		drawCenteredString(mc.fontRendererObj, finalString, width / 2, 20,
+		drawCenteredString(mc.fontRendererObj, finalString, 30, 20,
 				YELLOWSTR);
 	}
 

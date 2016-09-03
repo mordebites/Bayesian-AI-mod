@@ -47,6 +47,9 @@ public class GuiRoundWon extends GuiScreen {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.okay_button) {
 			ModGuiHandler.closeCurrentGui();
+			if(MainRegistry.match.getCurrentRound() == MainRegistry.match.getRoundsNumber()) {
+				MainRegistry.match.stopMatch();
+			}
 		}
 	}
 

@@ -36,7 +36,7 @@ public class GuiLostMatch extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 80, centered_height - 60, 170, 20);
 		texter.setMaxStringLength(90);
-		texter.setText("Hai perso!");
+		texter.setText("Hai perso la partita!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,

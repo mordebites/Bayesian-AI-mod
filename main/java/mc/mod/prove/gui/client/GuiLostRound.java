@@ -39,14 +39,23 @@ public class GuiLostRound extends GuiScreen {
 		texter.setText("Hai perso il round, amico!");
 		this.texter.setFocused(true);
 
+		String message = "";
+		if(MainRegistry.match.getCurrentRound() == MainRegistry.match.getRoundsNumber()) {
+			message = "Ok...";
+		} else {
+			message = "Fammi riprovare!";
+		}
 		this.buttonList.add(this.okay_button = new GuiButton(0,
-				centered_width - 100, centered_height - 24, "Fammi riprovare!"));
+				centered_width - 100, centered_height - 24, message));
 	}
 
 	@Override
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button == this.okay_button) {
 			ModGuiHandler.closeCurrentGui();
+			if(MainRegistry.match.getCurrentRound() == MainRegistry.match.getRoundsNumber()) {
+				MainRegistry.match.stopMatch();
+			}
 		}
 	}
 

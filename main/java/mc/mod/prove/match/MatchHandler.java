@@ -258,14 +258,16 @@ public class MatchHandler {
 			Random rand = new Random();
 			int n = rand.nextInt(coord.length);
 			
-			//TODO aggiungi distanza da lily
-			if(lastPlayerSpawnIndex != -1 && (n == lastPlayerSpawnIndex 
-				|| (new Vec3d(coord[n][0], 4, coord[n][2])).distanceTo(MainRegistry.lily.getPositionVector()) < 15)) {
+			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 4, coord[n][3], 2);
+			
+			if(lastPlayerSpawnIndex != -1 && 
+					((new Vec3d(coord[n][0], 4, coord[n][2])).distanceTo(MainRegistry.lily.getPositionVector()) < 15 
+					|| n == lastPlayerSpawnIndex)) {
+				System.out.println("Changed n!");
 				n = (n + 1) % 4;
 				lastPlayerSpawnIndex = n;
 			}
 			
-			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 5, coord[n][3], 2);
 			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
 			
 			System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
