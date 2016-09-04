@@ -24,7 +24,6 @@ public class EntityAILookAround extends EntityAIBase
     private double yPosition;
     private double zPosition;
     private double speed;
-    private boolean mustUpdate;
     private int moveTimer = maxMoveTimer;
     private int rotationTimer = maxRotationTimer;
     private Random rdm = new Random();
@@ -58,8 +57,6 @@ public class EntityAILookAround extends EntityAIBase
     			rotationTimer--;
     		} else {
     			rotationTimer = maxRotationTimer;
-    		     
-	            this.mustUpdate = false;
     		}
     		
     	} else {
@@ -71,7 +68,6 @@ public class EntityAILookAround extends EntityAIBase
 	            this.zPosition = vec3d.zCoord;
 	            
 	            moveTimer = maxMoveTimer;
-	            this.mustUpdate = false;
 	        }
     	}
     	
@@ -103,13 +99,6 @@ public class EntityAILookAround extends EntityAIBase
     	this.executing();
     }
 
-    /**
-     * Makes task to bypass chance
-     */
-    public void makeUpdate()
-    {
-        this.mustUpdate = true;
-    }
     
     private void setFakeEntityPosition(){
     	int rdmPos = rdm.nextInt(9);

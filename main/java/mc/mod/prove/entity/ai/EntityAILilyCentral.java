@@ -41,13 +41,12 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private int tickTimer = 0;
 	// l'ai di base da eseguire in un certo momento
 	private EntityAIBase currentState;
-	private Network net;
 	private static final int TIMER_SEC_THRESHOLD = 90;
 	private static final int DISTANCE_THRESHOLD = 5;
 	private static final int MAX_BAYESIAN_TIMER = 5;
 	private static final int MINS_IN_SEC = 60;
 
-	// la chiave è la positione del plate, PosAndTimer contiene la posizione del
+	// la chiave ï¿½ la positione del plate, PosAndTimer contiene la posizione del
 	// blocco e il timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
 	private HashMap<BlockPos, BlockEvent> soundBlocks = new HashMap<BlockPos, BlockEvent>();
@@ -91,7 +90,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 						.getBlockState(pos);
 				if (blockState.getBlock() instanceof BlockRedstoneLight) {
 					BlockPos platePos = this.findPressurePlate(pos);
-					// se il blocco non è collegato a una pressure plate non
+					// se il blocco non ï¿½ collegato a una pressure plate non
 					// viene calcolato in quanto non attivabile
 					if (platePos != null) {
 						lightBlocks.put(platePos, new BlockEvent(0, pos));
@@ -275,7 +274,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	}
 
 	// Trova il pressure plate corrispondente a un blocco sonoro o luminoso
-	private BlockPos findPressurePlate(BlockPos pos) {
+	protected static BlockPos findPressurePlate(BlockPos pos) {
 		boolean foundPlate = false;
 		BlockPos[] positions = new BlockPos[4];
 		BlockPos prev = pos;
