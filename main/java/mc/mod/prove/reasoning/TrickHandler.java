@@ -1,12 +1,10 @@
 
 package mc.mod.prove.reasoning;
 
-import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.Tricking;
+import mc.mod.prove.entity.bayesian.State;
 import mc.mod.prove.entity.transfer.TrickDeductionTO;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.math.Vec3d;
 
 public class TrickHandler {
 	
@@ -22,6 +20,18 @@ public class TrickHandler {
 				prob = Tricking.Unlikely;
 			}
 		}
+		return prob;
+	}
+	
+	
+	public Tricking isOtherPlayerTricking(TrickDeductionTO to, State stateT1) {
+		Tricking prob = Tricking.Uncertain;
+		
+		//Se è stato attivato un blocco sonoro o luminoso
+		if ((to.getBlockSound() != EntityDistance.None) || (to.getLightChange() != EntityDistance.None)){
+			
+		}
+		
 		return prob;
 	}
 }

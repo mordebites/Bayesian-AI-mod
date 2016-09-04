@@ -18,6 +18,20 @@ public class EvidenceTO {
 		this.blockSound = blockSound;
 		this.playerTricking = playerTricking;
 	}
+	
+	public int compareTo(EvidenceTO ev2) {
+		int result = -1;
+		if(this.playerInSight.compareTo(ev2.playerInSight) == 0
+			&& this.timer.compareTo(ev2.timer) == 0
+			&& this.lightingChange.compareTo(ev2.lightingChange) == 0
+			&& this.stepSound.compareTo(ev2.stepSound) == 0
+			&& this.blockSound.compareTo(ev2.blockSound) == 0
+			&& this.playerTricking.compareTo(ev2.playerTricking) == 0) {
+				
+			result = 0;
+		}
+		return result;
+	}
 
 	public String getPlayerInSight() {
 		return playerInSight;

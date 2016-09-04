@@ -2,15 +2,16 @@ package mc.mod.prove.reasoning;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
 public class HearingHandler {
-	private EntityCreature entity;
+	private Entity entity;
 	private final int HEARING_THRESHOLD = 10;
 
-	public HearingHandler(EntityCreature entity) {
+	public HearingHandler(Entity entity) {
 		this.entity = entity;
 	}
 

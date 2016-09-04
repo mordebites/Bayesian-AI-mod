@@ -221,12 +221,13 @@ public class EntityAILilyCentral extends EntityAIBase {
 				lightChange.name(), stepSound.name(), blockSound.name(),
 				playerTricking.name());
 		
-		handleSightBar(playerInSight);
+		handleSightBar();
 
 	}
 
 	
-	private void handleSightBar(EntityDistance playerInSight) {
+	private void handleSightBar() {
+		EntityDistance playerInSight = EntityDistance.valueOf(evidence.getPlayerInSight());
 		//per aggiornare ogni quarto di secondo la barra Lily's Sight
 		if(tickTimer % 2 == 0) {
 			//TODO costante
@@ -240,7 +241,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 						sightValue++;
 					}
 				}
-			} else if (playerInSight == EntityDistance.None && sightValue > 0) {
+			} else if (playerInSight == EntityDistance.None
+					&& EntityDistance.valueOf(evidence.getStepSound()) != EntityDistance.None
+					&& sightValue > 0) {
 				sightValue--;
 			}
 			
@@ -272,7 +275,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 	}
 
 	// Trova il pressure plate corrispondente a un blocco sonoro o luminoso
-	// TODO OFFSET per blocco sonoro al livello del terreno?
 	private BlockPos findPressurePlate(BlockPos pos) {
 		boolean foundPlate = false;
 		BlockPos[] positions = new BlockPos[4];
