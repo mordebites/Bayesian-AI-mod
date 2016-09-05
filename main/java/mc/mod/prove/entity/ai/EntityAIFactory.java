@@ -17,12 +17,12 @@ public class EntityAIFactory {
 	
 	public EntityAIFactory(EntityAILilyCentral central){
 		this.central = central;
-		EntityPlayer player = central.getPlayer();
-		EntityCreature entity = central.getEntity();
+		EntityPlayer player = (EntityPlayer)central.getPlayer();
+		EntityCreature entity = (EntityCreature) central.getEntity();
 
-		AIs.put("LookAround", new EntityAILookAround(entity, 0.5));
-		AIs.put("Hunt", new EntityAIHunt(entity, player, 0.7));
-		AIs.put("Flee", new EntityAIFlee(entity, player, 0.7));		
+		AIs.put("LookAround", new EntityAILookAround(entity, 0.4));
+		AIs.put("Hunt", new EntityAIHunt(entity, player, 0.65));
+		AIs.put("Flee", new EntityAIFlee(entity, player, 0.65));		
 		
 		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(0.55));
 		su.setPlayerLastPosition(central.getLastPlayerPosition());

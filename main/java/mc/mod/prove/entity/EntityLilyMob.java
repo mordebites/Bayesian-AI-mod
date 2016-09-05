@@ -1,7 +1,7 @@
 package mc.mod.prove.entity;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.entity.ai.EntityAILilyCentral;
+import mc.mod.prove.entity.ai.EntityAILilyProva;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityVillager;
@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class EntityLilyMob extends EntityVillager {
 	private final static int HIT_DISTANCE = 1;
@@ -26,7 +25,7 @@ public class EntityLilyMob extends EntityVillager {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		if (player != null) {
-			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
+			this.tasks.addTask(0, new EntityAILilyProva(this, player));
 			this.tasks.addTask(0, new EntityAIWander(this, 0.2));
 
 			System.out.println("Lily's AI set!");

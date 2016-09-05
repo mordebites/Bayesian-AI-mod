@@ -57,7 +57,7 @@ public class EntityAILilyFake extends EntityAIBase {
 	// non metto mai a null per simulare memoria
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
-	private BlockPos lastPlate = null;
+	private BlockPos lastPosition = null;
 
 	// per settare la barra Lily's sight
 	private int sightValue = 0;
@@ -136,11 +136,11 @@ public class EntityAILilyFake extends EntityAIBase {
 		if (lightBlocks.containsKey(playerPos)) {
 			BlockPos pos = (lightBlocks.get(playerPos)).getPos();
 			lastLight = new BlockEvent(5, pos);
-			lastPlate = playerPos;
+			lastPosition = playerPos;
 		} else if (soundBlocks.containsKey(playerPos)) {
 			BlockPos pos = (soundBlocks.get(playerPos)).getPos();
 			lastSound = new BlockEvent(1, pos);
-			lastPlate = playerPos;
+			lastPosition = playerPos;
 		}
 
 		// gestice i dati percepiti, raccolti o dedotti
@@ -177,15 +177,38 @@ public class EntityAILilyFake extends EntityAIBase {
 				currentState = "Flee";
 			}
 		} else {
+			
+			if (prevState.compareTo("Hunt") == 0) {
+				distance1 = info.getFirst().playerPos.distanceTo(new Vec3d(
+					lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
+				distance2 = info.getLast().playerPos.distanceTo(new Vec3d(
+					lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
+
+				if (distance1 < distance2) {
+					currentState = "Suspect";
+				}
+			}
+			
+			if (prevState.compareTo("Flee") == 0) {
+				distance1 = info.getFirst().playerPos.distanceTo(new Vec3d(
+					lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
+				distance2 = info.getLast().playerPos.distanceTo(new Vec3d(
+					lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
+
+				if (distance1 < distance2) {
+					currentState = "Flee";
+				}
+			}
+			
 			if (prevEvidence.getBlockSound().compareTo("None") != 0
 				|| prevEvidence.getLightingChange().compareTo("None") != 0) {
 				if (info.getFirst().playerPos.distanceTo(info.getLast().playerPos) < 5) {
 					currentState = "LookAround";
 				} else {
 					distance1 = info.getFirst().playerPos.distanceTo(new Vec3d(
-							lastPlate.getX(), lastPlate.getY(), lastPlate.getZ()));
+							lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
 					distance2 = info.getLast().playerPos.distanceTo(new Vec3d(
-							lastPlate.getX(), lastPlate.getY(), lastPlate.getZ()));
+							lastPosition.getX(), lastPosition.getY(), lastPosition.getZ()));
 
 					if (distance1 < distance2) {
 						currentState = "Suspect";
@@ -262,6 +285,10 @@ public class EntityAILilyFake extends EntityAIBase {
 		playerInSight = sightHandler.checkPlayerInSight(playerOpponent,
 				DISTANCE_THRESHOLD);
 
+		if (playerInSight != EntityDistance.None) {
+			lastPosition = playerOpponent.getPosition();
+		}
+		
 		TrickDeductionTO to = new TrickDeductionTO(playerInSight, blockSound,
 				lightChange, stepSound, lastLight, lastSound,
 				(EntityPlayer) playerOpponent);
@@ -344,6 +371,6 @@ public class EntityAILilyFake extends EntityAIBase {
 	}
 
 	protected BlockPos getLastPlayerPosition() {
-		return lastPlate;
+		return lastPosition;
 	}
 }

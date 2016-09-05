@@ -3,8 +3,6 @@ package mc.mod.prove.reasoning;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
 public class HearingHandler {
@@ -30,7 +28,7 @@ public class HearingHandler {
 	}
 	
 	//controlla se è percepito, e a che distanza, l'ultimo rumore dei passi prodotto
-	public EntityDistance checkStepSound(EntityPlayer player, int distanceThreshold){
+	public EntityDistance checkStepSound(Entity player, int distanceThreshold){
 		EntityDistance stepSound = EntityDistance.None;
 		
 		if(!player.isSneaking() && (player.motionX != 0 || player.motionZ != 0)){

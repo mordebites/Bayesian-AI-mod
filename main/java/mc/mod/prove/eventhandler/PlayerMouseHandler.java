@@ -47,7 +47,7 @@ public class PlayerMouseHandler {
 									.getZ()) {
 
 						message = "Puoi spawnare Lily solo DENTRO il labirinto! "
-								+ "Le coordinate della porta sono [187, 4, 693]";
+								+ "Le coordinate della porta sono [187, 4, 690]";
 
 						event.setCanceled(true);
 						// se è nel labirinto

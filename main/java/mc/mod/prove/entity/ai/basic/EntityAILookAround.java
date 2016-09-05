@@ -60,7 +60,7 @@ public class EntityAILookAround extends EntityAIBase
     		}
     		
     	} else {
-    		Vec3d vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 2, 0);
+    		Vec3d vec3d = RandomPositionGenerator.findRandomTarget(this.entity, 1, 0);
     		
 	        if (vec3d != null) {
 	            this.xPosition = vec3d.xCoord;

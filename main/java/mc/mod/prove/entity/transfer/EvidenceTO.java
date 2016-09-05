@@ -32,6 +32,16 @@ public class EvidenceTO {
 		}
 		return result;
 	}
+	
+	public String toString() {
+		String result = "PlayerInSight: " + playerInSight +", "
+						+ "Timer: " + timer +", "
+						+ "Lighting Change: " + lightingChange + ", "
+						+ "Step Sound: " + stepSound + ", "
+						+ "Block Sound: " + blockSound + ", "
+						+ "Payer Tricking: " + playerTricking;
+		return result;
+	}
 
 	public String getPlayerInSight() {
 		return playerInSight;

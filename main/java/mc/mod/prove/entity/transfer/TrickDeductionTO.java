@@ -2,6 +2,7 @@ package mc.mod.prove.entity.transfer;
 
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class TrickDeductionTO {
@@ -11,12 +12,12 @@ public class TrickDeductionTO {
 	EntityDistance stepSound;
 	BlockEvent lastLight;
 	BlockEvent lastSound;
-	EntityPlayer player;
+	Entity player;
 	
 	public TrickDeductionTO(EntityDistance playerInSight,
 			EntityDistance blockSound, EntityDistance lightChange,
 			EntityDistance stepSound, BlockEvent lastLight,
-			BlockEvent lastSound, EntityPlayer player) {
+			BlockEvent lastSound, Entity player) {
 		
 		this.playerInSight = playerInSight;
 		this.blockSound = blockSound;
@@ -45,7 +46,7 @@ public class TrickDeductionTO {
 	public BlockEvent getLastSound() {
 		return lastSound;
 	}
-	public EntityPlayer getPlayer() {
+	public Entity getPlayer() {
 		return player;
 	}
 	
