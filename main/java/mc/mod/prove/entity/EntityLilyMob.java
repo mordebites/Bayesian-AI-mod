@@ -3,7 +3,6 @@ package mc.mod.prove.entity;
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.ai.EntityAILilyProva;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -26,7 +25,6 @@ public class EntityLilyMob extends EntityVillager {
 
 		if (player != null) {
 			this.tasks.addTask(0, new EntityAILilyProva(this, player));
-			this.tasks.addTask(0, new EntityAIWander(this, 0.2));
 
 			System.out.println("Lily's AI set!");
 		}

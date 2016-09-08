@@ -35,7 +35,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 	protected Entity lily;
 	protected Entity opponent;
-	
+
 	protected int tickTimer = 0;
 	// l'ai di base da eseguire in un certo momento
 	private EntityAIBase currentState;
@@ -44,7 +44,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private static final int MAX_BAYESIAN_TIMER = 5;
 	private static final int MINS_IN_SEC = 60;
 
-	// la chiave ï¿½ la positione del plate, PosAndTimer contiene la posizione del
+	// la chiave ï¿½ la positione del plate, PosAndTimer contiene la posizione
+	// del
 	// blocco e il timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
 	private HashMap<BlockPos, BlockEvent> soundBlocks = new HashMap<BlockPos, BlockEvent>();
@@ -60,27 +61,28 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// non metto mai a null per simulare memoria
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
-	//viene aggiornato o con l'ultimo blocco attivato
-	//o con l'ultima posizione in cui è stato visto
+	// viene aggiornato o con l'ultimo blocco attivato
+	// o con l'ultima posizione in cui è stato visto
 	private BlockPos lastPosition = null;
-	
-	//per settare la barra Lily's sight
+
+	// per settare la barra Lily's sight
 	private int sightValue = 0;
-	//distanza al quarto di secondo precedente
+	// distanza al quarto di secondo precedente
 	private int prevDistance;
 	private boolean playerAlreadySeen = false;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.lily = entity;
 		this.opponent = player;
-		currentState = new EntityAILookAround(entity, 0.5);
+		currentState = new EntityAILookAround(entity, 0.4);
 
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
 		bayesianHandler = new BayesianHandler();
 		trickHandler = new TrickHandler();
-		
-		prevDistance = (int) entity.getPositionVector().distanceTo(player.getPositionVector());
+
+		prevDistance = (int) entity.getPositionVector().distanceTo(
+				player.getPositionVector());
 
 		// inizializza lista controllando tutte le posizioni del labirinto
 		for (int x = MainRegistry.MIN_X_LAB; x <= MainRegistry.MAX_X_LAB; x++) {
@@ -115,6 +117,10 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 	// eseguito ad ogni tick
 	protected void beforeExecuting() {
+		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
+			currentState = new EntityAILookAround((EntityCreature) lily, 0.4);
+		} 
+
 		// aggiorna la variabile con l'ultima luce accesa
 		if (lastLight != null) {
 			int timer = lastLight.getTimer();
@@ -134,8 +140,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 		}
 
 		// indica quali plate sono stati premuti durante il tick e avvia i timer
-		BlockPos playerPos = new BlockPos((int) opponent.posX, (int) opponent.posY,
-				(int) opponent.posZ);
+		BlockPos playerPos = new BlockPos((int) opponent.posX,
+				(int) opponent.posY, (int) opponent.posZ);
 
 		if (lightBlocks.containsKey(playerPos)) {
 			BlockPos pos = (lightBlocks.get(playerPos)).getPos();
@@ -157,7 +163,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 		} else {
 			currentState.continueExecuting();
 		}
-		
+
 		tickTimer++;
 	}
 
@@ -204,14 +210,15 @@ public class EntityAILilyCentral extends EntityAIBase {
 		stepSound = hearingHandler.checkStepSound(opponent, DISTANCE_THRESHOLD);
 
 		if (currentEvidence != null && MainRegistry.match.isRoundStarted()) {
-			playerAlreadySeen = !currentEvidence.getPlayerInSight().contains("None");
+			playerAlreadySeen = !currentEvidence.getPlayerInSight().contains(
+					"None");
 		} else {
 			playerAlreadySeen = false;
 		}
 
 		playerInSight = sightHandler.checkPlayerInSight(opponent,
 				DISTANCE_THRESHOLD);
-		
+
 		if (playerInSight != EntityDistance.None) {
 			lastPosition = opponent.getPosition();
 		}
@@ -220,61 +227,67 @@ public class EntityAILilyCentral extends EntityAIBase {
 				lightChange, stepSound, lastLight, lastSound, opponent);
 		playerTricking = trickHandler.isPlayerTricking(to);
 
-		currentEvidence = new EvidenceTO(playerInSight.name(), timerLeft.name(),
-				lightChange.name(), stepSound.name(), blockSound.name(),
-				playerTricking.name());
-		
+		currentEvidence = new EvidenceTO(playerInSight.name(),
+				timerLeft.name(), lightChange.name(), stepSound.name(),
+				blockSound.name(), playerTricking.name());
+
 		handleSightBar();
 
 	}
 
-	
 	private void handleSightBar() {
-		EntityDistance playerInSight = EntityDistance.valueOf(currentEvidence.getPlayerInSight());
-		//per aggiornare ogni quarto di secondo la barra Lily's Sight
-		if(tickTimer % 2 == 0) {
-			//TODO costante
-			if(playerInSight != EntityDistance.None && sightValue <= 10) {
-				int currentDistance = (int) lily.getPositionVector().distanceTo(opponent.getPositionVector());
-				if(prevDistance >= currentDistance) {
-					//TODO costanti
-					if((currentDistance <= 3) 
-						|| (currentDistance > 3 && currentDistance <= 7 && tickTimer % 6 == 0)
-						|| (currentDistance > 7 && tickTimer % 10 == 0)) {
-						sightValue++;
-					}
-				}
-			} else if (playerInSight == EntityDistance.None
-					&& EntityDistance.valueOf(currentEvidence.getStepSound()) != EntityDistance.None
-					&& sightValue > 0) {
-				sightValue--;
-			}
-			
-			MainRegistry.match.setSightValue(sightValue);
-			prevDistance = (int) lily.getPositionVector().distanceTo(opponent.getPositionVector());
-			
-			if(tickTimer % 20 == 0) {
-				System.out.println("Lily's position: " + lily.getPosition().toString());
-			}
-		}
-		
-		
-		if(playerInSight != EntityDistance.None && !playerAlreadySeen && 
-				MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY &&
-				MainRegistry.match.isMatchStarted()) {
-			SoundHandler.handlePlayerInSightSound((EntityPlayer)opponent);
-		}
-		
-		//resetta il valore da assegnare alla barra quando ricomincia il round
+		EntityDistance playerInSight = EntityDistance
+				.valueOf(currentEvidence.getPlayerInSight());
+		// resetta il valore da assegnare alla barra quando ricomincia il round
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			sightValue = 0;
+		} else {
+			
+			// per aggiornare ogni quarto di secondo la barra Lily's Sight
+			if (tickTimer % 3 == 0) {
+				// TODO costante
+				if (playerInSight != EntityDistance.None && sightValue <= 10) {
+					int currentDistance = (int) lily.getPositionVector()
+							.distanceTo(opponent.getPositionVector());
+					if (prevDistance >= currentDistance) {
+						// TODO costanti
+						if ((currentDistance <= 3)
+								|| (currentDistance > 3 && currentDistance <= 7 && tickTimer % 6 == 0)
+								|| (currentDistance > 7 && tickTimer % 9 == 0)) {
+							sightValue++;
+							if (sightValue == 11) {
+								PlayerDefeatHandler.onPlayerDefeat();
+							}
+						}
+					}
+				} else if (playerInSight == EntityDistance.None
+						&& EntityDistance.valueOf(currentEvidence
+								.getStepSound()) != EntityDistance.None
+						&& sightValue > 0) {
+					sightValue--;
+				}
+			}
+		}
+
+		if (playerInSight != EntityDistance.None
+				&& !playerAlreadySeen
+				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY
+				&& MainRegistry.match.isMatchStarted()) {
+
+			SoundHandler
+					.handlePlayerInSightSound((EntityPlayer) opponent);
+		}
+		
+		MainRegistry.match.setSightValue(sightValue);
+		prevDistance = (int) lily.getPositionVector().distanceTo(
+				opponent.getPositionVector());
+
+		if (tickTimer % 20 == 0) {
+			System.out.println("Lily's position: "
+					+ lily.getPosition().toString());
 		}
 		
 		tickTimer++;
-		
-		if(sightValue == 11) {
-			PlayerDefeatHandler.onPlayerDefeat();
-		}
 	}
 
 	// Trova il pressure plate corrispondente a un blocco sonoro o luminoso
