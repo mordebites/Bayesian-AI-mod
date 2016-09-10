@@ -24,7 +24,7 @@ public class EntityAILilyProva extends EntityAILilyCentral {
 	public EntityAILilyProva(EntityCreature entity, EntityPlayer player) {
 		super(entity, player);
 		stateStartEvidence = new EvidenceTO("None", "Normal", "None", "None",
-				"None", "Uncertain");
+				"None");
 		firstLilyPos = entity.getPositionVector();
 	}
 

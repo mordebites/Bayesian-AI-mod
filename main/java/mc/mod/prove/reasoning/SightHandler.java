@@ -27,15 +27,16 @@ public class SightHandler {
 	}
 
 	//stabilisce se il giocatore  e'  visibile e a quale distanza
-	public EntityDistance checkPlayerInSight(Entity player, int distanceThreshold){
+	public EntityDistance checkPlayerInSight(Entity player, int distanceThreshold, boolean playerAlreadySeen){
 		EntityDistance playerInSight = EntityDistance.None;
 		
 		//controlla se Lily puo' vedere il giocatore verificando che non ci siano blocchi interposti tra i due
 		if(entity.canEntityBeSeen(player)) {
 			
 			//controlla che il giocatore non sia invisibile a causa dell'oscurita'
-			if(player.getBrightness(0) > 0.2 || 
-				(player.getBrightness(0) > 0.1 && (player.motionX != 0 || player.motionY != 0 || player.motionZ != 0))) {
+			if(((player.getBrightness(0) > 0.2
+				|| (player.getBrightness(0) > 0.1 && (player.motionX != 0 || player.motionY != 0 || player.motionZ != 0))))
+				|| playerAlreadySeen) {
 				
 				if(entity.getPositionVector().distanceTo(player.getPositionVector()) > distanceThreshold) {
 					playerInSight = EntityDistance.Far;

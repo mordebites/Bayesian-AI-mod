@@ -6,18 +6,18 @@ import java.util.Iterator;
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
+import mc.mod.prove.entity.ai.decision.DecisorFactory;
+import mc.mod.prove.entity.ai.decision.IDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.EntityTimerLeft;
 import mc.mod.prove.entity.ai.enumerations.Tricking;
-import mc.mod.prove.entity.bayesian.BayesianHandler;
+import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
-import mc.mod.prove.entity.transfer.TrickDeductionTO;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
 import mc.mod.prove.match.PlayerDefeatHandler;
 import mc.mod.prove.reasoning.HearingHandler;
 import mc.mod.prove.reasoning.SightHandler;
-import mc.mod.prove.reasoning.TrickHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockNote;
 import net.minecraft.block.BlockPressurePlate;
@@ -53,8 +53,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// gestori per i dati e il decisore bayesiano
 	private SightHandler sightHandler;
 	private HearingHandler hearingHandler;
-	private TrickHandler trickHandler;
-	private BayesianHandler bayesianHandler;
+	private IDecisor decisor;
 	private EntityAIFactory factory;
 	protected EvidenceTO currentEvidence;
 
@@ -78,9 +77,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
-		bayesianHandler = new BayesianHandler();
-		trickHandler = new TrickHandler();
-
+		decisor = DecisorFactory.getDecisor(DecisorFactory.BAYES_AGGRESSIVE);
+		
 		prevDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
 
@@ -158,7 +156,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		// perform bayesian decision every 1/5 of a second
 		if (tickTimer % MAX_BAYESIAN_TIMER == 0) {
-			this.bayesian();
+			this.decision();
 			currentState.startExecuting();
 		} else {
 			currentState.continueExecuting();
@@ -182,10 +180,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 		return true;
 	}
 
-	private void bayesian() {
-		// imposta i dati percepiti o raccolti nel decisore bayesiano
-		bayesianHandler.setEvidence(currentEvidence);
-		String stateName = bayesianHandler.getDecision();
+	private void decision() {
+		// imposta i dati percepiti nel decisore e ottiene la decisione
+		String stateName = decisor.getDecision(currentEvidence);
 		System.out.println(stateName);
 		currentState = factory.getEntityAI(stateName);
 	}
@@ -217,19 +214,15 @@ public class EntityAILilyCentral extends EntityAIBase {
 		}
 
 		playerInSight = sightHandler.checkPlayerInSight(opponent,
-				DISTANCE_THRESHOLD);
+				DISTANCE_THRESHOLD, playerAlreadySeen);
 
 		if (playerInSight != EntityDistance.None) {
 			lastPosition = opponent.getPosition();
 		}
 
-		TrickDeductionTO to = new TrickDeductionTO(playerInSight, blockSound,
-				lightChange, stepSound, lastLight, lastSound, opponent);
-		playerTricking = trickHandler.isPlayerTricking(to);
-
 		currentEvidence = new EvidenceTO(playerInSight.name(),
 				timerLeft.name(), lightChange.name(), stepSound.name(),
-				blockSound.name(), playerTricking.name());
+				blockSound.name());
 
 		handleSightBar();
 

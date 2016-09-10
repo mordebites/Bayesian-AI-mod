@@ -1,7 +1,7 @@
 package mc.mod.prove.entity;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.entity.ai.EntityAILilyProva;
+import mc.mod.prove.entity.ai.EntityAILilyCentral;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,7 +24,7 @@ public class EntityLilyMob extends EntityVillager {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		if (player != null) {
-			this.tasks.addTask(0, new EntityAILilyProva(this, player));
+			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
 
 			System.out.println("Lily's AI set!");
 		}

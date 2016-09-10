@@ -6,17 +6,15 @@ public class EvidenceTO {
 	private String lightingChange;
 	private String stepSound;
 	private String blockSound;
-	private String playerTricking;
 	
 	public EvidenceTO(String playerInSight, String timer, String lightingChange,
-			String stepSound, String blockSound, String playerTricking) {
+			String stepSound, String blockSound) {
 
 		this.playerInSight = playerInSight;
 		this.timer = timer;
 		this.lightingChange = lightingChange;
 		this.stepSound = stepSound;
 		this.blockSound = blockSound;
-		this.playerTricking = playerTricking;
 	}
 	
 	public int compareTo(EvidenceTO ev2) {
@@ -25,8 +23,7 @@ public class EvidenceTO {
 			&& this.timer.compareTo(ev2.timer) == 0
 			&& this.lightingChange.compareTo(ev2.lightingChange) == 0
 			&& this.stepSound.compareTo(ev2.stepSound) == 0
-			&& this.blockSound.compareTo(ev2.blockSound) == 0
-			&& this.playerTricking.compareTo(ev2.playerTricking) == 0) {
+			&& this.blockSound.compareTo(ev2.blockSound) == 0) {
 				
 			result = 0;
 		}
@@ -38,8 +35,7 @@ public class EvidenceTO {
 						+ "Timer: " + timer +", "
 						+ "Lighting Change: " + lightingChange + ", "
 						+ "Step Sound: " + stepSound + ", "
-						+ "Block Sound: " + blockSound + ", "
-						+ "Payer Tricking: " + playerTricking;
+						+ "Block Sound: " + blockSound;
 		return result;
 	}
 
@@ -61,10 +57,5 @@ public class EvidenceTO {
 
 	public String getBlockSound() {
 		return blockSound;
-	}
-
-	public String getPlayerTricking() {
-		return playerTricking;
-	}
-	
+	}	
 }
