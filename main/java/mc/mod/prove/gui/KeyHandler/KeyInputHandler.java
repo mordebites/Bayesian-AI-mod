@@ -45,5 +45,11 @@ public class KeyInputHandler {
 						+ MainRegistry.lily.posZ);
 			}
 		}
+		
+		if (KeyBindings.escKey.isPressed()) {
+			if (MainRegistry.match.isMatchStarted()) {
+				ModGuiHandler.createGui(ModGuiHandler.GUI_STOP_MATCH);
+			}
+		}
 	}
 }

@@ -1,12 +1,13 @@
 package mc.mod.prove.entity.ai.decision;
 
 import mc.mod.prove.entity.ai.decision.fsm.FSMDecisor;
+import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
 
 public class DecisorFactory {
 	public static final int BAYES_AGGRESSIVE = 0;
 	public static final int FSM_AGGRESSIVE = 1;
-	public static final int ID3_AGGRESSIVE = 2;
+	public static final int TREE_AGGRESSIVE = 2;
 	
 	public static IDecisor getDecisor(int type) {
 		IDecisor decisor = null;
@@ -17,6 +18,10 @@ public class DecisorFactory {
 			}
 			case FSM_AGGRESSIVE : {
 				decisor = new FSMDecisor();
+				break;
+			}
+			case TREE_AGGRESSIVE : {
+				decisor = new TreeDecisor();
 				break;
 			}
 			default : {

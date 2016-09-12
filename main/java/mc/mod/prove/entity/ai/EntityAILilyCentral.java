@@ -9,9 +9,7 @@ import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.decision.DecisorFactory;
 import mc.mod.prove.entity.ai.decision.IDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
-import mc.mod.prove.entity.ai.enumerations.EntityTimerLeft;
-import mc.mod.prove.entity.ai.enumerations.Tricking;
-import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
+import mc.mod.prove.entity.ai.enumerations.TimerLeft;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
@@ -77,7 +75,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
-		decisor = DecisorFactory.getDecisor(DecisorFactory.BAYES_AGGRESSIVE);
+		decisor = DecisorFactory.getDecisor(DecisorFactory.TREE_AGGRESSIVE);
 		
 		prevDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
@@ -191,15 +189,14 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// dare indicazioni al decisore
 	private void handleEvidence() {
 		EntityDistance playerInSight, blockSound, lightChange, stepSound;
-		EntityTimerLeft timerLeft;
-		Tricking playerTricking;
-
+		TimerLeft timerLeft;
+		
 		// stabilisce se sta per scadere il tempo
 		if ((MainRegistry.match.getMinutesTime() * MINS_IN_SEC + MainRegistry.match
 				.getSecsTime()) > TIMER_SEC_THRESHOLD) {
-			timerLeft = EntityTimerLeft.Normal;
+			timerLeft = TimerLeft.Normal;
 		} else {
-			timerLeft = EntityTimerLeft.RunningOut;
+			timerLeft = TimerLeft.RunningOut;
 		}
 		lightChange = sightHandler.checkLight(lastLight, DISTANCE_THRESHOLD);
 		blockSound = hearingHandler.checkBlockSound(lastSound,
@@ -222,7 +219,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		currentEvidence = new EvidenceTO(playerInSight.name(),
 				timerLeft.name(), lightChange.name(), stepSound.name(),
-				blockSound.name());
+				blockSound.name(), currentState.getClass().getName().substring(37));
 
 		handleSightBar();
 
