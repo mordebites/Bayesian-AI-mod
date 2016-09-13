@@ -69,6 +69,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// distanza al quarto di secondo precedente
 	private int prevDistance;
 	private boolean playerAlreadySeen = false;
+	//serve per non far ripetere tante volte il suono
+	//se vede il player all'inizio del round
+	private int startRound = -1;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.lily = entity;
@@ -77,7 +80,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
-		decisor = DecisorFactory.getDecisor(DecisorFactory.TREE_AGGRESSIVE);
+		decisor = DecisorFactory.getDecisor(DecisorFactory.FSM_AGGRESSIVE);
 		
 		prevDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
@@ -157,6 +160,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 		// perform bayesian decision every 1/5 of a second
 		if (tickTimer % MAX_BAYESIAN_TIMER == 0) {
 			this.decision();
+			System.out.println();
 			currentState.startExecuting();
 		} else {
 			currentState.continueExecuting();
@@ -176,9 +180,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 	public boolean continueExecuting() {
 		if (MainRegistry.match.isRoundStarted()) {
 			beforeExecuting();
-		} else {
-			System.out.println("Tree time: " + ((TreeDecisor)decisor).elapsedSum
-								+ " Repetitions: " + ((TreeDecisor)decisor).repetitions);
 		}
 		return true;
 	}
@@ -199,9 +200,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 		// stabilisce se sta per scadere il tempo
 		if ((MainRegistry.match.getMinutesTime() * MINS_IN_SEC + MainRegistry.match
 				.getSecsTime()) > TIMER_SEC_THRESHOLD) {
-			timerLeft = TimerLeft.Normal;
-		} else {
 			timerLeft = TimerLeft.RunningOut;
+		} else {
+			timerLeft = TimerLeft.Normal;
 		}
 		lightChange = sightHandler.checkLight(lastLight, DISTANCE_THRESHOLD);
 		blockSound = hearingHandler.checkBlockSound(lastSound,
@@ -234,12 +235,14 @@ public class EntityAILilyCentral extends EntityAIBase {
 		EntityDistance playerInSight = EntityDistance
 				.valueOf(currentEvidence.getPlayerInSight());
 		// resetta il valore da assegnare alla barra quando ricomincia il round
-		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
+		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME 
+				&& tickTimer != (startRound+1)) {
 			sightValue = 0;
 			playerAlreadySeen = false;
+			startRound = tickTimer;
 		} else {
-			
-			// per aggiornare ogni quarto di secondo la barra Lily's Sight
+			startRound = -1;
+			// per aggiornare la barra Lily's Sight
 			if (tickTimer % 3 == 0) {
 				// TODO costante
 				if (playerInSight != EntityDistance.None && sightValue <= 10) {

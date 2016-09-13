@@ -9,7 +9,7 @@ public class LookAroundState extends HuntState{
 
 	@Override
 	String transition(EvidenceTO evidence) {
-		String next = "";
+		String next = super.transition(evidence);
 		int nextRandom = 2;
 		
 		if (evidence.getTimer().compareTo("RunningOut") == 0) {
@@ -22,9 +22,9 @@ public class LookAroundState extends HuntState{
 				next = "LookAround";
 				nextRandom = 3;
 			}
-		} else {
-			next = super.transition(evidence);
 		}
+		
+		//non deterministic
 		if (next.compareTo("LookAround") == 0) {
 			int n = rdm.nextInt(nextRandom);
 			next = nonDetermin[n];

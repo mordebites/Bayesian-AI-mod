@@ -34,7 +34,7 @@ public class GuiStopMatch extends GuiScreen {
 		int centered_height = (this.height / 2);
 
 		this.texter = new GuiTextField(0, this.fontRendererObj,
-				centered_width - 70, centered_height - 60, 150, 20);
+				centered_width - 125, centered_height - 60, 250, 20);
 		texter.setMaxStringLength(60);
 		texter.setText("Vuoi abbandonare? Perderai gli smeraldi!");
 		this.texter.setFocused(true);

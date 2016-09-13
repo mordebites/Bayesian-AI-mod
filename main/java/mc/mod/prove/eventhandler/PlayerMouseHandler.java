@@ -53,7 +53,7 @@ public class PlayerMouseHandler {
 						// se è nel labirinto
 					} else {
 						message = "Premi M per giocare! \nUsa P per mettere in pausa durante la partita!"
-								+ "\nRicorda: devi essere molto vicino a Lily per colpirla!";
+								+ "\n\nRICORDA: devi essere MOLTO VICINO a Lily per colpirla!";
 					}
 
 					if (!this.messageSent) {

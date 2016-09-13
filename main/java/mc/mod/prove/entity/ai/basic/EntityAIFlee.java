@@ -18,7 +18,6 @@ public class EntityAIFlee extends EntityAIBase {
 		this.entity = entity;
 		this.player = player;
 		this.speed = speed;
-		this.entity.setSprinting(true);
 	}
 
 	@Override
@@ -28,16 +27,15 @@ public class EntityAIFlee extends EntityAIBase {
 	
 	@Override
 	public void startExecuting(){
-		System.out.println("Starting!");
 		position();
 		/*this.theEntityCreature.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ, speed);*/
 	}
 	
 	@Override
 	public boolean continueExecuting() {
-		System.out.println("Continuing!");
-		if(player.getPositionVector().distanceTo(entity.getPositionVector()) < 5 && 
-				(entity.getPositionVector().equals(new Vec3d(newPosX, newPosY, newPosZ)))){
+		if((entity.getPositionVector().equals(new Vec3d(newPosX, newPosY, newPosZ)) && 
+			player.getPositionVector().distanceTo(entity.getPositionVector()) < 5)
+			|| (entity.motionX == 0 && entity.motionZ == 0)){
 			position();
 		}
 
@@ -46,9 +44,14 @@ public class EntityAIFlee extends EntityAIBase {
 
 	public void position(){
 		Vec3d vec3 = null;
+		boolean invisible = false;
 		do {
 			vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 10, 0, player.getPositionVector());
-		} while (vec3 == null);
+			if (entity.worldObj.rayTraceBlocks(
+					vec3, player.getPositionVector(), false, true, false) != null) {
+				invisible = true;
+			}
+		} while (vec3 == null && !invisible);
 		
 		newPosX = vec3.xCoord;
 		newPosY = vec3.yCoord;

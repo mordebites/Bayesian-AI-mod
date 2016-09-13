@@ -22,7 +22,7 @@ public class EntityAIFactory {
 
 		AIs.put("LookAround", new EntityAILookAround(entity, 0.4));
 		AIs.put("Hunt", new EntityAIHunt(entity, player, 0.65));
-		AIs.put("Flee", new EntityAIFlee(entity, player, 0.65));		
+		AIs.put("Flee", new EntityAIFlee(entity, player, 0.7));		
 		
 		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(0.55));
 		su.setPlayerLastPosition(central.getLastPlayerPosition());
@@ -39,8 +39,18 @@ public class EntityAIFactory {
 		EntityAIBase ai = null;
 		try {
 			ai = AIs.get(stateName);
-			if(stateName.compareTo("Suspect") == 0) {
-				((EntityAISuspect) ai).setPlayerLastPosition(central.getLastPlayerPosition());
+			
+			if (stateName.compareTo("Trick") != 0
+				 && stateName.compareTo("LookAround") != 0) {
+				((EntityAITrick)AIs.get("Trick")).setNotTricking();
+				if(stateName.compareTo("Suspect") == 0) {
+					((EntityAISuspect) ai).setPlayerLastPosition(central.getLastPlayerPosition());
+				}
+			} else if (stateName.compareTo("LookAround") == 0) {
+				if (((EntityAITrick)AIs.get("Trick")).isTricking()) {
+					ai = AIs.get("Trick");
+					System.out.println("Sorry, I'm actually TRICKING, not looking around!");
+				}
 			} else if (stateName.compareTo("Trick") == 0) {
 				if (!((EntityAITrick) ai).isTricking()) {
 					((EntityAITrick) ai).setPlayerLastPosition(central.getLastPlayerPosition());
