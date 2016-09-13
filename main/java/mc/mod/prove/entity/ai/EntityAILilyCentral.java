@@ -8,10 +8,10 @@ import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.decision.DecisorFactory;
 import mc.mod.prove.entity.ai.decision.IDecisor;
-import mc.mod.prove.entity.ai.decision.fsm.FSMDecisor;
 import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
+import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
@@ -69,9 +69,6 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// distanza al quarto di secondo precedente
 	private int prevDistance;
 	private boolean playerAlreadySeen = false;
-	//serve per non far ripetere tante volte il suono
-	//se vede il player all'inizio del round
-	private int startRound = -1;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.lily = entity;
@@ -80,7 +77,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
-		decisor = DecisorFactory.getDecisor(DecisorFactory.FSM_AGGRESSIVE);
+		decisor = DecisorFactory.getDecisor(DecisorFactory.BAYES_AGGRESSIVE);
 		
 		prevDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
@@ -180,6 +177,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 	public boolean continueExecuting() {
 		if (MainRegistry.match.isRoundStarted()) {
 			beforeExecuting();
+		} else {
+			System.out.println("Sum:" + ((BayesianDecisor)decisor).elapsedSum +
+								" Repetitions: " + ((BayesianDecisor)decisor).repetitions);
 		}
 		return true;
 	}
@@ -235,13 +235,10 @@ public class EntityAILilyCentral extends EntityAIBase {
 		EntityDistance playerInSight = EntityDistance
 				.valueOf(currentEvidence.getPlayerInSight());
 		// resetta il valore da assegnare alla barra quando ricomincia il round
-		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME 
-				&& tickTimer != (startRound+1)) {
+		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			sightValue = 0;
 			playerAlreadySeen = false;
-			startRound = tickTimer;
 		} else {
-			startRound = -1;
 			// per aggiornare la barra Lily's Sight
 			if (tickTimer % 3 == 0) {
 				// TODO costante
