@@ -3,7 +3,7 @@ import java.util.Random;
 
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
-public class LookAroundState extends FSMState{
+public class LookAroundState extends HuntState{
 	private Random rdm = new Random();
 	private String[] nonDetermin = {"LookAround", "Trick", "Flee"};
 
@@ -16,6 +16,7 @@ public class LookAroundState extends FSMState{
 			if (evidence.getPlayerInSight().compareTo("None") == 0
 				&& evidence.getStepSound().compareTo("Close") == 0) {
 				next = "Flee";
+				
 			} else if (evidence.getLightingChange().compareTo("Close") == 0
 					    || evidence.getBlockSound().compareTo("Close") == 0) {
 				next = "LookAround";

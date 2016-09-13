@@ -98,7 +98,7 @@ public class MainRegistry {
 					}
 				}
 
-				// questo controllo mi servir√† per mostrare correttamente la
+				// questo controllo mi servira'† per mostrare correttamente la
 				// schermata di countdown
 
 				if (match.isMatchStarted() && !match.isRoundStarted() && !match.isGamePaused()) {

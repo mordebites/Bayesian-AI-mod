@@ -39,11 +39,10 @@ public class KeyInputHandler {
 		}
 
 		if (KeyBindings.locationKey.isPressed()) {
-			if (MainRegistry.lily != null) {
-				System.out.println("Requested Lily's Position: "
-						+ MainRegistry.lily.posX + ", "
-						+ MainRegistry.lily.posZ);
-			}
+			int x = MainRegistry.LAB_PLATE.getX();
+			int y = MainRegistry.LAB_PLATE.getY();
+			int z = MainRegistry.LAB_PLATE.getZ();
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(x, y, z);
 		}
 		
 		if (KeyBindings.escKey.isPressed()) {

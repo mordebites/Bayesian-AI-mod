@@ -1,5 +1,7 @@
 package mc.mod.prove.entity.ai.decision.tree;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
 import java.util.Random;
 
@@ -11,7 +13,20 @@ import mc.mod.prove.entity.transfer.EvidenceTO;
 public class TreeDecisor implements IDecisor {
 	private Node root;
 	
+	//benchmarking
+	public long elapsedSum = 0;
+	public int repetitions = 0;
+	private ThreadMXBean threadMXB;
+	
 	public TreeDecisor() {
+		threadMXB = ManagementFactory.getThreadMXBean();
+        if (!threadMXB.isCurrentThreadCpuTimeSupported())
+        {
+            System.out.println("thread monitoring not supported by this JVM");
+            System.exit(1);
+        }
+		
+		
 		SingleChoiceNode hunt, flee, suspect, lookAround, trick;
 		hunt = new SingleChoiceNode("Hunt");
 		flee = new SingleChoiceNode("Flee");
@@ -63,7 +78,12 @@ public class TreeDecisor implements IDecisor {
 	}
 
 	public String getDecision(EvidenceTO evidence) {
-		return root.getDecision(evidence);
+		long start = threadMXB.getCurrentThreadUserTime();
+		String result = root.getDecision(evidence);
+		long elapsed = threadMXB.getCurrentThreadUserTime() - start;
+		this.elapsedSum += elapsed;
+		repetitions++;
+		return result;
 	}
 	
 	abstract class Node {

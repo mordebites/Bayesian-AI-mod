@@ -1,5 +1,7 @@
 package mc.mod.prove.entity.decision.bayesian;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -11,16 +13,28 @@ public class BayesianDecisor implements IDecisor{
 	private Network net = new Network();
 	private int stateT1;
 	private String exStatet1 = "LookAround";
-	private String[] esiti;
+	private String[] outcomes;
 	private PriorityQueue<BayesState> decision = new PriorityQueue<BayesState>();
 	private boolean updated = false;
 	private Random rdm = new Random();
-
+	
+	//benchmark
+	public long elapsedSum = 0;
+	public int repetitions = 0;
+	private ThreadMXBean threadMXB;
+	
 	public BayesianDecisor() {
 		net.readString(FilerXDSL.NET);
 		stateT1 = net.getNode("State_t1");
-		esiti = net.getOutcomeIds(stateT1);
+		outcomes = net.getOutcomeIds(stateT1);
 		net.updateBeliefs();
+		
+		threadMXB = ManagementFactory.getThreadMXBean();
+        if (!threadMXB.isCurrentThreadCpuTimeSupported())
+        {
+            System.out.println("thread monitoring not supported by this JVM");
+            System.exit(1);
+        }
 	}
 
 	/**
@@ -50,13 +64,12 @@ public class BayesianDecisor implements IDecisor{
 	 * @return la stringa con il nome dello stato da eseguire
 	 */
 	public String getDecision(EvidenceTO evidence) {
+		long start = threadMXB.getCurrentThreadUserTime();
+		
 		this.setEvidence(evidence);
-		if (!updated) {
-			throw new RuntimeException("Network Not Updated!");
-		}
 		double[] value = net.getNodeValue(stateT1);
-		for (int i = 0; i < esiti.length; i++) {
-			BayesState currentState = new BayesState(esiti[i], value[i]);
+		for (int i = 0; i < outcomes.length; i++) {
+			BayesState currentState = new BayesState(outcomes[i], value[i]);
 			decision.add(currentState);
 		}
 
@@ -71,6 +84,9 @@ public class BayesianDecisor implements IDecisor{
 
 		String finale = finalDecision.getName();
 
+		long elapsed = threadMXB.getCurrentThreadUserTime() - start;
+		this.elapsedSum += elapsed;
+		repetitions++;
 		return finale;
 	}
 

@@ -1,5 +1,9 @@
 package mc.mod.prove.match;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.Random;
 
 import mc.mod.prove.MainRegistry;
@@ -51,18 +55,19 @@ public class MatchHandler {
 	public static final int WINNER_LILY = 2;
 	public static final int WINNER_NOBODY = 3;
 	private int winner = WINNER_NOBODY;
-	
+
 	private static final int START_MATCH_TELEPORT = 0;
 	private static final int STOP_ROUND_TELEPORT = 1;
 	private static final int START_ROUND_TELEPORT = 2;
 	private static final int STOP_MATCH_TELEPORT = 3;
-	
 
 	private boolean gamePaused = false;
 
 	private final double[][] coord = new double[4][4];
 	private int lastPlayerSpawnIndex = -1;
 	
+	private int matchCounter = 1;
+
 	// serve per inizializzare la matrice che contiene le coordinate dove
 	// teletrasportare npc e giocatore a inizio round
 	public MatchHandler() {
@@ -152,7 +157,7 @@ public class MatchHandler {
 
 		matchStarted = true;
 		inventory.emptyInventory(Minecraft.getMinecraft().thePlayer);
-		
+
 		handleTeleport(START_MATCH_TELEPORT);
 	}
 
@@ -178,7 +183,25 @@ public class MatchHandler {
 			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_MATCH);
 		}
 		handleTeleport(STOP_MATCH_TELEPORT);
-		//MainRegistry.lily.setDead();
+
+		this.handleLog();
+	}
+
+	private void handleLog() {
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter("matchLog.txt", "UTF-8");
+			writer.write("Match " + matchCounter + 
+							", Lily: " +  (roundsNumber - roundsWon) +
+							"/" + roundsNumber);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				writer.close();
+			} catch (Exception e) {System.err.println(e.getMessage());}
+		}
+
 	}
 
 	public void stopRound() {
@@ -186,7 +209,7 @@ public class MatchHandler {
 
 		// resetto il timer del countdown
 		countDownTime = MAX_COUNTDOWN_TIME;
-		
+
 		this.handleTeleport(STOP_ROUND_TELEPORT);
 	}
 
@@ -229,7 +252,7 @@ public class MatchHandler {
 		sightValue = 0; // azzero la visione del maialino
 
 		roundStarted = true;
-		
+
 		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
 		// il round
 		this.handleTeleport(START_ROUND_TELEPORT);
@@ -251,29 +274,37 @@ public class MatchHandler {
 	}
 
 	private void handleTeleport(int teleportType) {
-		
-		if (teleportType == START_MATCH_TELEPORT || teleportType == STOP_ROUND_TELEPORT) {
-			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(188, 8, 705);
+
+		if (teleportType == START_MATCH_TELEPORT
+				|| teleportType == STOP_ROUND_TELEPORT) {
+			Minecraft.getMinecraft().thePlayer
+					.setPositionAndUpdate(188, 8, 705);
 		} else if (teleportType == START_ROUND_TELEPORT) {
 			Random rand = new Random();
 			int n = rand.nextInt(coord.length);
-			
-			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 4, coord[n][3], 2);
-			
-			if(lastPlayerSpawnIndex != -1 && 
-					((new Vec3d(coord[n][0], 4, coord[n][2])).distanceTo(MainRegistry.lily.getPositionVector()) < 15 
-					|| n == lastPlayerSpawnIndex)) {
+
+			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 4,
+					coord[n][3], 2);
+
+			if (lastPlayerSpawnIndex != -1
+					&& ((new Vec3d(coord[n][0], 4, coord[n][2]))
+							.distanceTo(MainRegistry.lily.getPositionVector()) < 15 || n == lastPlayerSpawnIndex)) {
 				System.out.println("Changed n!");
 				n = (n + 1) % 4;
 				lastPlayerSpawnIndex = n;
 			}
-			
-			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(coord[n][0], 4, coord[n][2]);
-			
-			System.out.println("Player Spawn: " + coord[n][0] + ", " + coord[n][2]);
-			System.out.println("Lily Spawn: " + coord[n][1] + ", " + coord[n][3]);
+
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(
+					coord[n][0], 4, coord[n][2]);
+
+			System.out.println("Player Spawn: " + coord[n][0] + ", "
+					+ coord[n][2]);
+			System.out.println("Lily Spawn: " + coord[n][1] + ", "
+					+ coord[n][3]);
 		} else if (teleportType == STOP_MATCH_TELEPORT) {
-			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(MainRegistry.LAB_PLATE.getX()-2, 4, MainRegistry.LAB_PLATE.getZ());
+			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(
+					MainRegistry.LAB_PLATE.getX() - 2, 4,
+					MainRegistry.LAB_PLATE.getZ());
 		}
 	}
 }

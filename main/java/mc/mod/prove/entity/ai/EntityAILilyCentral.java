@@ -8,6 +8,8 @@ import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.decision.DecisorFactory;
 import mc.mod.prove.entity.ai.decision.IDecisor;
+import mc.mod.prove.entity.ai.decision.fsm.FSMDecisor;
+import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
 import mc.mod.prove.entity.transfer.EvidenceTO;
@@ -174,6 +176,9 @@ public class EntityAILilyCentral extends EntityAIBase {
 	public boolean continueExecuting() {
 		if (MainRegistry.match.isRoundStarted()) {
 			beforeExecuting();
+		} else {
+			System.out.println("Tree time: " + ((TreeDecisor)decisor).elapsedSum
+								+ " Repetitions: " + ((TreeDecisor)decisor).repetitions);
 		}
 		return true;
 	}
@@ -231,6 +236,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 		// resetta il valore da assegnare alla barra quando ricomincia il round
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			sightValue = 0;
+			playerAlreadySeen = false;
 		} else {
 			
 			// per aggiornare ogni quarto di secondo la barra Lily's Sight
