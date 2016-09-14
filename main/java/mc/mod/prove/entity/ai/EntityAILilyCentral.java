@@ -8,7 +8,6 @@ import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.decision.DecisorFactory;
 import mc.mod.prove.entity.ai.decision.IDecisor;
-import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
 import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
@@ -61,7 +60,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
 	// viene aggiornato o con l'ultimo blocco attivato
-	// o con l'ultima posizione in cui è stato visto
+	// o con l'ultima posizione in cui ï¿½ stato visto
 	private BlockPos lastPosition = null;
 
 	// per settare la barra Lily's sight

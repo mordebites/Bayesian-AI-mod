@@ -1,6 +1,5 @@
 package mc.mod.prove.entity;
 
-import net.minecraft.block.BlockRedstoneLight;
 import net.minecraft.util.math.BlockPos;
 
 public class BlockEvent{

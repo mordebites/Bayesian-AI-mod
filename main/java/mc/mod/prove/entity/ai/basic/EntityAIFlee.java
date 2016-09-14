@@ -34,7 +34,7 @@ public class EntityAIFlee extends EntityAIBase {
 	@Override
 	public boolean continueExecuting() {
 		if((entity.getPositionVector().equals(new Vec3d(newPosX, newPosY, newPosZ)) && 
-			player.getPositionVector().distanceTo(entity.getPositionVector()) < 5)
+			player.getPositionVector().distanceTo(entity.getPositionVector()) < 3)
 			|| (entity.motionX == 0 && entity.motionZ == 0)){
 			position();
 		}
@@ -47,7 +47,7 @@ public class EntityAIFlee extends EntityAIBase {
 		boolean invisible = false;
 		do {
 			vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 10, 0, player.getPositionVector());
-			if (entity.worldObj.rayTraceBlocks(
+			if (vec3 != null && entity.worldObj.rayTraceBlocks(
 					vec3, player.getPositionVector(), false, true, false) != null) {
 				invisible = true;
 			}

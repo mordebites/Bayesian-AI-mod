@@ -35,15 +35,6 @@ public class PlayerAttackHandler {
 
 						ModGuiHandler
 						.createGui(ModGuiHandler.GUI_WON_ROUND);
-						
-						/*if (MainRegistry.match.getCurrentRound() == MainRegistry.match
-								.getRoundsNumber()) {
-							MainRegistry.match.stopMatch();
-						} else {
-							// mostro la schermata di vittoria
-							ModGuiHandler
-									.createGui(ModGuiHandler.GUI_WON_ROUND);
-						}*/
 					}
 				}
 			}

@@ -1,8 +1,5 @@
 package mc.mod.prove.match;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Random;
 
@@ -283,24 +280,31 @@ public class MatchHandler {
 			Random rand = new Random();
 			int n = rand.nextInt(coord.length);
 
-			MainRegistry.lily.getNavigator().tryMoveToXYZ(coord[n][1], 4,
-					coord[n][3], 2);
-
-			if (lastPlayerSpawnIndex != -1
-					&& ((new Vec3d(coord[n][0], 4, coord[n][2]))
-							.distanceTo(MainRegistry.lily.getPositionVector()) < 15 || n == lastPlayerSpawnIndex)) {
-				System.out.println("Changed n!");
-				n = (n + 1) % 4;
-				lastPlayerSpawnIndex = n;
+			MainRegistry.lily.getNavigator().setPath(null, 0);
+			
+			boolean playerSet = false;
+			int i = 1;
+			while(!playerSet && i <=4) {
+				if (lastPlayerSpawnIndex != -1
+						&& (((new Vec3d(coord[n][0], 4, coord[n][2]))
+								.distanceTo(MainRegistry.lily.getPositionVector()) < 10)
+					|| lastPlayerSpawnIndex == n)) {
+					System.out.println("Changed n!");
+					n = (n + 1) % 4;
+				} else {
+					playerSet = true;
+				}
+				i++;
 			}
-
+			
 			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(
 					coord[n][0], 4, coord[n][2]);
-
+			lastPlayerSpawnIndex = n;
 			System.out.println("Player Spawn: " + coord[n][0] + ", "
-					+ coord[n][2]);
-			System.out.println("Lily Spawn: " + coord[n][1] + ", "
-					+ coord[n][3]);
+			+ coord[n][2]);
+
+			
+			System.out.println("Lily Spawn: " + MainRegistry.lily.getPosition());
 		} else if (teleportType == STOP_MATCH_TELEPORT) {
 			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(
 					MainRegistry.LAB_PLATE.getX() - 2, 4,

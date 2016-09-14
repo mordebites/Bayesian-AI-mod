@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -54,7 +53,7 @@ public class EntityAITrick extends EntityAIBase {
 	}
 
 	public void setPlayerLastPosition(BlockPos lastPosition) {
-		// se non è nota l'ultima posizione
+		// se non e' nota l'ultima posizione
 		if (lastPosition != null) {
 			this.lastPosition = new Vec3d(lastPosition.getX(),
 					lastPosition.getY(), lastPosition.getZ());
@@ -107,6 +106,7 @@ public class EntityAITrick extends EntityAIBase {
 		}
 	}
 
+	//TODO aggiusta
 	@Override
 	public boolean continueExecuting() {
 		if (!movingToPlate) {
@@ -116,10 +116,12 @@ public class EntityAITrick extends EntityAIBase {
 			if (this.entity.getNavigator().tryMoveToXYZ(plateToPress.xCoord,
 					plateToPress.yCoord, plateToPress.zCoord, speed)) {
 				movingToPlate = true;
+				stopTimer = 0;
 				System.out.println("Moving to plate!");
 			} else {
-				//se non può raggiungere la piattaforma scelta in precedenza
+				//se non puo' raggiungere la piattaforma scelta in precedenza
 				plateToPress = null;
+				stopTimer++;
 				System.out.println("Plate to press was reset!");
 			}
 		} else {
@@ -196,7 +198,6 @@ public class EntityAITrick extends EntityAIBase {
 				}
 			}
 		}
-		// JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 

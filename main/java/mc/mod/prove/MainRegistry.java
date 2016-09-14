@@ -5,16 +5,15 @@ import java.util.TimerTask;
 
 import mc.mod.prove.entity.EntityLily;
 import mc.mod.prove.entity.EntityLilyMob;
-import mc.mod.prove.eventhandler.PlayerMouseHandler;
 import mc.mod.prove.eventhandler.PlayerAttackHandler;
 import mc.mod.prove.eventhandler.PlayerLogHandler;
+import mc.mod.prove.eventhandler.PlayerMouseHandler;
 import mc.mod.prove.gui.CommonProxy;
 import mc.mod.prove.gui.KeyHandler.KeyBindings;
 import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemMonsterPlacer;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +32,7 @@ public class MainRegistry {
 	public static final String VERSION = "1.0.0";
 	public static MatchHandler match = new MatchHandler();
 	public static EntityLilyMob lily;
-	
+
 	// coordinate bordi del labirinto
 	public static final int MIN_X_LAB = 178;
 	public static final int MAX_X_LAB = 199;
@@ -46,14 +45,14 @@ public class MainRegistry {
 	@Instance(MODID)
 	public static MainRegistry modInstance;
 
-	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		System.out.println("Preinit!");
 		// Inizializza l'entity lily
 		EntityLily.mainRegistry();
-		lilyEgg = (ItemMonsterPlacer) Item.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
-		
+		lilyEgg = (ItemMonsterPlacer) Item
+				.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
+
 		// registro l'handler che si occupa dei suoni personalizzati
 		SoundHandler.init();
 
@@ -98,10 +97,11 @@ public class MainRegistry {
 					}
 				}
 
-				// questo controllo mi servira'  per mostrare correttamente la
+				// questo controllo mi servira'ï¿½ per mostrare correttamente la
 				// schermata di countdown
 
-				if (match.isMatchStarted() && !match.isRoundStarted() && !match.isGamePaused()) {
+				if (match.isMatchStarted() && !match.isRoundStarted()
+						&& !match.isGamePaused()) {
 					match.setCountDownTime(match.getCountDownTime() - 1);
 
 					if (match.getCountDownTime() < 1) {
@@ -117,12 +117,13 @@ public class MainRegistry {
 		// inizializzo le interfacce widgets che verranno mostrate mentre il
 		// player gioca
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
-		
-		// inizializzo il codice per controllare se l'entity sta per essere attaccata
+
+		// inizializzo il codice per controllare se l'entity sta per essere
+		// attaccata
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
-		
+
 		MinecraftForge.EVENT_BUS.register(new PlayerMouseHandler());
-		
+
 		MinecraftForge.EVENT_BUS.register(new PlayerLogHandler());
 	}
 

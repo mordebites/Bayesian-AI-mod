@@ -22,7 +22,7 @@ public class EntityAIFactory {
 
 		AIs.put("LookAround", new EntityAILookAround(entity, 0.4));
 		AIs.put("Hunt", new EntityAIHunt(entity, player, 0.65));
-		AIs.put("Flee", new EntityAIFlee(entity, player, 0.7));		
+		AIs.put("Flee", new EntityAIFlee(entity, player, 0.75));		
 		
 		EntityAISuspect su = new EntityAISuspect(entity, player, new Double(0.55));
 		su.setPlayerLastPosition(central.getLastPlayerPosition());
