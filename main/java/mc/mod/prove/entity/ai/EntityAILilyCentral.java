@@ -7,10 +7,10 @@ import mc.mod.prove.MainRegistry;
 import mc.mod.prove.entity.BlockEvent;
 import mc.mod.prove.entity.ai.basic.EntityAILookAround;
 import mc.mod.prove.entity.ai.decision.DecisorFactory;
-import mc.mod.prove.entity.ai.decision.IDecisor;
+import mc.mod.prove.entity.ai.decision.Decisor;
+import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
-import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
@@ -42,6 +42,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private static final int DISTANCE_THRESHOLD = 5;
 	private static final int MAX_BAYESIAN_TIMER = 5;
 	private static final int MINS_IN_SEC = 60;
+	private static final int OUT_OF_SIGHT_MAX = 15;
 
 	// la chiave � la positione del plate, PosAndTimer contiene la posizione
 	// del
@@ -52,7 +53,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// gestori per i dati e il decisore bayesiano
 	private SightHandler sightHandler;
 	private HearingHandler hearingHandler;
-	private IDecisor decisor;
+	private Decisor decisor;
 	private EntityAIFactory factory;
 	protected EvidenceTO currentEvidence;
 
@@ -68,6 +69,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	// distanza al quarto di secondo precedente
 	private int prevDistance;
 	private boolean playerAlreadySeen = false;
+	private int outOfSightTimer = 0;
 
 	public EntityAILilyCentral(EntityCreature entity, EntityPlayer player) {
 		this.lily = entity;
@@ -77,7 +79,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 		sightHandler = new SightHandler(entity, player);
 		hearingHandler = new HearingHandler(entity);
 		decisor = DecisorFactory.getDecisor(DecisorFactory.BAYES_AGGRESSIVE);
-		
+
 		prevDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
 
@@ -116,7 +118,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	protected void beforeExecuting() {
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			currentState = new EntityAILookAround((EntityCreature) lily, 0.4);
-		} 
+		}
 
 		// aggiorna la variabile con l'ultima luce accesa
 		if (lastLight != null) {
@@ -177,8 +179,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 		if (MainRegistry.match.isRoundStarted()) {
 			beforeExecuting();
 		} else {
-			System.out.println("Sum:" + ((BayesianDecisor)decisor).elapsedSum +
-								" Repetitions: " + ((BayesianDecisor)decisor).repetitions);
+			System.out.println("Sum:" + decisor.elapsedSum
+					+ " Repetitions: "+ decisor.repetitions);
 		}
 		return true;
 	}
@@ -195,7 +197,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 	private void handleEvidence() {
 		EntityDistance playerInSight, blockSound, lightChange, stepSound;
 		TimerLeft timerLeft;
-		
+
 		// stabilisce se sta per scadere il tempo
 		if ((MainRegistry.match.getMinutesTime() * MINS_IN_SEC + MainRegistry.match
 				.getSecsTime()) > TIMER_SEC_THRESHOLD) {
@@ -224,24 +226,27 @@ public class EntityAILilyCentral extends EntityAIBase {
 
 		currentEvidence = new EvidenceTO(playerInSight.name(),
 				timerLeft.name(), lightChange.name(), stepSound.name(),
-				blockSound.name(), currentState.getClass().getName().substring(37));
+				blockSound.name(), currentState.getClass().getName()
+						.substring(37));
 
 		handleSightBar();
 
 	}
 
 	private void handleSightBar() {
-		EntityDistance playerInSight = EntityDistance
-				.valueOf(currentEvidence.getPlayerInSight());
+		EntityDistance playerInSight = EntityDistance.valueOf(currentEvidence
+				.getPlayerInSight());
 		// resetta il valore da assegnare alla barra quando ricomincia il round
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			sightValue = 0;
 			playerAlreadySeen = false;
+			outOfSightTimer = 0;
 		} else {
 			// per aggiornare la barra Lily's Sight
 			if (tickTimer % 3 == 0) {
 				// TODO costante
 				if (playerInSight != EntityDistance.None && sightValue <= 10) {
+					outOfSightTimer = 0;
 					int currentDistance = (int) lily.getPositionVector()
 							.distanceTo(opponent.getPositionVector());
 					if (prevDistance >= currentDistance) {
@@ -256,23 +261,26 @@ public class EntityAILilyCentral extends EntityAIBase {
 						}
 					}
 				} else if (playerInSight == EntityDistance.None
-						&& EntityDistance.valueOf(currentEvidence
-								.getStepSound()) != EntityDistance.None
 						&& sightValue > 0) {
-					sightValue--;
+					outOfSightTimer++;
+					if (EntityDistance.valueOf(currentEvidence.getStepSound()) != EntityDistance.None) {
+							sightValue--;
+					} else {
+						if (outOfSightTimer >= OUT_OF_SIGHT_MAX) {
+							sightValue--;
+						}
+					}
 				}
 			}
 		}
 
-		if (playerInSight != EntityDistance.None
-				&& !playerAlreadySeen
+		if (playerInSight != EntityDistance.None && !playerAlreadySeen
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY
 				&& MainRegistry.match.isMatchStarted()) {
 
-			SoundHandler
-					.handlePlayerInSightSound((EntityPlayer) opponent);
+			SoundHandler.handlePlayerInSightSound((EntityPlayer) opponent);
 		}
-		
+
 		MainRegistry.match.setSightValue(sightValue);
 		prevDistance = (int) lily.getPositionVector().distanceTo(
 				opponent.getPositionVector());
@@ -281,7 +289,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 			System.out.println("Lily's position: "
 					+ lily.getPosition().toString());
 		}
-		
+
 		tickTimer++;
 	}
 

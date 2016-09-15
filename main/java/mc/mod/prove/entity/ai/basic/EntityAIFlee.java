@@ -28,13 +28,12 @@ public class EntityAIFlee extends EntityAIBase {
 	@Override
 	public void startExecuting(){
 		position();
-		/*this.theEntityCreature.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ, speed);*/
 	}
 	
 	@Override
 	public boolean continueExecuting() {
 		if((entity.getPositionVector().equals(new Vec3d(newPosX, newPosY, newPosZ)) && 
-			player.getPositionVector().distanceTo(entity.getPositionVector()) < 3)
+			player.getPositionVector().distanceTo(entity.getPositionVector()) < 6)
 			|| (entity.motionX == 0 && entity.motionZ == 0)){
 			position();
 		}

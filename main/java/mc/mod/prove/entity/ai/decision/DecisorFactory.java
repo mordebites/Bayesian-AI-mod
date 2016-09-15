@@ -9,8 +9,8 @@ public class DecisorFactory {
 	public static final int FSM_AGGRESSIVE = 1;
 	public static final int TREE_AGGRESSIVE = 2;
 	
-	public static IDecisor getDecisor(int type) {
-		IDecisor decisor = null;
+	public static Decisor getDecisor(int type) {
+		Decisor decisor = null;
 		switch (type) {
 			case BAYES_AGGRESSIVE : {
 				decisor = new BayesianDecisor();

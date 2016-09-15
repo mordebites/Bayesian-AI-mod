@@ -39,18 +39,8 @@ public class EntityAIFactory {
 		EntityAIBase ai = null;
 		try {
 			ai = AIs.get(stateName);
-			
-			if (stateName.compareTo("Trick") != 0
-				 && stateName.compareTo("LookAround") != 0) {
-				((EntityAITrick)AIs.get("Trick")).setNotTricking();
-				if(stateName.compareTo("Suspect") == 0) {
-					((EntityAISuspect) ai).setPlayerLastPosition(central.getLastPlayerPosition());
-				}
-			} else if (stateName.compareTo("LookAround") == 0) {
-				if (((EntityAITrick)AIs.get("Trick")).isTricking()) {
-					ai = AIs.get("Trick");
-					System.out.println("Sorry, I'm actually TRICKING, not looking around!");
-				}
+			if(stateName.compareTo("Suspect") == 0) {
+				((EntityAISuspect) ai).setPlayerLastPosition(central.getLastPlayerPosition());
 			} else if (stateName.compareTo("Trick") == 0) {
 				if (!((EntityAITrick) ai).isTricking()) {
 					((EntityAITrick) ai).setPlayerLastPosition(central.getLastPlayerPosition());

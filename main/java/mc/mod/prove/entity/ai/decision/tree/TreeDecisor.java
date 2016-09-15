@@ -5,12 +5,12 @@ import java.lang.management.ThreadMXBean;
 import java.util.HashMap;
 import java.util.Random;
 
-import mc.mod.prove.entity.ai.decision.IDecisor;
+import mc.mod.prove.entity.ai.decision.Decisor;
 import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
-public class TreeDecisor implements IDecisor {
+public class TreeDecisor extends Decisor {
 	private Node root;
 	
 	//benchmarking

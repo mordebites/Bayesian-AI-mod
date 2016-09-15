@@ -5,11 +5,11 @@ import java.lang.management.ThreadMXBean;
 import java.util.PriorityQueue;
 import java.util.Random;
 
-import mc.mod.prove.entity.ai.decision.IDecisor;
+import mc.mod.prove.entity.ai.decision.Decisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import smile.Network;
 
-public class BayesianDecisor implements IDecisor{
+public class BayesianDecisor extends Decisor{
 	private Network net = new Network();
 	private int stateT1;
 	private String exStatet1 = "LookAround";
@@ -17,11 +17,6 @@ public class BayesianDecisor implements IDecisor{
 	private PriorityQueue<BayesState> decision = new PriorityQueue<BayesState>();
 	private boolean updated = false;
 	private Random rdm = new Random();
-	
-	//benchmark
-	public long elapsedSum = 0;
-	public int repetitions = 0;
-	private ThreadMXBean threadMXB;
 	
 	public BayesianDecisor() {
 		net.readString(FilerXDSL.NET);

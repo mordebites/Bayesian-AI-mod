@@ -3,16 +3,11 @@ package mc.mod.prove.entity.ai.decision.fsm;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 
-import mc.mod.prove.entity.ai.decision.IDecisor;
+import mc.mod.prove.entity.ai.decision.Decisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
-public class FSMDecisor implements IDecisor {
+public class FSMDecisor extends Decisor {
 	FSMState currentState = FSMFactory.getState(FSMFactory.LOOK_AROUND);
-	
-	//benchmarking
-	public long elapsedSum = 0;
-	public int repetitions = 0;
-	private ThreadMXBean threadMXB;
 	
 	public FSMDecisor() {
 		threadMXB = ManagementFactory.getThreadMXBean();

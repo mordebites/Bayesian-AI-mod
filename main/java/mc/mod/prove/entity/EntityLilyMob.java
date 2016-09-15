@@ -10,7 +10,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 public class EntityLilyMob extends EntityVillager {
-	private final static int HIT_DISTANCE = 2;
+	private final static int HIT_DISTANCE = 1;
 	
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
