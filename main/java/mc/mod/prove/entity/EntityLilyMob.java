@@ -9,14 +9,17 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
+/**
+ * Class representing the main entity of the mod, Lily. Handles AI and health.
+ */
 public class EntityLilyMob extends EntityVillager {
+	//the player needs to be this close to Lily to hit her
 	private final static int HIT_DISTANCE = 1;
 	
 	public EntityLilyMob(World worldIn) {
 		super(worldIn);
 		MainRegistry.lily = this;
 		initTasks();
-		//InventoryContentHandler.removeLilyEggs(Minecraft.getMinecraft().thePlayer);
 
 	}
 
@@ -24,18 +27,20 @@ public class EntityLilyMob extends EntityVillager {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 
 		if (player != null) {
+			//adds the AI that handles basic behaviours
 			this.tasks.addTask(0, new EntityAILilyCentral(this, player));
 
-			System.out.println("Lily's AI set!");
+			System.out.println("AI set!");
 		}
 	}
 	
+	//prevents Lily from making the usual villager sounds
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return null;
 	}
 	
-	
+	//forces the match to end when Lily dies
 	@Override
 	public void setDead() {
 		super.setDead();
@@ -45,9 +50,11 @@ public class EntityLilyMob extends EntityVillager {
 			MainRegistry.match.stopMatch();
 		}
 		
-		System.out.println("Oh noes Lily died!");
+		System.out.println("Oh no, Lily died!");
 	}
 	
+	//the animation for the damage is performed
+	//only if the player's distance is below HIT_DISTANCE
 	@Override
 	public void performHurtAnimation(){
 		double distance = getDistance();
@@ -56,6 +63,8 @@ public class EntityLilyMob extends EntityVillager {
 		}
 	}
 	
+	//Lily gets damaged
+	//only if the player's distance is below HIT_DISTANCE
 	@Override
 	public boolean isEntityInvulnerable(DamageSource source) {
 		boolean result = super.isEntityInvulnerable(source);

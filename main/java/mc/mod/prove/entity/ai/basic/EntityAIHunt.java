@@ -4,6 +4,9 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Class that implements the AI for hunting the player
+ */
 public class EntityAIHunt extends EntityAIBase {
 	private EntityCreature entity;
 	private EntityPlayer player;

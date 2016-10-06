@@ -138,7 +138,6 @@ public class SightHandler {
 
 			if (lightSeen) {
 				System.out.println("Lily saw a light!");
-				lastLight.setPerceived(true);
 				if (entity.getPositionVector().distanceTo(
 						new Vec3d(lastLight.getPos().getX(), lastLight.getPos()
 								.getY(), lastLight.getPos().getZ())) > distanceThreshold) {

@@ -3,8 +3,12 @@ import java.util.Random;
 
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
+/**
+ * Class implementing the LookAround state for the finite state machine.
+ */
 public class LookAroundState extends HuntState{
 	private Random rdm = new Random();
+	//used to ensure nondeterminism
 	private String[] nonDetermin = {"LookAround", "Trick", "Flee"};
 
 	@Override

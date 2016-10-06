@@ -1,10 +1,5 @@
 package mc.mod.prove.entity.ai.basic;
 
-import mc.mod.prove.entity.EntityLilyMob;
-import mc.mod.prove.entity.movement.JumpHelper;
-import net.minecraft.block.BlockPressurePlate;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -12,6 +7,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Class that implements the AI to suspect of an event.
+ */
 public class EntityAISuspect extends EntityAIBase {
 	private EntityCreature entity;
 	private EntityPlayer player;
@@ -46,7 +44,7 @@ public class EntityAISuspect extends EntityAIBase {
 			// position of the last activated plate
 			Vec3d lastPosVec = new Vec3d(lastPosition.getX(),
 					lastPosition.getY(), lastPosition.getZ());
-			// distanza tra l'npc e il blocco attivato
+			// distance between entity and last activated block
 			int distance = (int) entity.getPositionVector().distanceTo(
 					lastPosVec);
 
@@ -62,13 +60,11 @@ public class EntityAISuspect extends EntityAIBase {
 
 			this.entity.getNavigator().tryMoveToXYZ(newPosX, newPosY, newPosZ,
 					speed);
-			//JumpHelper.pathHelper(entity);
 		}
 	}
 
 	@Override
 	public boolean continueExecuting() {
-		//JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 }

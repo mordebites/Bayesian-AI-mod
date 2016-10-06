@@ -6,7 +6,11 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 
+/**
+ * Class that implements the AI for the escape
+ */
 public class EntityAIFlee extends EntityAIBase {
+	private static final int DISTANCE_THRESHOLD = 6;
 	private EntityCreature entity;
 	private EntityPlayer player;
 	private double speed;
@@ -32,8 +36,11 @@ public class EntityAIFlee extends EntityAIBase {
 	
 	@Override
 	public boolean continueExecuting() {
+		//if the entity has reached the chosen spot
+		//or the opponent is closer than a certain threshold
+		//then a new destination is chosen 
 		if((entity.getPositionVector().equals(new Vec3d(newPosX, newPosY, newPosZ)) && 
-			player.getPositionVector().distanceTo(entity.getPositionVector()) < 6)
+			player.getPositionVector().distanceTo(entity.getPositionVector()) < DISTANCE_THRESHOLD)
 			|| (entity.motionX == 0 && entity.motionZ == 0)){
 			position();
 		}
@@ -50,6 +57,7 @@ public class EntityAIFlee extends EntityAIBase {
 					vec3, player.getPositionVector(), false, true, false) != null) {
 				invisible = true;
 			}
+		//the chosen position must not be visible from player's position
 		} while (vec3 == null && !invisible);
 		
 		newPosX = vec3.xCoord;

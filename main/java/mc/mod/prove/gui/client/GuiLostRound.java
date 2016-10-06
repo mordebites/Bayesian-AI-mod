@@ -36,14 +36,14 @@ public class GuiLostRound extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 120, centered_height - 60, 240, 20);
 		texter.setMaxStringLength(90);
-		texter.setText("Hai perso il round, amico!");
+		texter.setText("You lost the round, man!");
 		this.texter.setFocused(true);
 
 		String message = "";
 		if(MainRegistry.match.getCurrentRound() == MainRegistry.match.getRoundsNumber()) {
 			message = "Ok...";
 		} else {
-			message = "Fammi riprovare!";
+			message = "Let me try again!";
 		}
 		this.buttonList.add(this.okay_button = new GuiButton(0,
 				centered_width - 100, centered_height - 24, message));
@@ -61,7 +61,6 @@ public class GuiLostRound extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		System.out.println("Ripristino lo stato di PAUSED");
 		// tolgo il gioco dallo stato di pausa
 		MainRegistry.match.setGamePaused(false);
 	}

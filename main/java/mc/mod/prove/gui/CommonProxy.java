@@ -4,7 +4,9 @@ import mc.mod.prove.MainRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-// common proxy è una classe usata per registrare la mod gui con l'handler della gui
+/**
+ * A class used to register the GUI for the mod to the GUI handler
+ */
 
 public class CommonProxy {
 	public static void init(FMLInitializationEvent e) {

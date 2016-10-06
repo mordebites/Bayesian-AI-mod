@@ -36,11 +36,11 @@ public class GuiRoundWon extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 80, centered_height - 60, 170, 20);
 		texter.setMaxStringLength(70);
-		texter.setText("Hai vinto il round!");
+		texter.setText("You won the round!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,
-				centered_width - 100, centered_height - 24, "Avevi dubbi?"));
+				centered_width - 100, centered_height - 24, "Of course I did"));
 	}
 
 	@Override
@@ -55,7 +55,6 @@ public class GuiRoundWon extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		System.out.println("Ripristino lo stato di PAUSED");
 		// tolgo il gioco dallo stato di pausa
 		MainRegistry.match.setGamePaused(false);
 	}

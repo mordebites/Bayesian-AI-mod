@@ -11,6 +11,9 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * The factory to abstract the instantiation of the current basic AI.
+ */
 public class EntityAIFactory {
 	private HashMap<String, EntityAIBase> AIs = new HashMap<String, EntityAIBase>();
 	private EntityAILilyCentral central;
@@ -49,7 +52,7 @@ public class EntityAIFactory {
 				}
 			}
 		} catch (Exception e){
-			System.err.println("Panic at the Factory!");
+			System.err.println("Problem occured in the AI factory!");
 			System.err.println(e.getMessage());
 		}
 		return ai;

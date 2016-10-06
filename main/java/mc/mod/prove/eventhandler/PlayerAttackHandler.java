@@ -10,6 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Class that handles an attack from the player.
+ */
 public class PlayerAttackHandler {
 	@SubscribeEvent
 	public void onAttack(LivingHurtEvent event) {
@@ -17,6 +20,7 @@ public class PlayerAttackHandler {
 		if (player != null) {
 			EntityLivingBase entity = event.getEntityLiving();
 
+			//the event is handled only if Lily is about to be hit
 			if (entity instanceof EntityLilyMob) {
 				if (MainRegistry.match.isMatchStarted()) {
 					
@@ -25,13 +29,13 @@ public class PlayerAttackHandler {
 						MainRegistry.match
 								.setWinner(MatchHandler.WINNER_PLAYER);
 
-						// incremento il numero di round vinti
+						// increase number of rounds won
 						MainRegistry.match.setRoundsWon(MainRegistry.match
 								.getRoundsWon() + 1);
 						MainRegistry.match.stopRound();
 
-						// se i round sono finiti allora finisco il gioco
-						// altrimenti comincio un nuovo round
+						// if rounds are over then the game is over
+						// else a new round starts
 
 						ModGuiHandler
 						.createGui(ModGuiHandler.GUI_WON_ROUND);

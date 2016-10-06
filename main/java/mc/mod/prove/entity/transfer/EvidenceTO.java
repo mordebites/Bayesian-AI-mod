@@ -1,5 +1,8 @@
 package mc.mod.prove.entity.transfer;
 
+/**
+ * Transfer object to pass data from central handler to decisor.
+ */
 public class EvidenceTO {
 	private String playerInSight;
 	private String timer;

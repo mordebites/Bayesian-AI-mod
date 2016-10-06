@@ -17,8 +17,8 @@ public class AwardHandler {
 	public static int getEmeraldQuantity(EntityPlayer ep) {
 		int itemsNumber = 0;
 
-		// prende la grandezza dello stack e si segna la posizione se sono già
-		// presenti emerald nell'inventario
+		// saves stack size and index of the first
+		// occurrence of emeralds in the inventory
 		IInventory inv = ep.inventory;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			if (inv.getStackInSlot(i) != null) {
@@ -39,8 +39,8 @@ public class AwardHandler {
 
 		int index = 0;
 
-		// prende la grandezza dello stack e si segna la posizione se sono già
-		// presenti emerald nell'inventario
+		// saves stack size and index of the first
+		// occurrence of emeralds in the inventory
 		IInventory inv = ep.inventory;
 		for (int i = 0; i < inv.getSizeInventory(); i++) {
 			if (inv.getStackInSlot(i) != null) {
@@ -54,10 +54,10 @@ public class AwardHandler {
 			}
 		}
 
-		// se non sono presenti emerald all'interno dell'inventario aggiungo
-		// l'emerald nella prima posizione disponibile (in caso tutto
-		// l'inventario
-		// dovesse essere pieno rimpiazzo la prima posizione dell'inventario :(
+		// if there are no emeralds in the inventory, it adds
+		// the emerald into the first available position.
+		// if the whole inventory is full, it replaces
+		// the first element
 		if (currentAmount == 0) {
 			for (int i = 0; i < inv.getSizeInventory(); i++) {
 				if (inv.getStackInSlot(i) == null) {
@@ -68,8 +68,8 @@ public class AwardHandler {
 			}
 		}
 
-		// sommo la quantita' di vincita della partita
-		// alla quantita' presente nell'inventario
+		// sums the won quantity to 
+		// the quantity already present in the inventory
 		newAmount += currentAmount;
 
 		ItemStack newEmerald = new ItemStack(Item.getByNameOrId(ITEM_NAME),

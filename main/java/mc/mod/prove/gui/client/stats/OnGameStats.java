@@ -7,7 +7,9 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-// interfaccia che mostra i widgets principali del gioco
+/**
+ * GUI class for the main widgets seen during the match.
+ */
 
 public class OnGameStats extends Gui {
 	private static final int REDSTR = Integer.parseInt("FF0000", 16);
@@ -31,14 +33,14 @@ public class OnGameStats extends Gui {
 		this.width = scaled.getScaledWidth();
 		this.height = scaled.getScaledHeight();
 		
-		// disegno i vari widgets
+		// draws widgets
 
 		drawRound(MainRegistry.match.getCurrentRound(), MainRegistry.match.getRoundsNumber());
 
 		drawTime();
 
-		// sight suspect bar, prima si setta il current sight value
-		// poi si disegna la barra
+		//first you set current sight value
+		//then you draw the bar
 		drawSightBar();
 
 	}

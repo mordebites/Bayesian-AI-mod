@@ -10,6 +10,9 @@ import mc.mod.prove.entity.ai.enumerations.EntityDistance;
 import mc.mod.prove.entity.ai.enumerations.TimerLeft;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
+/**
+ * Class implementing the decisor based on the decision tree.
+ */
 public class TreeDecisor extends Decisor {
 	private Node root;
 	
@@ -19,14 +22,9 @@ public class TreeDecisor extends Decisor {
 	private ThreadMXBean threadMXB;
 	
 	public TreeDecisor() {
-		threadMXB = ManagementFactory.getThreadMXBean();
-        if (!threadMXB.isCurrentThreadCpuTimeSupported())
-        {
-            System.out.println("thread monitoring not supported by this JVM");
-            System.exit(1);
-        }
+		super();
 		
-		
+		//from this point on the structure of the three is initialized
 		SingleChoiceNode hunt, flee, suspect, lookAround, trick;
 		hunt = new SingleChoiceNode("Hunt");
 		flee = new SingleChoiceNode("Flee");
@@ -79,16 +77,22 @@ public class TreeDecisor extends Decisor {
 
 	public String getDecision(EvidenceTO evidence) {
 		long start = threadMXB.getCurrentThreadUserTime();
+		
+		//actual transition
 		String result = root.getDecision(evidence);
+		
 		long elapsed = threadMXB.getCurrentThreadUserTime() - start;
 		this.elapsedSum += elapsed;
 		repetitions++;
 		return result;
 	}
 	
+	//each of its subclasses implements one of the relevant variables of the problem
 	abstract class Node {
 		boolean isLeaf;
 
+		//for non terminal nodes, it calls itself on the appropriate child
+		//for leaf nodes, it returns a choice
 		abstract String getDecision(EvidenceTO evidence);
 	}
 
@@ -197,6 +201,7 @@ public class TreeDecisor extends Decisor {
 		}
 	}
 
+	//for nodes with more than one possible choices; nondeterministic.
 	class MultipleChoiceNode extends Node {
 		Node[] choices;
 

@@ -36,7 +36,7 @@ public class GuiMatchWon extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 100, centered_height - 60, 200, 20);
 		texter.setMaxStringLength(70);
-		texter.setText("Congratulazioni, hai vinto la PARTITA!");
+		texter.setText("Kudos, you won the MATCH!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0,
@@ -52,7 +52,6 @@ public class GuiMatchWon extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		System.out.println("Ripristino lo stato di PAUSED");
 		// tolgo il gioco dallo stato di pausa
 		MainRegistry.match.setGamePaused(false);
 	}

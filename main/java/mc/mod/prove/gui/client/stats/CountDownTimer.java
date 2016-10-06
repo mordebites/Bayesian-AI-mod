@@ -5,6 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
+/**
+ * Class that handles the countdown timer at the beginning of each round.
+ */
 public class CountDownTimer extends Gui {
 	private static final int REDSTR = Integer.parseInt("FF0000", 16);
 	private static final int YELLOWSTR = Integer.parseInt("FFAA00", 16);

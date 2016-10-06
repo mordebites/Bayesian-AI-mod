@@ -36,11 +36,11 @@ public class GuiStopMatch extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 125, centered_height - 60, 250, 20);
 		texter.setMaxStringLength(60);
-		texter.setText("Vuoi abbandonare? Perderai gli smeraldi!");
+		texter.setText("Wanna leave? You'll loose the emeralds!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Sì..."));
+				centered_height - 24, "Yep..."));
 		this.buttonList.add(this.b = new GuiButton(1, centered_width - 100,
 				centered_height + 4, "No!"));
 	}
@@ -63,7 +63,6 @@ public class GuiStopMatch extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		System.out.println("Ripristino lo stato di PAUSED");
 		// tolgo il gioco dallo stato di pausa
 		MainRegistry.match.setGamePaused(false);
 	}

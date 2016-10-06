@@ -9,35 +9,35 @@ import mc.mod.prove.entity.ai.decision.Decisor;
 import mc.mod.prove.entity.transfer.EvidenceTO;
 import smile.Network;
 
+/**
+ * Class implementing the decisor based on the bayesian network.
+ */
 public class BayesianDecisor extends Decisor{
 	private Network net = new Network();
+	//index of the State t+1 inside the network
 	private int stateT1;
+	//previous statet+1
 	private String exStatet1 = "LookAround";
 	private String[] outcomes;
 	private PriorityQueue<BayesState> decision = new PriorityQueue<BayesState>();
+	//checks whether the net is updated
 	private boolean updated = false;
 	private Random rdm = new Random();
 	
 	public BayesianDecisor() {
+		super();
+		//the file with the net has been converted into a long string to overcome compatibility problems
 		net.readString(FilerXDSL.NET);
 		stateT1 = net.getNode("State_t1");
 		outcomes = net.getOutcomeIds(stateT1);
 		net.updateBeliefs();
-		
-		threadMXB = ManagementFactory.getThreadMXBean();
-        if (!threadMXB.isCurrentThreadCpuTimeSupported())
-        {
-            System.out.println("thread monitoring not supported by this JVM");
-            System.exit(1);
-        }
 	}
 
 	/**
-	 * Permette di impostare i risultati delle osservazioni in modo da
-	 * aggiornare la rete.
+	 * Sets the data to update net's beliefs.
 	 * 
 	 * @param evidence
-	 *            il transfer object contenente i risultati delle osservazioni
+	 *            transfer object containing data
 	 */
 	private void setEvidence(EvidenceTO evidence) {
 		net.setEvidence("State_t", exStatet1);
@@ -52,11 +52,9 @@ public class BayesianDecisor extends Decisor{
 	}
 
 	/**
-	 * Esegue il ragionamento bayesiano e restituisce il nome dello stato da
-	 * eseguire. Il metodo deve essere chiamato dopo aver settato i risultati
-	 * delle osservazioni.
+	 * Performs bayesian reasoning and returns the name of the state to execute.
 	 * 
-	 * @return la stringa con il nome dello stato da eseguire
+	 * @return a string with the name of the state to execute
 	 */
 	public String getDecision(EvidenceTO evidence) {
 		long start = threadMXB.getCurrentThreadUserTime();
@@ -85,14 +83,15 @@ public class BayesianDecisor extends Decisor{
 		return finale;
 	}
 
+	//introduces nondeterminism
 	private BayesState makeDecision(BayesState[] states) {
 		BayesState finalDecision = states[0];
 		final int THRESHOLD = 5;
 
-		// se la prima opzione e' abbastanza vicina alla seconda come
-		// probabilita'
+		// if first option had probability close to second option's
 		if (states[0].getValue() - states[1].getValue() <= THRESHOLD) {
 			int choices = 2;
+			// if third option had probability close to first options'
 			if (states[1].getValue() - states[2].getValue() <= THRESHOLD) {
 				choices = 3;
 			}

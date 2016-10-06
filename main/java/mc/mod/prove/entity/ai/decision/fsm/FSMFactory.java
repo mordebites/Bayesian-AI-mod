@@ -1,6 +1,8 @@
 package mc.mod.prove.entity.ai.decision.fsm;
 
-
+/**
+ * Class implementing the factory that instantiates FSM states.
+ */
 public class FSMFactory {
 	static final String LOOK_AROUND = "LookAround";
 	static final String HUNT = "Hunt";

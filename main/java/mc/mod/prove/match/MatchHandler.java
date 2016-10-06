@@ -12,19 +12,16 @@ import net.minecraft.util.math.Vec3d;
 public class MatchHandler {
 	public InventoryContentHandler inventory = new InventoryContentHandler();
 
-	// tempo del countdown iniziale
-	// il tempo del countdown e' stato settato a 4 poiche' a volte
-	// il il numero 3 a causa del thread di Timer non e' mostrato
+	// initial countdown timer
+	// set to 4 because sometimes number 3
+	// isn't shown because of the Timer thread
 	private static final int MAX_COUNTDOWN_TIME = 4;
 	private int countDownTime = MAX_COUNTDOWN_TIME;
 
-	// minuti e secondi del round corrente
-
+	// minutes and seconds of the current round
 	public static final int MAX_ROUND_TIME = 5;
 	private int minutesTime = MAX_ROUND_TIME;
 	private int secsTime = 0;
-
-	// variabili di stato del match e del round
 
 	private boolean matchStarted = false;
 	private boolean roundStarted = false;
@@ -32,22 +29,18 @@ public class MatchHandler {
 	public static final int MAX_ROUNDS = 5;
 	public static final int MIN_ROUNDS = 3;
 
-	// roundsNumber verra' settato quando si comincia la scommessa
-	// settiamo quindi il numero di round da giocare in tutto il match
-	// e possibile scegliere tra 5 e 3 round se cosi' non fosse abbiamo una
-	// eccezione
+	// roundsNumber set when starting the bet, represents number of
+	// rounds in the match. The player can choose between 3 and 5 rounds,
+	// if a different number is set an exception is thrown
 
 	private int roundsNumber = 0;
 	private int currentRound = 0;
 	private int roundsWon = 0;
 
-	// variabili che serviranno per capire quando uno dei due
-	// giocatori (mob o player) vince
-
 	private static final int MAX_SIGHT_VALUE = 10;
 	private int sightValue = 0;
 
-	// variabili che gestiscono chi dei due giocatori ha vinto
+	// variables that represent the possible winners
 	public static final int WINNER_PLAYER = 1;
 	public static final int WINNER_LILY = 2;
 	public static final int WINNER_NOBODY = 3;
@@ -65,8 +58,8 @@ public class MatchHandler {
 	
 	private int matchCounter = 1;
 
-	// serve per inizializzare la matrice che contiene le coordinate dove
-	// teletrasportare npc e giocatore a inizio round
+	// initialization of the matrix with the coordinates
+	// where to move player at the beginning of the round
 	public MatchHandler() {
 		coord[0][0] = 180.5;
 		coord[0][1] = 193.143;
@@ -146,10 +139,7 @@ public class MatchHandler {
 			throw new RuntimeException("Manca numero di round!");
 		}
 
-		// resetto il contatore di rounds vinti
 		roundsWon = 0;
-
-		// resetto il round corrente
 		currentRound = 0;
 
 		matchStarted = true;
@@ -162,7 +152,7 @@ public class MatchHandler {
 		matchStarted = false;
 		roundStarted = false;
 
-		// resetto il timer del countdown
+		// resets countdown timer
 		countDownTime = MAX_COUNTDOWN_TIME;
 		inventory.refillInventory();
 
@@ -170,41 +160,22 @@ public class MatchHandler {
 
 		int roundsLost = roundsNumber - roundsWon;
 
+		//calculates number of emeralds earned or lost
 		if (roundsWon > (roundsNumber / 2)) {
 			AwardHandler.addEmeralds(playerIn, (roundsWon * 2));
-
 			ModGuiHandler.createGui(ModGuiHandler.GUI_WON_MATCH);
+			
 		} else {
 			AwardHandler.removeEmeralds(playerIn, roundsLost);
-
 			ModGuiHandler.createGui(ModGuiHandler.GUI_LOST_MATCH);
 		}
 		handleTeleport(STOP_MATCH_TELEPORT);
-
-		this.handleLog();
-	}
-
-	private void handleLog() {
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter("matchLog.txt", "UTF-8");
-			writer.write("Match " + matchCounter + 
-							", Lily: " +  (roundsNumber - roundsWon) +
-							"/" + roundsNumber);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				writer.close();
-			} catch (Exception e) {System.err.println(e.getMessage());}
-		}
-
 	}
 
 	public void stopRound() {
 		roundStarted = false;
 
-		// resetto il timer del countdown
+		// resets countdown timer
 		countDownTime = MAX_COUNTDOWN_TIME;
 
 		this.handleTeleport(STOP_ROUND_TELEPORT);
@@ -235,23 +206,21 @@ public class MatchHandler {
 	}
 
 	public void startRound() {
-		// resetto il timer del round
+		// resets countdown timer
 		minutesTime = MAX_ROUND_TIME;
 		secsTime = 0;
 
-		// aumento il numero del round attuale
+		// increases current round number
 		this.setCurrentRound(this.getCurrentRound() + 1);
 
-		// resetto il boolean che indica se il player ha toccato
-		// l'entity e quindi ha vinto la partita
-
+		// resets winner 
 		winner = WINNER_NOBODY;
-		sightValue = 0; // azzero la visione del maialino
+		// resets the value for the sight bar
+		sightValue = 0;
 
 		roundStarted = true;
 
-		// teletrasporta Lily e il giocatore nella posizione in cui cominceranno
-		// il round
+		// teleports the player
 		this.handleTeleport(START_ROUND_TELEPORT);
 	}
 
@@ -284,6 +253,7 @@ public class MatchHandler {
 			
 			boolean playerSet = false;
 			int i = 1;
+			//teleports player in a position distant enought from the npc
 			while(!playerSet && i <=4) {
 				if (lastPlayerSpawnIndex != -1
 						&& (((new Vec3d(coord[n][0], 4, coord[n][2]))

@@ -1,4 +1,4 @@
-package mc.mod.prove.gui.KeyHandler;
+package mc.mod.prove.gui.keyhandler;
 
 import mc.mod.prove.MainRegistry;
 import mc.mod.prove.gui.ModGuiHandler;
@@ -8,6 +8,9 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 
+/**
+ * Class handling the logic to be executed when certain keys are pressed
+ */
 public class KeyInputHandler {
 	@SubscribeEvent
 	public void onKeyInput(InputEvent.KeyInputEvent event) {
@@ -24,7 +27,7 @@ public class KeyInputHandler {
 
 			if (MainRegistry.lily == null) {
 				Minecraft.getMinecraft().thePlayer.addChatComponentMessage(
-					new TextComponentString("Devi usare l'uovo giallo e rosa nel labirinto, poi premi M per giocare!"));
+					new TextComponentString("Spawn the yellow and pink egg in the labyrinth, then press M to play!"));
 			} else {
 				if (!MainRegistry.match.isMatchStarted()) {
 					if (AwardHandler.hasEmeralds(Minecraft.getMinecraft().thePlayer,
@@ -36,13 +39,6 @@ public class KeyInputHandler {
 					}
 				}
 			}
-		}
-
-		if (KeyBindings.locationKey.isPressed()) {
-			int x = MainRegistry.LAB_PLATE.getX();
-			int y = MainRegistry.LAB_PLATE.getY();
-			int z = MainRegistry.LAB_PLATE.getZ();
-			Minecraft.getMinecraft().thePlayer.setPositionAndUpdate(x, y, z);
 		}
 		
 		if (KeyBindings.escKey.isPressed()) {

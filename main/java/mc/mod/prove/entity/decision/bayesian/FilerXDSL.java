@@ -1,7 +1,10 @@
 package mc.mod.prove.entity.decision.bayesian;
 
+
+/**
+ * Long string which contains the converted network file (.xdsl)
+ */
 public class FilerXDSL {
-	 // BuildMyString.com generated code.
 
 	static final String NET = "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" +
 "<smile version=\"1.0\" id=\"Network1\" numsamples=\"1000\" discsamples=\"10000\">" +
@@ -90,7 +93,7 @@ public class FilerXDSL {
 "				<font color=\"000000\" name=\"Arial\" size=\"8\" />" +
 "				<position>407 309 476 352</position>" +
 "				<barchart active=\"true\" width=\"128\" height=\"72\" />" +
-"				<defcomment row=\"0\" col=\"0\">Il senso è determinare quanto lo stato successivo dipende dall&apos;aver sentito un suono ad una certa distanza\\n</defcomment>" +
+"				<defcomment row=\"0\" col=\"0\">We want to determine how much the next state depends on hearing a sound at a certain distance\\n</defcomment>" +
 "			</node>" +
 "			<node id=\"Timer\">" +
 "				<name>Timer</name>" +

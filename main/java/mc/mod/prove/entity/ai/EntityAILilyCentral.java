@@ -29,45 +29,57 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
-
+/**
+ * Central handler that manages all Lily's activities.
+ */
 public class EntityAILilyCentral extends EntityAIBase {
-
-	protected Entity lily;
-	protected Entity opponent;
-
-	protected int tickTimer = 0;
-	// l'ai di base da eseguire in un certo momento
-	private EntityAIBase currentState;
 	private static final int TIMER_SEC_THRESHOLD = 90;
 	private static final int DISTANCE_THRESHOLD = 5;
 	private static final int MAX_BAYESIAN_TIMER = 5;
 	private static final int MINS_IN_SEC = 60;
 	private static final int OUT_OF_SIGHT_MAX = 15;
+	
+	//constants used  for sight bar
+	private static final int SIGHT_BAR_TIMER_1 = 3;
+	private static final int SIGHT_BAR_TIMER_2 = 6;
+	private static final int SIGHT_BAR_TIMER_3 = 9;
+	private static final int SIGHT_BAR_DISTANCE_1 = 3;
+	private static final int SIGHT_BAR_DISTANCE_2 = 7;
+	private static final int EXCEEDING_SIGHT_BAR = 11;	
+	
+	private Entity lily;
+	private Entity opponent;
 
-	// la chiave � la positione del plate, PosAndTimer contiene la posizione
-	// del
-	// blocco e il timer
+	//timer used to know when to perform the decision for the next state
+	private int tickTimer = 0;
+	// basic behaviour to execute in a certain moment
+	private EntityAIBase currentState;
+	
+
+	// key: position of the pressure plate
+	// value: BlockEvent representing block position and activation timer
 	private HashMap<BlockPos, BlockEvent> lightBlocks = new HashMap<BlockPos, BlockEvent>();
 	private HashMap<BlockPos, BlockEvent> soundBlocks = new HashMap<BlockPos, BlockEvent>();
 
-	// gestori per i dati e il decisore bayesiano
+	// data handlers and decisor
 	private SightHandler sightHandler;
 	private HearingHandler hearingHandler;
 	private Decisor decisor;
 	private EntityAIFactory factory;
-	protected EvidenceTO currentEvidence;
+	private EvidenceTO currentEvidence;
 
-	// non metto mai a null per simulare memoria
+	// after initialization, is never set to null
+	// to simulate memory 
 	private BlockEvent lastLight = null;
 	private BlockEvent lastSound = null;
-	// viene aggiornato o con l'ultimo blocco attivato
-	// o con l'ultima posizione in cui � stato visto
+	// contains last activated block position
+	// or player's last known position
 	private BlockPos lastPosition = null;
 
-	// per settare la barra Lily's sight
+	// ot set Lily's sight bar
 	private int sightValue = 0;
-	// distanza al quarto di secondo precedente
-	private int prevDistance;
+	// Lily's previous distance from the player
+	private int prevPlayerDistance;
 	private boolean playerAlreadySeen = false;
 	private int outOfSightTimer = 0;
 
@@ -80,10 +92,10 @@ public class EntityAILilyCentral extends EntityAIBase {
 		hearingHandler = new HearingHandler(entity);
 		decisor = DecisorFactory.getDecisor(DecisorFactory.BAYES_AGGRESSIVE);
 
-		prevDistance = (int) entity.getPositionVector().distanceTo(
+		prevPlayerDistance = (int) entity.getPositionVector().distanceTo(
 				player.getPositionVector());
 
-		// inizializza lista controllando tutte le posizioni del labirinto
+		// fills dictionaries with all blocks and plates in the labyrinth
 		for (int x = MainRegistry.MIN_X_LAB; x <= MainRegistry.MAX_X_LAB; x++) {
 			for (int z = MainRegistry.MIN_Z_LAB; z <= MainRegistry.MAX_Z_LAB; z++) {
 				BlockPos pos = new BlockPos(x, 4, z);
@@ -91,8 +103,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 						.getBlockState(pos);
 				if (blockState.getBlock() instanceof BlockRedstoneLight) {
 					BlockPos platePos = this.findPressurePlate(pos);
-					// se il blocco non � collegato a una pressure plate non
-					// viene calcolato in quanto non attivabile
+					// if block is not linked to a pressure plate
+					// it's not considered because it can't be activated
 					if (platePos != null) {
 						lightBlocks.put(platePos, new BlockEvent(0, pos));
 					}
@@ -114,13 +126,14 @@ public class EntityAILilyCentral extends EntityAIBase {
 		return true;
 	}
 
-	// eseguito ad ogni tick
+	// executed once per tick, contains main actions
 	protected void beforeExecuting() {
+		//entity is set to LookAround at the beginning of each round
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			currentState = new EntityAILookAround((EntityCreature) lily, 0.4);
 		}
 
-		// aggiorna la variabile con l'ultima luce accesa
+		// updates reference to last activated light block
 		if (lastLight != null) {
 			int timer = lastLight.getTimer();
 			if (timer > 0) {
@@ -129,7 +142,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 			}
 		}
 
-		// aggiorna la variabile con l'ultimo suono emesso
+		// updates reference to last activated sound block
 		if (lastSound != null) {
 			int timer = lastSound.getTimer();
 			if (timer > 0) {
@@ -138,10 +151,10 @@ public class EntityAILilyCentral extends EntityAIBase {
 			}
 		}
 
-		// indica quali plate sono stati premuti durante il tick e avvia i timer
 		BlockPos playerPos = new BlockPos((int) opponent.posX,
 				(int) opponent.posY, (int) opponent.posZ);
-
+		
+		//checks if player is on a pressure plate and activates block timer
 		if (lightBlocks.containsKey(playerPos)) {
 			BlockPos pos = (lightBlocks.get(playerPos)).getPos();
 			lastLight = new BlockEvent(5, pos);
@@ -152,10 +165,10 @@ public class EntityAILilyCentral extends EntityAIBase {
 			lastPosition = playerPos;
 		}
 
-		// gestice i dati percepiti, raccolti o dedotti
+		//handles perceived and collected data
 		this.handleEvidence();
 
-		// perform bayesian decision every 1/5 of a second
+		// performs decision every 1/5 of a second
 		if (tickTimer % MAX_BAYESIAN_TIMER == 0) {
 			this.decision();
 			System.out.println();
@@ -178,27 +191,23 @@ public class EntityAILilyCentral extends EntityAIBase {
 	public boolean continueExecuting() {
 		if (MainRegistry.match.isRoundStarted()) {
 			beforeExecuting();
-		} else {
-			System.out.println("Sum:" + decisor.elapsedSum
-					+ " Repetitions: "+ decisor.repetitions);
 		}
 		return true;
 	}
 
+	//sets currentState based on evidence
 	private void decision() {
-		// imposta i dati percepiti nel decisore e ottiene la decisione
+		// sends data to decisor and obtains decision
 		String stateName = decisor.getDecision(currentEvidence);
-		System.out.println(stateName);
 		currentState = factory.getEntityAI(stateName);
 	}
 
-	// si occupa di elaborare i dati dei sensi e quelli raccolti o dedotti per
-	// dare indicazioni al decisore
+	// manages perceived or known data needed by the decisor
 	private void handleEvidence() {
 		EntityDistance playerInSight, blockSound, lightChange, stepSound;
 		TimerLeft timerLeft;
 
-		// stabilisce se sta per scadere il tempo
+		// decides if match is about to be over
 		if ((MainRegistry.match.getMinutesTime() * MINS_IN_SEC + MainRegistry.match
 				.getSecsTime()) > TIMER_SEC_THRESHOLD) {
 			timerLeft = TimerLeft.RunningOut;
@@ -210,6 +219,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 				DISTANCE_THRESHOLD);
 		stepSound = hearingHandler.checkStepSound(opponent, DISTANCE_THRESHOLD);
 
+		//if the player is not in the fov
+		//then playerAlreadySeen is set to false
 		if (currentEvidence != null && MainRegistry.match.isRoundStarted()) {
 			playerAlreadySeen = !currentEvidence.getPlayerInSight().contains(
 					"None");
@@ -230,32 +241,32 @@ public class EntityAILilyCentral extends EntityAIBase {
 						.substring(37));
 
 		handleSightBar();
-
 	}
 
+	//manages Lily's sight bar that indicates player's level of stealth
 	private void handleSightBar() {
 		EntityDistance playerInSight = EntityDistance.valueOf(currentEvidence
 				.getPlayerInSight());
-		// resetta il valore da assegnare alla barra quando ricomincia il round
+		// sight bar is empty at the beginning of the round
 		if (MainRegistry.match.getMinutesTime() == MatchHandler.MAX_ROUND_TIME) {
 			sightValue = 0;
 			playerAlreadySeen = false;
 			outOfSightTimer = 0;
 		} else {
-			// per aggiornare la barra Lily's Sight
-			if (tickTimer % 3 == 0) {
-				// TODO costante
+			// to update bar during the match
+			if (tickTimer % SIGHT_BAR_TIMER_1 == 0) {
 				if (playerInSight != EntityDistance.None && sightValue <= 10) {
 					outOfSightTimer = 0;
 					int currentDistance = (int) lily.getPositionVector()
 							.distanceTo(opponent.getPositionVector());
-					if (prevDistance >= currentDistance) {
+					if (prevPlayerDistance >= currentDistance) {
 						// TODO costanti
-						if ((currentDistance <= 3)
-								|| (currentDistance > 3 && currentDistance <= 7 && tickTimer % 6 == 0)
-								|| (currentDistance > 7 && tickTimer % 9 == 0)) {
+						if ((currentDistance <= SIGHT_BAR_DISTANCE_1)
+								|| (currentDistance > SIGHT_BAR_DISTANCE_1 && currentDistance <= SIGHT_BAR_DISTANCE_2 
+									&& tickTimer % SIGHT_BAR_TIMER_2 == 0)
+								|| (currentDistance > SIGHT_BAR_DISTANCE_2 && tickTimer % SIGHT_BAR_TIMER_3 == 0)) {
 							sightValue++;
-							if (sightValue == 11) {
+							if (sightValue == EXCEEDING_SIGHT_BAR) {
 								PlayerDefeatHandler.onPlayerDefeat();
 							}
 						}
@@ -263,6 +274,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 				} else if (playerInSight == EntityDistance.None
 						&& sightValue > 0) {
 					outOfSightTimer++;
+					//if player is making step sound then it's considered unlinkely to be tricking
+					//thus bar can decrease
 					if (EntityDistance.valueOf(currentEvidence.getStepSound()) != EntityDistance.None) {
 							sightValue--;
 					} else {
@@ -274,6 +287,7 @@ public class EntityAILilyCentral extends EntityAIBase {
 			}
 		}
 
+		//if Lily sees the player during the match a sound is played
 		if (playerInSight != EntityDistance.None && !playerAlreadySeen
 				&& MainRegistry.match.getWinner() == MatchHandler.WINNER_NOBODY
 				&& MainRegistry.match.isMatchStarted()) {
@@ -282,25 +296,21 @@ public class EntityAILilyCentral extends EntityAIBase {
 		}
 
 		MainRegistry.match.setSightValue(sightValue);
-		prevDistance = (int) lily.getPositionVector().distanceTo(
+		prevPlayerDistance = (int) lily.getPositionVector().distanceTo(
 				opponent.getPositionVector());
-
-		if (tickTimer % 20 == 0) {
-			System.out.println("Lily's position: "
-					+ lily.getPosition().toString());
-		}
 
 		tickTimer++;
 	}
 
-	// Trova il pressure plate corrispondente a un blocco sonoro o luminoso
+	// finds pressure plate corresponding to a light or sound block
 	protected static BlockPos findPressurePlate(BlockPos pos) {
 		boolean foundPlate = false;
 		BlockPos[] positions = new BlockPos[4];
 		BlockPos prev = pos;
 		int i = 0;
 
-		// sistema condizione di uscita
+		//follows the redstone wire until it gets
+		//to the block linked to the plate
 		do {
 			boolean foundWire = false;
 			int x = pos.getX();
@@ -313,8 +323,8 @@ public class EntityAILilyCentral extends EntityAIBase {
 			positions[3] = new BlockPos(x, y, z - 1);
 
 			for (i = 0; i < 4 && !foundWire; i++) {
-				IBlockState blockState = Minecraft.getMinecraft().theWorld
-						.getBlockState(positions[i]);
+				IBlockState blockState = 
+						Minecraft.getMinecraft().theWorld.getBlockState(positions[i]);
 				Block b = blockState.getBlock();
 				if (b instanceof BlockPressurePlate) {
 					pos = positions[i];

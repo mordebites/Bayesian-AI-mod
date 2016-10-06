@@ -31,11 +31,11 @@ public class GuiNotEnoughMoney extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 120, centered_height - 60, 240, 20);
 		texter.setMaxStringLength(90);
-		texter.setText("Devi avere almeno 5 Smeraldi per sfidarmi!");
+		texter.setText("You must have at least 5 Emeralds to fight me!");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.okay_button = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Ci vediamo"));
+				centered_height - 24, "See ya"));
 	}
 
 	@Override

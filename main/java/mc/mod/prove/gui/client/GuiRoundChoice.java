@@ -33,13 +33,13 @@ public class GuiRoundChoice extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 70, centered_height - 60, 150, 20);
 		texter.setMaxStringLength(60);
-		texter.setText("Quanti round?");
+		texter.setText("How many rounds?");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Facciamo 5!"));
+				centered_height - 24, "5 will do!"));
 		this.buttonList.add(this.b = new GuiButton(1, centered_width - 100,
-				centered_height + 4, "3 per favore"));
+				centered_height + 4, "3 please"));
 	}
 
 	@Override

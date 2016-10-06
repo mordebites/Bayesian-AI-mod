@@ -4,6 +4,9 @@ import mc.mod.prove.entity.ai.decision.fsm.FSMDecisor;
 import mc.mod.prove.entity.ai.decision.tree.TreeDecisor;
 import mc.mod.prove.entity.decision.bayesian.BayesianDecisor;
 
+/**
+ * Factory to get one of the Decisor classes.
+ */
 public class DecisorFactory {
 	public static final int BAYES_AGGRESSIVE = 0;
 	public static final int FSM_AGGRESSIVE = 1;

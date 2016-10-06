@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.Random;
 
 import mc.mod.prove.MainRegistry;
-import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -22,6 +21,7 @@ public class EntityAITrick extends EntityAIBase {
 	private Iterator[] iters = new Iterator[2];
 	private Random rdm = new Random();
 	private boolean tricking = false;
+	//fake entity to have the main entity face a certain position 
 	private EntityLiving fakeRotationEntity = new EntityCow(Minecraft.getMinecraft().theWorld);
 	
 	//vectors
@@ -30,8 +30,8 @@ public class EntityAITrick extends EntityAIBase {
 	
 	//position flags
 	private boolean platePressed = false; //shows if the plate chosen to trick was pressed
-	private boolean movingToPlate = false;
-	private boolean ambushPlaceChosen = false;
+	private boolean movingToPlate = false; //shows if entity is moving to reach the plate
+	private boolean ambushPlaceChosen = false; //shows if the entity chose an ambush place
 	
 	private int stopTimer = 0;
 	
@@ -62,12 +62,13 @@ public class EntityAITrick extends EntityAIBase {
 	}
 	
 	public void setPlayerLastPosition(BlockPos lastPosition) {
-		//se non è nota l'ultima posizione
+		//last position unknown
 		if (lastPosition != null) {
 			this.lastPosition =  new Vec3d(lastPosition.getX(), lastPosition.getY(), lastPosition.getZ());
 		} else if (plateToPress == null) {
 			int pos = rdm.nextInt(4);
 			int i = 0;
+			//chooses a plate to press among all the plates
 			while (plateToPress == null) {
 				if(iters[0].hasNext()){
 					if(i == pos) {
@@ -94,7 +95,7 @@ public class EntityAITrick extends EntityAIBase {
 
 	@Override
 	public void startExecuting(){
-		//se non ha raggiunto il blocco da premere
+		//block to press not yet chosen
 		if (plateToPress == null) {
 			BlockPos a = null;
 			int i = 0;
@@ -128,6 +129,8 @@ public class EntityAITrick extends EntityAIBase {
 				if (entity.getPosition().getX() == MathHelper.floor_double(plateToPress.xCoord) &&
 					entity.getPosition().getZ() == MathHelper.floor_double(plateToPress.zCoord)) {
 					platePressed = true;
+					
+					//if the entity is not moving, it tries to set again the path navigator
 				} else if (entity.getNavigator().getPath() == null || (entity.motionX == 0 && entity.motionZ == 0)) {
 					this.entity.getNavigator().tryMoveToXYZ(plateToPress.xCoord, plateToPress.yCoord, 
 							plateToPress.zCoord, speed);
@@ -139,9 +142,10 @@ public class EntityAITrick extends EntityAIBase {
 					do {
 						vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(entity, 4, 0, plateToPress);
 						if(vec3 != null) {
+							//if position is inside the labyrinth
 							if (vec3.xCoord >= MainRegistry.MIN_X_LAB && vec3.xCoord <= MainRegistry.MAX_X_LAB &&
 								vec3.zCoord >= MainRegistry.MIN_Z_LAB && vec3.zCoord <= MainRegistry.MAX_Z_LAB) {
-								//controlla se va bene che sia visibile il plate o meglio il blocco
+								//checks if block is visible from current position
 								if(entity.worldObj.rayTraceBlocks(plateToPress, vec3, false, true, false) != null) {
 									invisible = true;
 								}
@@ -157,6 +161,7 @@ public class EntityAITrick extends EntityAIBase {
 						ambushPlace = vec3;
 					}
 				} else {
+					//if has reached ambush place
 					if(entity.getPosition().getX() == MathHelper.floor_double(ambushPlace.xCoord) &&
 							entity.getPosition().getZ() == MathHelper.floor_double(ambushPlace.zCoord)) {
 						entity.getNavigator().clearPathEntity();
@@ -166,14 +171,15 @@ public class EntityAITrick extends EntityAIBase {
 							entity.faceEntity(fakeRotationEntity, 360F, 360F);
 						}
 						resetVariables();
-					} else if (entity.getNavigator().getPath() == null || (entity.motionX == 0 && entity.motionZ == 0)) {//se Lily non si sta muovendo
+						
+						//if entity is not moving
+					} else if (entity.getNavigator().getPath() == null || (entity.motionX == 0 && entity.motionZ == 0)) {
 						this.entity.getNavigator().tryMoveToXYZ(ambushPlace.xCoord, ambushPlace.yCoord, 
 								ambushPlace.zCoord, speed);
 					}
 				}
 			} 
 		}
-		//JumpHelper.pathHelper(entity);
 		return !entity.getNavigator().noPath();
 	}
 	

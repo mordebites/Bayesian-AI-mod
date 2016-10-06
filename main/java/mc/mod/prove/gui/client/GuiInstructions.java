@@ -52,14 +52,14 @@ public class GuiInstructions extends GuiScreen {
 		this.t6 = new GuiTextField(0, this.fontRendererObj,	centered_width - textWidth/2, t5.yPosition + 21, textWidth, 20);
 		t6.setMaxStringLength(80);
 		
-		t1.setText("Per vincere un round dovrai trovarmi nel labirinto e colpirmi senza che ");
-		t2.setText("io ti scopra! Chi vince il maggior numero di round vince la partita.");
-		t3.setText("Una barra in alto a sinistra ti indicherà se hai attirato la mia attenzione");
-		t4.setText("e in che misura. Ogni volta che ti individuo un suono ti avviserà!");
-		t5.setText("Se vinci, guadagni 2 Smeraldi per ogni round vinto, mentre se perdi");
-		t6.setText("ne perderai uno per ogni round in cui ti ho sconfitto. Buona partita!");
+		t1.setText("To win a round you must find me and hit me without me ");
+		t2.setText("noticing you! The one who wins most of the rounds wins the match! ");
+		t3.setText("A bar in the upper side of the screen will tell you if I saw you and my ");
+		t4.setText("alert level. Each time I found you a sound will inform you! ");
+		t5.setText("If you win, you win 2 Emeralds for each won round, while if you lose ");
+		t6.setText("you will lose one for each round I defeated you. Enjoy the match!");
 
-		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100, t6.yPosition + 35, "Indietro"));
+		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100, t6.yPosition + 35, "Back"));
 	}
 
 	@Override
@@ -71,7 +71,6 @@ public class GuiInstructions extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		System.out.println("Ripristino lo stato di PAUSED");
 		// tolgo il gioco dallo stato di pausa
 		MainRegistry.match.setGamePaused(false);
 	}

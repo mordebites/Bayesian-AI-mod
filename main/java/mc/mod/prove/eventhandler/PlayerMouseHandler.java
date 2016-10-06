@@ -10,6 +10,9 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * Class that handles left and right click.
+ */
 public class PlayerMouseHandler {
 	private static final int TYPE_EGG = 0;
 	private static final int TYPE_OTHER = 2;
@@ -30,30 +33,26 @@ public class PlayerMouseHandler {
 				}
 				
 				if(isLily) {
-					if (MainRegistry.lilyEgg == null) {
-						MainRegistry.lilyEgg = egg;
-						System.out.println("Lily's egg added");
-					}
 					String message = "";
 
-					// se c'è già una Lily
+					//if Lily has already been spawned
 					if (MainRegistry.lily != null) {
-						message = "Puoi spawnare solo una Lily!";
+						message = "You can spawn just one Lily!";
 						event.setCanceled(true);
-						// se non è nel labirinto
+						// if the hit vector is not in the labyrinth
 					} else if (!isInsideLabirynth((int)event.getHitVec().xCoord, (int)event.getHitVec().zCoord, TYPE_EGG)
 							|| event.getHitVec().yCoord > 5
 							|| event.getEntityPlayer().posZ <= MainRegistry.LAB_PLATE
 									.getZ()) {
 
-						message = "Puoi spawnare Lily solo DENTRO il labirinto! "
-								+ "Le coordinate della porta sono [187, 4, 690]";
+						message = "You can spawn Lily only INSIDE the labyrinth! "
+								+ "The coordinates of the door are [187, 4, 690]";
 
 						event.setCanceled(true);
-						// se è nel labirinto
+						//  if the hit vector is in the labyrinth
 					} else {
-						message = "Premi M per giocare! \nUsa P per mettere in pausa durante la partita!"
-								+ "\n\nRICORDA: devi essere MOLTO VICINO a Lily per colpirla!";
+						message = "Press M to play! \nPress P or ESC to pause the match!"
+								+ "\n\nREMEMBER: you must be REALLY CLOSE to Lily to hit her!";
 					}
 
 					if (!this.messageSent) {
@@ -64,13 +63,14 @@ public class PlayerMouseHandler {
 						this.messageSent = false;
 					}
 				
+					//if it's not Lily
 				} else {
 					if(isInsideLabirynth((int)event.getHitVec().xCoord, (int)event.getHitVec().zCoord, TYPE_OTHER)) {
 						event.setCanceled(true);
 						
 						if (!this.messageSent) {
 							event.getEntityPlayer().addChatComponentMessage(
-									new TextComponentString("Puoi usare solo l'uovo di Lily nel labirinto!"));
+									new TextComponentString("You can use only Lily's egg in the labyrinth!"));
 							this.messageSent = true;
 						} else {
 							this.messageSent = false;
@@ -89,7 +89,7 @@ public class PlayerMouseHandler {
 			event.setCanceled(true);
 			
 			if (!this.messageSent) {
-				event.getEntityPlayer().addChatMessage(new TextComponentString("Puoi colpire solo Lily nel labirinto!"));
+				event.getEntityPlayer().addChatMessage(new TextComponentString("You can hit only Lily in the labyrinth!"));
 				this.messageSent = true;
 			} else {
 				this.messageSent = false;
@@ -97,6 +97,7 @@ public class PlayerMouseHandler {
 		}
 	}
 
+	//checks whether the coordinates are inside the labirinth
 	private boolean isInsideLabirynth(int x, int z, int type) {
 		boolean result = false;
 		if (x >= MainRegistry.MIN_X_LAB - type && x <= MainRegistry.MAX_X_LAB + type

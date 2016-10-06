@@ -1,7 +1,10 @@
 package mc.mod.prove.entity.decision.bayesian; 
-
+/**
+ * Implements one of the possible states for the NPC in the network.
+ */
 public class BayesState implements Comparable<BayesState> {
 	private String name;
+	//represents the probability of the state
 	private int value;
 	
 	public BayesState(String name, double value) {
@@ -20,8 +23,6 @@ public class BayesState implements Comparable<BayesState> {
 
 	@Override
 	public int compareTo(BayesState otherState) {
-		//arrotonda i valori per eccesso e poi fa il casting a int 
-		//prima di eseguire la sottrazione
 		return otherState.value - this.value;
 	}
 }

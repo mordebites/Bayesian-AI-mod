@@ -7,12 +7,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
-// Classe dell'effettiva interfaccia attivata dall'utente
-// Questa interfaccia viene attivata quando l'npc ci propone la scommessa
-
-// incolla il seguente metodo nel pezzo di codice che deve aprire la gui
-// nei parametri lo zero indica il codice dell'interfaccia che l'handler deve aprire
-// player.openGui(MasterInterfacer.instance, 0, world, (int) player.posX, (int) player.posY, (int) player.posZ);
+// Class for the user activated interface.
+// Called when the NPC starts the bet
 
 public class GuiStartBet extends GuiScreen {
 	private GuiButton a, b, c;
@@ -40,15 +36,15 @@ public class GuiStartBet extends GuiScreen {
 		this.texter = new GuiTextField(0, this.fontRendererObj,
 				centered_width - 70, centered_height - 60, 150, 20);
 		texter.setMaxStringLength(60);
-		texter.setText("Ti va di sfidarmi?");
+		texter.setText("Wanna fight me?");
 		this.texter.setFocused(true);
 
 		this.buttonList.add(this.a = new GuiButton(0, centered_width - 100,
-				centered_height - 24, "Certo!"));
+				centered_height - 24, "Sure!"));
 		this.buttonList.add(this.b = new GuiButton(1, centered_width - 100,
-				centered_height + 4, "Non adesso..."));
+				centered_height + 4, "Not now..."));
 		this.buttonList.add(this.c = new GuiButton(1, centered_width - 100,
-				centered_height + 32, "Regole del gioco?"));
+				centered_height + 32, "Game rules?"));
 	}
 
 	@Override

@@ -7,6 +7,9 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+/**
+ * Class that manages custom sounds.
+ */
 public class SoundHandler {
 	public static SoundEvent lily_alert;
 
@@ -30,6 +33,7 @@ public class SoundHandler {
 				.setRegistryName(soundID));
 	}
 	
+	//plays sound for when the NPC saw the player
 	public static void handlePlayerInSightSound(EntityPlayer player) {
 		player.worldObj.playSound(player, player.posX, player.posY,
 				player.posZ, SoundHandler.lily_alert,	SoundCategory.AMBIENT, 2.0F, 1.0F);

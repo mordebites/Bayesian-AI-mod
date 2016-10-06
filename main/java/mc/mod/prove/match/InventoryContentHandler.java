@@ -7,6 +7,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * Class that handles the content of player's inventory.
+ */
 public class InventoryContentHandler {
 	private static IInventory inv;
 	private IInventory prevInventory;

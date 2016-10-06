@@ -9,9 +9,9 @@ import mc.mod.prove.eventhandler.PlayerAttackHandler;
 import mc.mod.prove.eventhandler.PlayerLogHandler;
 import mc.mod.prove.eventhandler.PlayerMouseHandler;
 import mc.mod.prove.gui.CommonProxy;
-import mc.mod.prove.gui.KeyHandler.KeyBindings;
-import mc.mod.prove.gui.KeyHandler.KeyInputHandler;
 import mc.mod.prove.gui.client.stats.RenderGuiHandler;
+import mc.mod.prove.gui.keyhandler.KeyBindings;
+import mc.mod.prove.gui.keyhandler.KeyInputHandler;
 import mc.mod.prove.gui.sounds.SoundHandler;
 import mc.mod.prove.match.MatchHandler;
 import net.minecraft.item.Item;
@@ -25,21 +25,27 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
+/**
+ * Main class of the mod. The execution of the mod, since its preinitialization,
+ * starts here.
+ */
+
 @Mod(modid = MainRegistry.MODID, name = MainRegistry.MODNAME, version = MainRegistry.VERSION)
 public class MainRegistry {
 	public static final String MODID = "MainRegistry";
 	public static final String MODNAME = "Main Registry";
 	public static final String VERSION = "1.0.0";
 	public static MatchHandler match = new MatchHandler();
+	// reference to the NPC the mod revolves around
 	public static EntityLilyMob lily;
-
-	// coordinate bordi del labirinto
+	// labyrinth coordinates
 	public static final int MIN_X_LAB = 178;
 	public static final int MAX_X_LAB = 199;
 	public static final int MIN_Z_LAB = 694;
 	public static final int MAX_Z_LAB = 716;
-	// BlockPos con coordinate plate della porta del labirinto
+	// coordinates of the pressure plate in front of the labyrinth's door
 	public static final BlockPos LAB_PLATE = new BlockPos(187, 4, 692);
+	// used by methods that handle the content of player's inventory
 	public static ItemMonsterPlacer lilyEgg;
 
 	@Instance(MODID)
@@ -48,15 +54,15 @@ public class MainRegistry {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent e) {
 		System.out.println("Preinit!");
-		// Inizializza l'entity lily
+		// Initializes the Lily entity 
 		EntityLily.mainRegistry();
 		lilyEgg = (ItemMonsterPlacer) Item
 				.getByNameOrId("Spawn entity.MainRegistry.LilyMob.name");
 
-		// registro l'handler che si occupa dei suoni personalizzati
+		// registers the handler for custom sounds
 		SoundHandler.init();
 
-		// registro il keybinding per i tasti speciali
+		// registers keybinding handler
 		MinecraftForge.EVENT_BUS.register(new KeyInputHandler());
 		KeyBindings.init();
 	}
@@ -64,17 +70,16 @@ public class MainRegistry {
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
 		System.out.println("Init!");
-		// timer che tiene traccia dei secondi
 
+		//timer keeping track of the seconds
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
-				// se il round e' cominciato, il gioco non e' in pausa
-				// e la schermata di countdown non e' mostrata allora
-				// faccio scorrere il tempo decrementando i minuti ed i secondi
-
+				
+				//if round is started, game is not paused and the countdown is not active
+				// then time passes, minutes and seconds are decreased
 				if (match.isRoundStarted() && !match.isGamePaused()
 						&& match.getCountDownTime() < 1) {
 
@@ -88,8 +93,9 @@ public class MainRegistry {
 					if (match.getMinutesTime() < 0) {
 						match.stopRound();
 
-						// se i round sono finiti allora finisco il gioco
-						// altrimenti comincio un nuovo round
+						// if rounds are over
+						// then the game ends
+						// else a new round starts
 
 						if (match.getCurrentRound() == match.getRoundsNumber()) {
 							match.stopMatch();
@@ -97,9 +103,7 @@ public class MainRegistry {
 					}
 				}
 
-				// questo controllo mi servira'� per mostrare correttamente la
-				// schermata di countdown
-
+				// this control is used to correctly show the countdown screen
 				if (match.isMatchStarted() && !match.isRoundStarted()
 						&& !match.isGamePaused()) {
 					match.setCountDownTime(match.getCountDownTime() - 1);
@@ -111,15 +115,14 @@ public class MainRegistry {
 			}
 		}, 0, 1000);
 
-		// inizializzo le interfacce full screen
+		// initialization of fullscreen UI
 		CommonProxy.init(e);
 
-		// inizializzo le interfacce widgets che verranno mostrate mentre il
-		// player gioca
+		// initialization of widget interfaces shown dureing the match 
 		MinecraftForge.EVENT_BUS.register(new RenderGuiHandler());
 
-		// inizializzo il codice per controllare se l'entity sta per essere
-		// attaccata
+		// initialization of handler for player attack
+		// called when entity is about to be attacked
 		MinecraftForge.EVENT_BUS.register(new PlayerAttackHandler());
 
 		MinecraftForge.EVENT_BUS.register(new PlayerMouseHandler());

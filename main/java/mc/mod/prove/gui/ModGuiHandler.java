@@ -15,13 +15,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
-// classe gestore delle gui. Si occupa di capire il tipo di richiesta di gui
-// e successivamente chiamare la gui in base al tipo di richiesta.
+// Class that handles the GUI. It figures the type of GUI request
+// and then calls the appropriate GUI.
 
 public class ModGuiHandler implements IGuiHandler {
-
-	// queste costanti contengono l'id della gui chiamata chiamata dal client
-
+	//constants with the GUI IDs
 	public static final int GUI_START_BET = 0;
 	public static final int GUI_ROUND_CHOICE = 1;
 	public static final int GUI_STOP_MATCH = 2;
@@ -88,12 +86,10 @@ public class ModGuiHandler implements IGuiHandler {
 		return null;
 	}
 
-	// questo metodo ci consente di chiudere una gui cercando di aprire una gui
-	// con un id
-	// nel gui handler che non esiste, quindi openGui ritornerà null ritornando
-	// alla schermata
-	// di gioco. (e' una brutta soluzione poi si fixa)
-
+	/*
+	 * Closes the current gui by trying to open a gui with an invalid ID.
+	 * Needs fixing. 
+	 */
 	public static void closeCurrentGui() {
 		createGui(-1);
 	}

@@ -2,7 +2,6 @@ package mc.mod.prove.entity.ai.basic;
 
 import java.util.Random;
 
-import mc.mod.prove.entity.movement.JumpHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
@@ -11,8 +10,9 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.util.math.Vec3d;
 
-/*
- * Based on the Minecraft AI class EntityAIWander
+/**
+ * Class that implements the AI for looking around.
+ * Based on EntityAIWander.
  */
 public class EntityAILookAround extends EntityAIBase
 {
@@ -28,7 +28,9 @@ public class EntityAILookAround extends EntityAIBase
     private int rotationTimer = maxRotationTimer;
     private Random rdm = new Random();
     
+    //fake entity used to have the main entity turn around its axis
     private EntityLiving fakeRotationEntity;
+    //positions for the fake entity
     private int[][] positions = {{-2,2}, {-1,2}, {0,2}, {1,2}, {2,2},
     								{-2,1}, {2,1}, {-2, 0}, {2,0}};
 
@@ -49,7 +51,7 @@ public class EntityAILookAround extends EntityAIBase
     }
 
     private void executing() {
-    	//parte 1: stabilisce quando deve ruotare su se stesso e quando muoversi
+    	//part 1: decides when main entity must turn around or move
     	if (moveTimer > 0) {
     		moveTimer--;
     		if (rotationTimer > 0) {
@@ -70,35 +72,31 @@ public class EntityAILookAround extends EntityAIBase
 	        }
     	}
     	
-    	//parte 2: si occupa di far ruotare o muovere l'npc
+    	//part 2: makes main entity turn or move
     	if(rotationTimer == maxRotationTimer) {
     		setFakeEntityPosition();
     		entity.faceEntity(fakeRotationEntity, 180F, 180F);
     	} else if (moveTimer == maxMoveTimer){
     		this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, this.speed);
     	}
-    	//JumpHelper.pathHelper(entity);
     }
     
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting()
-    {
+    public boolean continueExecuting() {
     	this.executing();
-    	
     	return true;
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting()
-    {
+    public void startExecuting() {
     	this.executing();
     }
 
-    
+    //randomly chooses a position for the fake entity to have the main entity look in that direction
     private void setFakeEntityPosition(){
     	int rdmPos = rdm.nextInt(9);
     	fakeRotationEntity.setPosition(positions[rdmPos][0] + entity.posX, fakeRotationEntity.posY, positions[rdmPos][1] + entity.posZ);

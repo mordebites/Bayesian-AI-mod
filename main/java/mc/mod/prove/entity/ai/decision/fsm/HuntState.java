@@ -2,6 +2,9 @@ package mc.mod.prove.entity.ai.decision.fsm;
 
 import mc.mod.prove.entity.transfer.EvidenceTO;
 
+/**
+ * Class implementing the Hunt state for the finite state machine.
+ */
 public class HuntState extends FSMState {
 
 	@Override

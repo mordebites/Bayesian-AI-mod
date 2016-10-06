@@ -13,21 +13,18 @@ public class HearingHandler {
 		this.entity = entity;
 	}
 
-	//controlla se è percepito, e a che distanza, il suono dell'ultimo blocco sonoro attivato
+	//checks if sound from last activated block is perceived and how distant it is
 	public EntityDistance checkBlockSound(BlockEvent lastSound, int distanceThreshold){
 		EntityDistance blockSound = EntityDistance.None;
 		
 		if (lastSound != null && lastSound.getTimer()> 0) {
 			Vec3d lastSoundPos = new Vec3d(lastSound.getPos());
 			blockSound = checkSound(lastSoundPos, distanceThreshold);
-			if(blockSound != EntityDistance.None) {
-				lastSound.setPerceived(true);
-			}
 		}
 		return blockSound;
 	}
 	
-	//controlla se è percepito, e a che distanza, l'ultimo rumore dei passi prodotto
+	//checks if last step sound is perceived and how distant it is
 	public EntityDistance checkStepSound(Entity player, int distanceThreshold){
 		EntityDistance stepSound = EntityDistance.None;
 		
@@ -38,22 +35,18 @@ public class HearingHandler {
 		return stepSound;
 	}
 	
-	//se il suono non è vicino, sarà colto solo in caso di assenza di ostacoli tra l'NPC e la fonte
 	private EntityDistance checkSound(Vec3d targetPosition, int distanceThreshold) {
 		EntityDistance blockSound = EntityDistance.None;
 		double distance = entity.getPositionVector().distanceTo(targetPosition);
 		
-		//se l'npc si sta muovendo il rumore dei propri passi copre la capacità di sentire l'altro
-		//if(entity.motionX == 0 && entity.motionZ == 0) {
-			if(distance <= distanceThreshold){
-				blockSound = EntityDistance.Close;
-			} else {
-				//se il target è lontano
-				if (distance <= HEARING_THRESHOLD) {
-					blockSound = EntityDistance.Far;
-				}
+		if(distance <= distanceThreshold){
+			blockSound = EntityDistance.Close;
+		} else {
+			//se target is far
+			if (distance <= HEARING_THRESHOLD) {
+				blockSound = EntityDistance.Far;
 			}
-		//}
+		}
 		return blockSound;
 	}
 }

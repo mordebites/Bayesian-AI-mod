@@ -2,14 +2,16 @@ package mc.mod.prove.entity;
 
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * Class used to represent activated blocks.
+ */
 public class BlockEvent{
 	private int timer;
-	private BlockPos pos;
-	private boolean perceived = false;
+	private BlockPos position;
 	
 	public BlockEvent(int timer, BlockPos pos) {
 		this.timer = timer;
-		this.pos = pos;
+		this.position = pos;
 	}
 	
 	public int getTimer() {
@@ -17,15 +19,10 @@ public class BlockEvent{
 	}
 
 	public BlockPos getPos() {
-		return pos;
+		return position;
 	}
 
 	public void setTimer(int timer) {
 		this.timer = timer;
-	}
-
-	public void setPerceived(boolean perceived){
-		perceived = true;
-	}
-	
+	}	
 }
