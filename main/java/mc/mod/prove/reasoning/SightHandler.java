@@ -14,6 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
 public class SightHandler {
+	
+	private enum RelativePosition {
+		LEFT, RIGHT, FRONT
+	}
+
 	private EntityLivingBase entity;
 	private EntityPlayer player;
 
@@ -22,7 +27,7 @@ public class SightHandler {
 		this.player = player;
 	}
 
-	// stabilisce se il giocatore e' visibile e a quale distanza
+	//  determines whether the player is visible and how far he is
 	public EntityDistance checkPlayerInSight(Entity player,
 			int distanceThreshold, boolean playerAlreadySeen) {
 		EntityDistance playerInSight = EntityDistance.None;
@@ -86,11 +91,11 @@ public class SightHandler {
 			return false;
 	}
 
-	// controlla se Lily puo' vedere l'ultima luce che si e' accesa
+	// checks whether the entity can see the last activated light
 	public EntityDistance checkLight(BlockEvent lastLight, int distanceThreshold) {
 		EntityDistance light = EntityDistance.None;
 
-		// se e' stata accesa qualche luce
+		// if a light was activated
 		if (lastLight != null && lastLight.getTimer() > 0) {
 			int lightX = lastLight.getPos().getX();
 			int lightZ = lastLight.getPos().getZ();
@@ -98,39 +103,43 @@ public class SightHandler {
 			boolean lightSeen = false;
 			EnumFacing facing = entity.getHorizontalFacing();
 
-			// controlla se l'NPC sta guardando nella stessa direzione della
-			// luce
+			// checks if the entity is facing the same direction as the light
 			if ((facing == EnumFacing.WEST && (int) entity.posX >= lightX)
 					|| (facing == EnumFacing.EAST && (int) entity.posX <= lightX)
 					|| (facing == EnumFacing.NORTH && (int) entity.posZ >= lightZ)
 					|| (facing == EnumFacing.SOUTH && (int) entity.posZ <= lightZ)) {
 
+				//if the entity can see the light block
 				if (entity.worldObj.rayTraceBlocks(new Vec3d(entity.posX,
 						entity.posY + (double) entity.getEyeHeight(),
 						entity.posZ), new Vec3d(lightX, 4, lightZ), false,
 						true, false) == null) {
 					lightSeen = true;
 				} else {
+					RelativePosition pos;
 					switch (facing) {
 					case EAST: {
-						lightSeen = handleEast(lightX, lightZ);
+						pos = getRelativePosition(lightZ, facing);
+						lightSeen = handleCardinal(lightZ, lightX, facing, pos);
 						break;
 					}
 					case WEST: {
-						lightSeen = handleWest(lightX, lightZ);
+						pos = getRelativePosition(lightZ, facing);
+						lightSeen = handleCardinal(lightZ, lightX, facing, pos);
 						break;
 					}
 					case SOUTH: {
-						lightSeen = handleSouth(lightX, lightZ);
+						pos = getRelativePosition(lightX, facing);
+						lightSeen = handleCardinal(lightX, lightZ, facing, pos);
 						break;
 					}
 					case NORTH: {
-						lightSeen = handleNorth(lightX, lightZ);
+						pos = getRelativePosition(lightX, facing);
+						lightSeen = handleCardinal(lightX, lightZ, facing, pos);
 						break;
 					}
 					default: {
-						System.err
-								.println("Lily is facing an invalid direction!");
+						System.err.println("Lily is facing an invalid direction!");
 					}
 					}
 				}
@@ -147,169 +156,107 @@ public class SightHandler {
 				}
 			}
 		}
+		System.out.println(light);
 		return light;
 	}
-
-	private boolean handleNorth(int lightX, int lightZ) {
+	//determines if the light block is on the left, on the right or in front of the entity
+	private RelativePosition getRelativePosition(int light, EnumFacing facing) {
+		RelativePosition pos = null;
+		
+		switch (facing) {
+		case EAST: {
+			if (light < (int) entity.posZ) {
+				pos = RelativePosition.LEFT;
+			} else if (light > (int) entity.posZ) {
+				pos = RelativePosition.RIGHT;
+			} else {
+				pos = RelativePosition.FRONT;
+			}
+			break;
+		}
+		case WEST: {
+			if (light > (int) entity.posZ) {
+				pos = RelativePosition.LEFT;
+			} else if (light < (int) entity.posZ) {
+				pos = RelativePosition.RIGHT;
+			} else {
+				pos = RelativePosition.FRONT;
+			}
+			break;
+		}
+		case SOUTH: {
+			if (light > (int) entity.posX) {
+				pos = RelativePosition.LEFT;
+			} else if (light < (int) entity.posX) {
+				pos = RelativePosition.RIGHT;
+			} else {
+				pos = RelativePosition.FRONT;
+			}
+		
+			break;
+		}
+		case NORTH: {
+			if (light < (int) entity.posX) {
+				pos = RelativePosition.LEFT;
+			} else if (light > (int) entity.posX) {
+				pos = RelativePosition.RIGHT;
+			} else {
+				pos = RelativePosition.FRONT;
+			}
+			break;
+		}
+		default: {
+			System.err.println("Lily is facing an invalid direction!");
+		}
+		}
+		return pos;
+	}
+	
+	//tells the cross(...) method the sides of the light block to check.
+	//It's used to check whether the entity can see  the light even though
+	//it can't see the block.
+	private boolean handleCardinal(int lightMainVar, int lightSecVar, EnumFacing facing, RelativePosition pos) {
 		boolean lightSeen = false;
-
-		// se la luce � a sinistra dell'npc
-		if (lightX < (int) entity.posX) {
-			lightSeen = this.cross(lightX + 1, lightX + 4, lightZ, "NS", false);
+		
+		String axis1 = "NS";
+		String axis2 = "WE";
+		if(facing == EnumFacing.WEST || facing == EnumFacing.EAST) {
+			axis1 = "WE";
+			axis2 = "NS";
+		}
+		
+		if(pos != RelativePosition.FRONT) {
+			if ((pos == RelativePosition.LEFT && (facing == EnumFacing.NORTH && facing == EnumFacing.EAST))
+				||(pos == RelativePosition.RIGHT && (facing == EnumFacing.SOUTH && facing == EnumFacing.WEST))) {
+				lightSeen = this.cross(lightMainVar + 1, lightMainVar + 4, lightSecVar, axis1, true);
+			} else {
+				lightSeen = this.cross(lightMainVar - 1, lightMainVar - 4, lightSecVar, axis1, false);
+			}
+			
 			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
+				lightSeen = this.cross(lightSecVar + 1, lightSecVar + 4, lightMainVar, axis2, true);
+				if(!lightSeen) {
+					lightSeen = this.cross(lightSecVar - 1, lightSecVar - 4, lightMainVar, axis2, false);
 				}
 			}
-			// se la luce � a destra dell'npc
-		} else if (lightX > (int) entity.posX) {
-			lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
-				}
-			}
-			// se la luce � di fronte all'npc
 		} else {
-			lightSeen = this.cross(lightX + 1, lightX + 4, lightZ, "NS", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
+			lightSeen = this.cross(lightMainVar + 1, lightMainVar + 4, lightSecVar, axis1, true);
+			if(!lightSeen) {
+				lightSeen = this.cross(lightMainVar - 1, lightMainVar - 4, lightSecVar, axis1, false);
+				if(!lightSeen) {
+					if (facing == EnumFacing.NORTH || facing == EnumFacing.WEST) {
+						lightSeen = this.cross(lightSecVar + 1, lightSecVar + 4, lightMainVar, axis2, true);
+					} else {
+						lightSeen = this.cross(lightSecVar - 1, lightSecVar - 4, lightMainVar, axis2, false);
+					}
 				}
 			}
 		}
-		return lightSeen;
+		return lightSeen;	
 	}
 
-	private boolean handleSouth(int lightX, int lightZ) {
-		boolean lightSeen = false;
-
-		// se la luce � a sinistra dell'npc
-		if (lightX > (int) entity.posX) {
-			lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS", false);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
-				}
-			}
-			// se la luce � a destra dell'npc
-		} else if (lightX < (int) entity.posX) {
-			lightSeen = this.cross(lightX + 1, lightX + 4, lightZ, "NS", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
-				}
-			}
-			// se la luce � di fronte all'npc
-		} else {
-			lightSeen = this.cross(lightX + 1, lightX + 4, lightZ, "NS", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX,
-							"WE", true);
-				}
-			}
-		}
-		return lightSeen;
-	}
-
-	private boolean handleWest(int lightX, int lightZ) {
-		boolean lightSeen = false;
-
-		// se la luce � a sinistra dell'npc
-		if (lightZ > (int) entity.posZ) {
-			lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE", false);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightX + 1, lightX + 4, lightZ,
-							"NS", true);
-				}
-			}
-			// se la luce � a destra dell'npc
-		} else if (lightZ < (int) entity.posZ) {
-			lightSeen = this.cross(lightZ + 1, lightZ - 4, lightX, "WE", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightX + 1, lightX + 4, lightZ,
-							"NS", true);
-				}
-			}
-			// se la luce � di fronte all'npc
-		} else {
-			lightSeen = this.cross(lightX + 1, lightX + 4, lightZ, "NS", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
-				}
-			}
-		}
-		return lightSeen;
-	}
-
-	private boolean handleEast(int lightX, int lightZ) {
-		boolean lightSeen = false;
-
-		// se la luce � a sinistra dell'npc
-		if (lightZ < (int) entity.posZ) {
-			lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX, "WE", true);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightX + 1, lightX + 4, lightZ,
-							"NS", true);
-				}
-			}
-			// se la luce � a destra dell'npc
-		} else if (lightZ > (int) entity.posZ) {
-			lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE", false);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightX + 1, lightX + 4, lightZ,
-							"NS", true);
-				}
-			}
-			// se la luce � di fronte all'npc
-		} else {
-			lightSeen = this.cross(lightX - 1, lightX - 4, lightZ, "NS", false);
-			if (!lightSeen) {
-				lightSeen = this.cross(lightZ - 1, lightZ - 4, lightX, "WE",
-						false);
-				if (!lightSeen) {
-					lightSeen = this.cross(lightZ + 1, lightZ + 4, lightX,
-							"WE", true);
-				}
-			}
-		}
-		return lightSeen;
-	}
-
+	//checks three sides of the light block and surrounding blocks to know if
+	//the illuminated floor blocks are seen
 	private boolean cross(int start, int end, int otherCoord, String axis,
 			boolean increment) {
 		boolean visible = false;
